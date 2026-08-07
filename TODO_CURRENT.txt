@@ -1,0 +1,24 @@
+NIKLAR — TODO (current execution queue)
+
+AWAITING USER DECISION
+------------------------
+  - Architecture/stack for the automation code itself (niklar-stocks
+    currently has no implementation code — only reference docs and repo
+    scaffolding).
+
+READY TO EXECUTE
+-------------------
+  - (none queued yet — implementation has not started)
+
+BLOCKED
+----------
+  - (none)
+
+VALIDATION REQUIRED
+----------------------
+  - (none)
+
+COMPLETED, AWAITING CANONICAL SYNCHRONIZATION
+-------------------------------------------------
+  - (none — the reference-doc sync in niklar-stocks is already
+    reconciled with Drive as of 2026-08-07)

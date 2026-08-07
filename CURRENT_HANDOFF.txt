@@ -1,0 +1,83 @@
+NIKLAR — CURRENT HANDOFF
+Last updated: 2026-08-07
+Maintained by: Claude, working in the private niklar-stocks environment
+
+STATUS
+------
+This is the first handoff snapshot. The private canonical Niklar system
+(Google Drive) and a private GitHub implementation repository
+(joiedevivre02/niklar-stocks, private) both already exist and are the
+source of truth. This public repository is a newly created sanitized
+coordination layer with no prior handoff history.
+
+PROJECT SUMMARY (sanitized)
+----------------------------
+Niklar is a research and decision-automation system covering PSE stocks,
+US stocks, options, and crypto. It is governed by a canonical rulebook
+and multi-market routing/validation contracts maintained in a private
+Google Drive folder. A private GitHub repository (niklar-stocks) holds
+implementation work and a curated set of the canonical governance
+documents for reference during development.
+
+CANONICAL FILES THE NEXT AGENT SHOULD CONSULT
+-----------------------------------------------
+All of the following live in the PRIVATE niklar-stocks repository under
+docs/niklar-reference/ — file names only, not reproduced here. Read them
+there before continuing any Niklar implementation work:
+
+  - 00_MANDATORY_READ_CURRENT.txt        (sole mandatory-read rulebook)
+  - START_HERE_CURRENT_STATUS.txt        (current-status pointer)
+  - README_FIRST_CURRENT.txt
+  - NIKLAR_MULTI_MARKET_AUTHORITY_MAP_CURRENT.txt
+  - PSE_EXECUTION_MANIFEST_CURRENT.txt
+  - US_STOCKS_EXECUTION_MANIFEST_CURRENT.txt
+  - OPTIONS_EXECUTION_MANIFEST_CURRENT.txt
+  - CRYPTO_EXECUTION_MANIFEST_CURRENT.txt
+  - NIKLAR_VALIDATION_ORCHESTRATOR_CURRENT.txt
+  - NIKLAR_RUN_RECEIPT_CONTRACT_CURRENT.txt
+
+The private Google Drive "Niklar" folder remains authority #1 above all
+of the above; re-sync from Drive if these appear stale.
+
+IMPLEMENTATION CHANGES THIS SESSION (private niklar-stocks repo)
+-------------------------------------------------------------------
+  - Repository initialized (previously just a one-line README).
+  - Added docs/niklar-reference/: a curated subset of the canonical
+    governance docs listed above, synced from the private Drive folder
+    (10 documents + an index README). Intentionally NOT a full mirror —
+    daily-churn operational state (master databases, decision objects,
+    reports, run receipts, journals, ops scripts) stays in Drive only.
+  - Added a standard .gitignore.
+  - No LICENSE file (repository intentionally kept unlicensed/private).
+  - Reference-docs branch merged into main. Repo is otherwise a clean,
+    minimal state — no automation/implementation code exists yet.
+
+DECISIONS ALREADY FROZEN
+--------------------------
+See DECISIONS_CURRENT.txt in this repository.
+
+UNRESOLVED / BLOCKERS
+------------------------
+  - No automation/decision-engine code exists in niklar-stocks yet. The
+    architecture, language, and integration approach for that code have
+    not been decided. This is the main open item for whoever continues
+    the implementation.
+  - No blockers preventing that work from starting.
+
+NEXT RECOMMENDED STEPS
+-------------------------
+  - Decide the implementation architecture/stack for the automation
+    described in the niklar-stocks README ("research and decision
+    automation for pse, us stocks, options and crypto") before writing
+    code, since none exists yet.
+  - Keep docs/niklar-reference/ in niklar-stocks in sync with Drive as
+    the canonical rulebook evolves (see its own README for what is and
+    isn't mirrored).
+
+FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
+--------------------------------------------------------------------------
+  - Default branch: main
+  - Branch: claude/niklar-folder-reference-vzytcg (still present on
+    origin, already merged into main)
+  - Commit sequence: initial commit -> add .gitignore -> add Niklar
+    reference docs -> merge reference-docs branch into main

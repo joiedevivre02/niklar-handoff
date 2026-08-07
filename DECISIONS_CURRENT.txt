@@ -1,0 +1,37 @@
+NIKLAR — DECISIONS (current)
+
+1) Decision: Sync only a curated "Universal Authority Chain" subset of
+   canonical docs into the private niklar-stocks repo, not a full Drive
+   mirror.
+   Date: 2026-08-07
+   Rationale: Operational state (master databases, decision objects,
+   reports, run receipts, journals, ops scripts, dated audits) changes
+   daily in Drive and would go stale immediately if copied; the fixed
+   governance/rulebook files are the actual stable reference material.
+   Affected component: niklar-stocks/docs/niklar-reference/
+   Status: Frozen (implemented)
+
+2) Decision: No LICENSE file on the private niklar-stocks repository.
+   Date: 2026-08-07
+   Rationale: Repository holds proprietary trading/decision rules; keep
+   it unlicensed/private rather than assume open-source terms.
+   Affected component: niklar-stocks (repo root)
+   Status: Frozen (implemented)
+
+3) Decision: Merge the reference-docs branch directly into main rather
+   than opening a PR for review.
+   Date: 2026-08-07
+   Rationale: Low-risk, additive documentation change; explicit choice
+   to skip the review step.
+   Affected component: niklar-stocks (git history)
+   Status: Frozen (implemented)
+
+4) Decision: Create this public niklar-handoff repository as a
+   sanitized coordination layer only, never a competing source of
+   truth.
+   Date: 2026-08-07
+   Rationale: Enable handoff between AI agents (Claude, ChatGPT, etc.)
+   without exposing private canon, credentials, or proprietary data.
+   Affected component: niklar-handoff (this repo)
+   Status: Frozen (implemented) — authority order: private Drive canon
+   > private niklar-stocks repo > this repo.

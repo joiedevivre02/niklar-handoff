@@ -1,0 +1,9 @@
+NIKLAR-HANDOFF — CHANGELOG
+
+2026-08-07
+  - Repository created as the sanitized public coordination layer for
+    AI-agent handoff, per NIKLAR_PUBLIC_HANDOFF_SETUP instructions.
+  - Initial CURRENT_HANDOFF.txt, DECISIONS_CURRENT.txt, and
+    TODO_CURRENT.txt published, summarizing the private niklar-stocks
+    repository's current state (repo scaffolding + canonical reference
+    docs synced from private Drive; no automation code yet).
