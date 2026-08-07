@@ -1,0 +1,124 @@
+NIKLAR — CLAUDE OVERNIGHT AUTONOMOUS OPERATING PROMPT
+Recorded: 2026-08-07
+Source: user instruction, niklar-stocks/niklar-handoff Claude session
+Status: DURABLE RECORD — governs autonomous Claude sessions on this
+project until the user supersedes or revokes it.
+
+PURPOSE
+---------
+This is a durable copy of the operating instructions the user gave for
+autonomous overnight work on Niklar, so a future session (Claude or,
+for coordination purposes, ChatGPT) can pick up the same operating
+posture without the user re-typing it. This file does not itself carry
+authority over the canonical Niklar rules — see AUTHORITY below.
+
+AUTHORITY
+-----------
+This prompt is an OPERATING-POSTURE record, not a canonical rule. It is
+subordinate to:
+  1. The private Niklar canonical source in Google Drive
+  2. The private niklar-stocks implementation repository
+  3. NIKLAR_CHATGPT_CLAUDE_HANDOFF_RECOVERY_RULE.txt (Drive) — the
+     canonical rule governing this handoff repo's use, the ChatGPT/
+     Claude authority order, the stale-canon/handoff gate procedure,
+     and Claude model-routing + token-efficiency guidance. That rule is
+     NOT reproduced in full here (avoid duplicating canonical
+     documents into the handoff, per that rule's own token-efficiency
+     guidance) — read it directly in Drive.
+
+VERBATIM OPERATING INSTRUCTIONS (as given 2026-08-07)
+--------------------------------------------------------
+Read NIKLAR_CHATGPT_CLAUDE_HANDOFF_RECOVERY_RULE.txt from the canonical
+Niklar Google Drive folder first.
+
+Then initialize and maintain:
+https://github.com/joiedevivre02/niklar-handoff
+Use it strictly as the sanitized ChatGPT <-> Claude coordination layer
+described in that canonical rule.
+
+While the user is away, operate autonomously:
+
+* Read and obey the current Google Drive Niklar canon before
+  implementation.
+* Inspect the current private niklar-stocks implementation and recent
+  work.
+* Reconcile the private implementation, Drive canon, and public handoff
+  before making system-wide changes.
+* Continue all already-authorized, unblocked implementation work
+  without waiting for routine approvals.
+* Prioritize technical-debt resolution, deterministic workflow
+  reliability, research/data acquisition, database mapping, null/error
+  handling, validation, replayability, cross-division consistency, and
+  preservation of established decision outputs before speculative new
+  features.
+* Test and simulate affected workflows rather than assuming they work.
+* Commit coherent, reversible implementation batches and push them
+  appropriately.
+* Keep CURRENT_HANDOFF.txt, TODO_CURRENT.txt, DECISIONS_CURRENT.txt,
+  and CHANGELOG.txt current so ChatGPT can pick up exactly where Claude
+  stops.
+* Label anything not yet reconciled into Drive canon as PENDING
+  CANONICAL RECONCILIATION.
+* Never expose secrets, credentials, private trading information,
+  proprietary datasets, personal data, or sensitive canonical material
+  in the public handoff repo.
+
+Model routing (see the Drive recovery rule's "CLAUDE MODEL ROUTING +
+TOKEN EFFICIENCY RULE" section for the authoritative, detailed version):
+* Haiku-class for mechanical discovery, extraction, navigation,
+  formatting, indexing, and repetitive deterministic work.
+* Sonnet-class as the default Niklar implementation/debugging/
+  reconciliation model.
+* Opus-class selectively for difficult architecture, high-impact
+  canonical conflicts, stubborn root-cause analysis, security/privacy,
+  complex trading methodology changes, large cross-division refactors,
+  or final review where subtle drift could materially change Niklar
+  outputs.
+
+Maximize useful work per token without sacrificing quality: read
+CURRENT/index/pointer files before broad scans; use targeted reads and
+diffs; reuse stable grounded context; use scripts/tools for mechanical
+operations; pass compact evidence packets when escalating models; avoid
+regenerating unchanged material. Never save tokens by skipping required
+canonical reads, validation, testing, source checks, reconciliation, or
+security review.
+
+Do not stop merely because work is large or multi-step. Break it into
+safe increments and continue.
+
+Only stop for a genuine blocker requiring unavailable credentials/
+information, or a material product, security, architectural, or
+canonical decision with no existing authoritative basis. If blocked,
+document exactly what failed, what was tried, the smallest decision
+needed from the user, and continue any other safe unblocked work.
+
+Before ending, leave the private implementation clean and recoverable,
+push appropriate commits, synchronize authorized canonical changes,
+sanitize and refresh the public handoff, and state the exact next
+action for ChatGPT or Claude.
+
+OPERATOR NOTES — HOW THIS WAS ACTUALLY CARRIED OUT
+------------------------------------------------------
+Recorded for the next agent's calibration, not as new canon:
+
+* Claude Code (this environment) is not a persistent background
+  daemon — it acts within tool-using turns of a session, not as an
+  indefinitely-running unsupervised process. "Operate autonomously
+  overnight" was carried out as: complete a real, tested, reversible
+  increment per turn; keep this handoff current after each one; and
+  use the session's scheduling capability to resume and continue in
+  further increments, rather than one unbounded uninterruptible run.
+* "Use model routing intelligently" was carried out via the model this
+  session was already running as (Sonnet-class, the documented default
+  workhorse for Niklar work) for implementation/reconciliation, with
+  the option to spawn Haiku-class or Opus-class subagents for
+  mechanical work or high-stakes review respectively where that
+  genuinely fit a sub-task — not a hard requirement to fragment every
+  action across models.
+* No live trading, broker, or market-data credentials exist in this
+  environment. Nothing in this session created, requested, or used
+  any such credential. Implementation work in this pass was limited to
+  deterministic, non-networked code (schema/validation/rendering
+  logic) with a test suite — not new trading/decision methodology.
+
+END

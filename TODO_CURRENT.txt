@@ -1,14 +1,30 @@
 NIKLAR — TODO (current execution queue)
+Last updated: 2026-08-07 (overnight autonomous session, in progress)
 
 AWAITING USER DECISION
 ------------------------
-  - Architecture/stack for the automation code itself (niklar-stocks
-    currently has no implementation code — only reference docs and repo
-    scaffolding).
+  - Architecture/stack for the orchestrator's stage-handler
+    implementations (authority_load, research_memory_gate,
+    evidence_acquisition, decision_object_freeze,
+    canonical_serialization, publication_validation,
+    research_database_append, research_indexes_update,
+    master_database_update, opportunity_matrix_rebuild,
+    discovery_consumers_sync, tactical_consumers_sync,
+    postflight_verification). These require deciding how/whether this
+    environment integrates with Drive/Sheets/Slack and any market-data
+    source — a material architectural + credentials decision, held for
+    the user rather than guessed.
 
-READY TO EXECUTE
--------------------
-  - (none queued yet — implementation has not started)
+READY TO EXECUTE (safe, unblocked, no user decision required)
+------------------------------------------------------------------
+  - Continue reviewing other existing Drive Operations/Shared Workflow
+    artifacts for further integration-with-tests candidates, following
+    the same pattern as the ops/ increment (pull verbatim, test against
+    synthetic fixtures, document, no logic changes).
+  - General repo technical-debt/reliability passes as safe opportunities
+    are found (e.g., additional test coverage, error-handling review)
+    — evaluated case by case against the priority order in the
+    overnight operating instructions.
 
 BLOCKED
 ----------
@@ -16,9 +32,13 @@ BLOCKED
 
 VALIDATION REQUIRED
 ----------------------
-  - (none)
+  - (none currently — the ops/ increment's own validation, the 26-test
+    suite, already ran and passed; see CURRENT_HANDOFF.txt)
 
 COMPLETED, AWAITING CANONICAL SYNCHRONIZATION
 -------------------------------------------------
-  - (none — the reference-doc sync in niklar-stocks is already
-    reconciled with Drive as of 2026-08-07)
+  - ops/ integration (niklar-stocks commit cac4df1) — private-repo-only
+    code artifact; not a candidate for Drive canon promotion (code
+    doesn't belong in the Drive canon layer), but flagged per the
+    recovery rule as not yet reconciled anywhere else. No action
+    needed unless the user wants it referenced from Drive.

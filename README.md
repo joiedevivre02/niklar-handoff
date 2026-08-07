@@ -25,10 +25,40 @@ Files here may contain:
 If this repository conflicts with the private Niklar canon, the private
 canon always wins.
 
-Authority order:
+Authority order (per `NIKLAR_CHATGPT_CLAUDE_HANDOFF_RECOVERY_RULE.txt`,
+Drive):
 1. Private Niklar canonical source (Google Drive)
 2. Private implementation repository (`niklar-stocks`, private)
 3. This repository — coordination only
+4. Conversation summaries / memory
+
+If sources conflict, higher authority wins.
+
+## Stale-canon / handoff gate
+
+Before concluding that Niklar context is missing, outdated, or must be
+reconstructed manually:
+1. Inspect the current authoritative Niklar folder in Google Drive.
+2. Determine whether its CURRENT/handoff/operational artifacts
+   adequately cover the latest known work.
+3. If Drive appears stale or there's evidence of newer work, read this
+   repo's `CURRENT_HANDOFF.txt`, `DECISIONS_CURRENT.txt`,
+   `TODO_CURRENT.txt`, `CHANGELOG.txt`.
+4. Treat those files as evidence of newer coordination state, NOT as
+   authority over the private canon.
+5. Reconcile the handoff against current Drive canon before changing
+   canonical rules.
+6. Preserve established Niklar decisions, report templates,
+   deterministic execution rules, data mappings, operational
+   workflows, and audit/replay requirements unless canon explicitly
+   supersedes them.
+7. If this handoff describes changes not yet synchronized into Drive,
+   label that state explicitly `PENDING CANONICAL RECONCILIATION`.
+8. Never silently promote a handoff statement into canon.
+9. Once reconciled and authorized, update Drive so it's self-sufficient
+   again.
+10. After meaningful work, keep this handoff current so the other
+    agent can resume without reconstructing the session.
 
 ## Security
 

@@ -34,4 +34,36 @@ NIKLAR — DECISIONS (current)
    without exposing private canon, credentials, or proprietary data.
    Affected component: niklar-handoff (this repo)
    Status: Frozen (implemented) — authority order: private Drive canon
-   > private niklar-stocks repo > this repo.
+   > private niklar-stocks repo > this repo > conversation summaries/
+   memory (4-tier order per the canonical recovery rule).
+
+5) Decision: Integrate the three existing Drive ops Python modules
+   (schema lock, publication validator, orchestrator) into niklar-stocks
+   verbatim, add a test suite, and do NOT implement the orchestrator's
+   stage handlers or any Drive/Sheets/Slack/market-data integration in
+   this pass.
+   Date: 2026-08-07
+   Rationale: Matches the stated priority (technical-debt/reliability/
+   validation before speculative new features) and stays inside
+   "already-authorized, unblocked" work — these modules already exist
+   as Niklar artifacts, so integrating+testing them isn't inventing new
+   trading/decision logic. Implementing the stage handlers would require
+   an architecture/integration decision with no existing authoritative
+   basis, so it was deliberately left for the user (see TODO_CURRENT.txt).
+   Affected component: niklar-stocks/ops/, niklar-stocks/tests/
+   Status: Frozen (implemented) — PENDING CANONICAL RECONCILIATION into
+   Drive (see CURRENT_HANDOFF.txt; code artifacts aren't expected to be
+   mirrored into Drive canon, this is a status flag, not a to-do).
+
+6) Decision: During this autonomous session, use scheduled check-ins to
+   continue work in bounded increments rather than one unsupervised,
+   unbounded run.
+   Date: 2026-08-07
+   Rationale: This environment executes within tool-using turns, not as
+   a persistent background daemon; bounded, tested, documented
+   increments with a resumption mechanism best satisfy "continue
+   autonomously... commit coherent, reversible implementation batches"
+   without producing a large unreviewable diff.
+   Affected component: session operating pattern (see
+   CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt)
+   Status: Provisional — operating pattern, not a Niklar canonical rule.

@@ -7,3 +7,19 @@ NIKLAR-HANDOFF — CHANGELOG
     TODO_CURRENT.txt published, summarizing the private niklar-stocks
     repository's current state (repo scaffolding + canonical reference
     docs synced from private Drive; no automation code yet).
+
+2026-08-07 (overnight autonomous session)
+  - Read NIKLAR_CHATGPT_CLAUDE_HANDOFF_RECOVERY_RULE.txt from Drive;
+    reconciled README.md's authority-order/stale-canon-gate section
+    against it (added the 4th authority tier and the 10-step gate).
+  - Added CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt: durable record of the
+    user's overnight autonomous-operation instructions.
+  - niklar-stocks: integrated the three existing Drive ops Python
+    modules (schema lock / renderers, publication validator,
+    orchestrator) verbatim into ops/, added a 26-test suite (all
+    passing against unmodified source) and GitHub Actions CI. No
+    stage-handler implementations or external integrations added.
+    Commit cac4df1.
+  - Updated CURRENT_HANDOFF.txt, DECISIONS_CURRENT.txt, and this file
+    to reflect the above; TODO_CURRENT.txt updated with the next safe
+    queue and the one item awaiting user decision.
