@@ -19,11 +19,11 @@ AWAITING USER DECISION
 
 READY TO EXECUTE (safe, unblocked, no user decision required)
 ------------------------------------------------------------------
-  - Further PWA views per the canonical priority order (Home/
-    Opportunity Landscape, Daily Brief/Inbox, Watchlist), though Home/
-    Opportunity Landscape needs portfolio-level (multi-ticker) sample
-    data conventions decided first — currently only a per-ticker
-    contract exists.
+  - PWA MVP (priorities #1 Home/Opportunity Landscape + #2 Quick
+    Review) now both implemented (niklar-stocks commit aae6fea).
+    Remaining PWA views per canonical priority order: Daily Brief/
+    Inbox, Watchlist. Also: navigation linking a landscape row to its
+    matching tactical card (currently two independent lists).
   - Continue reviewing other existing Drive Operations/Shared Workflow
     artifacts for further integration-with-tests candidates, following
     the same pattern as the ops/ increment (pull verbatim, test against
@@ -46,9 +46,9 @@ VALIDATION REQUIRED
 
 COMPLETED, AWAITING CANONICAL SYNCHRONIZATION
 -------------------------------------------------
-  - ops/ integration (niklar-stocks commit cac4df1) and mobile
-    contract + PWA slice (commit 56dd1d2) — private-repo-only code
+  - ops/ integration (cac4df1), mobile contract + PWA slice (56dd1d2),
+    Opportunity Landscape view (aae6fea) — private-repo-only code
     artifacts; not candidates for Drive canon promotion (code doesn't
     belong in the Drive canon layer), but flagged per the recovery
     rule as not yet reconciled anywhere else. No action needed unless
-    the user wants either referenced from Drive.
+    the user wants any referenced from Drive.

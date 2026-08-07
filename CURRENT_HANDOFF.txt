@@ -1,6 +1,26 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-07 (autonomous session RESUMED after handshake ack)
+Last updated: 2026-08-07 (autonomous session, continuous — no blockers)
 Maintained by: Claude, working in the private niklar-stocks environment
+
+LATEST DELTA (this update)
+------------------------------
+niklar-stocks commit aae6fea: added the Home / Opportunity Landscape
+mobile view (PWA priority #1) — ops/mobile_contract.py gained
+to_opportunity_card()/build_opportunity_landscape() (condensed
+multi-ticker rows over existing schema fields; deliberately never
+sorts/ranks — that's canonical decision output this environment can't
+compute). pwa/ restructured into two independent sections (Opportunity
+Landscape + the existing Quick Review) so one section's failure can't
+break the other. 10 new tests (47/47 suite passing); re-validated in a
+real browser (order-preservation and failure-isolation both proven).
+Pre-commit gate PASS (10/10), post-commit verification PASS. Full
+detail below under "ops/ + PWA history."
+No blockers, no drift, nothing awaiting reconciliation beyond the
+existing PENDING CANONICAL RECONCILIATION flag on all private-repo
+code artifacts (unchanged rationale — see DECISIONS_CURRENT.txt).
+Next action: continue with further safe increments (see
+TODO_CURRENT.txt) — same architecture-decision item as before remains
+the only thing held for the user.
 
 STATUS
 ------
@@ -42,8 +62,8 @@ In Drive (not yet mirrored anywhere, read directly):
 
 Drive remains authority #1 above all of the above; re-sync if stale.
 
-IMPLEMENTATION CHANGES THIS SESSION (private niklar-stocks repo)
--------------------------------------------------------------------
+ops/ + PWA history (private niklar-stocks repo) — full detail
+------------------------------------------------------------------
 Prior turns (already in earlier handoff versions, unchanged):
   - Repository initialized; docs/niklar-reference/ synced (10 docs +
     index); .gitignore added; no LICENSE; reference-docs branch merged
@@ -166,4 +186,5 @@ FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
   - Commits on main: 1f7f4d8 (initial) -> b0dd27f (.gitignore) ->
     eb0a196 (reference docs) -> 98cbf5a (merge) ->
     cac4df1 (ops/ integration + tests + CI) ->
-    56dd1d2 (mobile contract + PWA vertical slice)
+    56dd1d2 (mobile contract + PWA vertical slice) ->
+    aae6fea (Opportunity Landscape view)

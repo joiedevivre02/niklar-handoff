@@ -68,3 +68,17 @@ NIKLAR-HANDOFF — CHANGELOG
     verification PASS. Commit 56dd1d2.
   - Updated CURRENT_HANDOFF.txt, DECISIONS_CURRENT.txt, TODO_CURRENT.txt,
     and this file to record the resumption and the new increment.
+
+2026-08-07 ("sync" keyword protocol recorded)
+  - User established "sync" as the standing coordination trigger.
+    Recorded in CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt, README.md,
+    DECISIONS_CURRENT.txt item 9.
+
+2026-08-07 (Home/Opportunity Landscape — niklar-stocks commit aae6fea)
+  - Resumed without waiting for the hourly checkpoint, per explicit
+    instruction. Added the other half of the PWA MVP: condensed
+    multi-ticker landscape view; contract deliberately never sorts/
+    ranks rows (tested with a deliberately out-of-order fixture). 10
+    new tests (47/47 suite), re-validated in a real browser (order
+    preservation + section-failure isolation both proven). Gate
+    PASS/PASS. No blockers, no drift.

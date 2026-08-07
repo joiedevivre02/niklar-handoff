@@ -117,3 +117,18 @@ NIKLAR — DECISIONS (current)
    CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt, README.md "sync keyword")
    Status: Frozen (implemented) — operating protocol, not a Niklar
    trading/canonical rule.
+
+10) Decision: Implement Home/Opportunity Landscape (PWA priority #1)
+    with zero sorting/ranking logic — preserve exact input row order,
+    always.
+    Date: 2026-08-07
+    Rationale: Ranking is canonical decision output owned by the
+    upstream Opportunity Matrix, not available in this environment;
+    computing any ordering here (even a "reasonable" heuristic like
+    sorting by Tactical Priority) would be inventing/duplicating
+    scoring logic in the client, which the PWA rule forbids outright.
+    Affected component: niklar-stocks/ops/mobile_contract.py
+    (build_opportunity_landscape), niklar-stocks/pwa/
+    Status: Frozen (implemented, tested with a deliberately
+    out-of-priority-order fixture to prove it) — PENDING CANONICAL
+    RECONCILIATION (same flag rationale as decisions 1 and 8).
