@@ -100,3 +100,10 @@ NIKLAR-HANDOFF — CHANGELOG
     (documented reason). Gate PASS/PASS. niklar-stocks commit 95cb051.
   - This entry doubles as the "sync" checkpoint requested after the
     above.
+
+2026-08-07 (mypy CI validation — niklar-stocks commit 9549f65)
+  - Second "cont" of this cycle. Remaining PWA views blocked on
+    data/semantics, so picked a safe technical-debt item: mypy static
+    type-checking added to CI (pyproject.toml + pinned mypy 1.13.0).
+    Zero code changes, 0 issues found across ops/ — ongoing regression
+    protection. Gate PASS/PASS. No blockers, no drift.

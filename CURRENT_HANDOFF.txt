@@ -2,27 +2,25 @@ NIKLAR — CURRENT HANDOFF
 Last updated: 2026-08-07 (autonomous session, continuous — no blockers)
 Maintained by: Claude, working in the private niklar-stocks environment
 
-LATEST DELTA (this update — sync)
---------------------------------------
-Since last handoff sync:
-1. Coordination protocol expanded from "sync" alone to sync/cont/stop
-   (user-directed; recorded in CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt,
-   README.md, DECISIONS_CURRENT.txt #9). niklar-handoff commit 4b766e7.
-2. niklar-stocks commit 95cb051 ("cont"): added the Watchlist roster
-   view (PWA priority #4, roster half only) — ticker/portfolio-status/
-   thesis/action rows, zero filtering or ranking (Portfolio Status has
-   no known valid-value set here, so it's passed through raw/
-   unfiltered rather than interpreted). 8 new tests (55/55 suite),
-   real-browser verified alongside the two existing sections + nav.
-   Explicitly deferred (documented, not silently skipped): the
-   "Inbox"/alerting half — needs real prior-state history or new
-   canonical alert semantics this environment doesn't have.
-Gate PASS/PASS on both. No blockers, no drift, nothing new pending
-beyond the existing PENDING CANONICAL RECONCILIATION flag on
-private-repo code artifacts (DECISIONS_CURRENT.txt). Next action: a
-second "cont" continues this cycle — see TODO_CURRENT.txt for the
-selected next increment; same architecture-decision item remains the only
-thing held for the user.
+LATEST DELTA (this update)
+------------------------------
+Second "cont" of this cycle. niklar-stocks commit 9549f65: added mypy
+static type-checking to CI (pyproject.toml config + pinned mypy
+1.13.0 CI step, targeting ops/). Zero code changes — clean validation
+result (0 issues across all 5 ops/ modules) kept as ongoing regression
+protection. Chosen because the remaining PWA views are now blocked on
+data/semantics this environment doesn't have (Watchlist alerting,
+Daily Brief, Position/journal — see TODO_CURRENT.txt), so this cycle's
+second increment was a safe technical-debt item instead of forcing
+another PWA feature. Gate PASS/PASS.
+Prior delta this cycle (niklar-stocks 95cb051): Watchlist roster view
+— see "ops/ + PWA history" below for full detail.
+No blockers, no drift, nothing new pending beyond the existing
+PENDING CANONICAL RECONCILIATION flag on private-repo code artifacts
+(DECISIONS_CURRENT.txt). Next action: awaiting the user — remaining
+safe work needs either a "cont" for another technical-debt pass, or
+the architecture decision (orchestrator stage-handlers / live data
+source) that has been consistently held open all session.
 
 STATUS
 ------
@@ -191,4 +189,4 @@ FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
     56dd1d2 (mobile contract + PWA vertical slice) ->
     aae6fea (Opportunity Landscape view) ->
     3a66e90 (cross-section navigation) ->
-    95cb051 (Watchlist roster view)
+    95cb051 (Watchlist roster view) -> 9549f65 (mypy CI validation)
