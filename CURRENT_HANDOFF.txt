@@ -2,23 +2,26 @@ NIKLAR — CURRENT HANDOFF
 Last updated: 2026-08-07 (autonomous session, continuous — no blockers)
 Maintained by: Claude, working in the private niklar-stocks environment
 
-LATEST DELTA (this update)
-------------------------------
-niklar-stocks commit 3a66e90: cross-section navigation — tapping (or
-Tab+Enter on) an Opportunity Landscape row now scrolls to and
-highlights its matching Tactical Card by ticker (live DOM lookup at
-click time); shows an inline "not loaded" message instead of doing
-nothing when no match exists. Pure ticker-string matching, no
-scoring/decision logic. Verified in a real browser: found-match nav,
-missing-match fallback, and keyboard access all confirmed. Existing 47
-tests + smoke test unaffected. Gate PASS/PASS.
-This stabilizes the MVP built in the prior delta (aae6fea, Opportunity
-Landscape view — see "ops/ + PWA history" below for that detail)
-rather than adding new scope.
-No blockers, no drift, nothing new pending beyond the existing PENDING
-CANONICAL RECONCILIATION flag on private-repo code artifacts (see
-DECISIONS_CURRENT.txt). Next action: further safe increments (see
-TODO_CURRENT.txt) — same architecture-decision item remains the only
+LATEST DELTA (this update — sync)
+--------------------------------------
+Since last handoff sync:
+1. Coordination protocol expanded from "sync" alone to sync/cont/stop
+   (user-directed; recorded in CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt,
+   README.md, DECISIONS_CURRENT.txt #9). niklar-handoff commit 4b766e7.
+2. niklar-stocks commit 95cb051 ("cont"): added the Watchlist roster
+   view (PWA priority #4, roster half only) — ticker/portfolio-status/
+   thesis/action rows, zero filtering or ranking (Portfolio Status has
+   no known valid-value set here, so it's passed through raw/
+   unfiltered rather than interpreted). 8 new tests (55/55 suite),
+   real-browser verified alongside the two existing sections + nav.
+   Explicitly deferred (documented, not silently skipped): the
+   "Inbox"/alerting half — needs real prior-state history or new
+   canonical alert semantics this environment doesn't have.
+Gate PASS/PASS on both. No blockers, no drift, nothing new pending
+beyond the existing PENDING CANONICAL RECONCILIATION flag on
+private-repo code artifacts (DECISIONS_CURRENT.txt). Next action: a
+second "cont" continues this cycle — see TODO_CURRENT.txt for the
+selected next increment; same architecture-decision item remains the only
 thing held for the user.
 
 STATUS
@@ -187,4 +190,5 @@ FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
     cac4df1 (ops/ integration + tests + CI) ->
     56dd1d2 (mobile contract + PWA vertical slice) ->
     aae6fea (Opportunity Landscape view) ->
-    3a66e90 (cross-section navigation)
+    3a66e90 (cross-section navigation) ->
+    95cb051 (Watchlist roster view)

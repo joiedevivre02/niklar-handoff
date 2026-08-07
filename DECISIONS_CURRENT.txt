@@ -137,3 +137,17 @@ NIKLAR — DECISIONS (current)
     Status: Frozen (implemented, tested with a deliberately
     out-of-priority-order fixture to prove it) — PENDING CANONICAL
     RECONCILIATION (same flag rationale as decisions 1 and 8).
+
+11) Decision: Ship Watchlist as a roster-only view (PWA priority #4);
+    defer the "Inbox"/alerting half rather than approximate it.
+    Date: 2026-08-07
+    Rationale: Alerting requires diffing current state against real
+    prior-state history (not available here) or inventing new alert
+    semantics absent from canon — either is a guess, not a transform
+    of existing data. Portfolio Status field is passed through raw,
+    never filtered/interpreted, since no valid-value set for it is
+    defined anywhere available to this environment.
+    Affected component: niklar-stocks/ops/mobile_contract.py
+    (build_watchlist), niklar-stocks/pwa/
+    Status: Frozen (implemented) — PENDING CANONICAL RECONCILIATION
+    (same flag rationale as decisions 1, 8, 10).

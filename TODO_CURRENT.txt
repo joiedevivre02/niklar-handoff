@@ -19,12 +19,13 @@ AWAITING USER DECISION
 
 READY TO EXECUTE (safe, unblocked, no user decision required)
 ------------------------------------------------------------------
-  - PWA MVP (priorities #1+#2) implemented and stabilized: both views
-    plus cross-section tap-navigation between them (commit 3a66e90).
-    Remaining PWA views per canonical priority order: Watchlist. Daily
-    Brief/Inbox deferred — no existing canonical field cleanly maps to
-    an "alert/notification" concept; would need new semantics, so
-    treat as its own decision rather than assuming a shape.
+  - PWA priorities #1, #2, #4-roster all implemented + stabilized
+    (commits aae6fea, 3a66e90, 95cb051). Remaining, in order:
+    (a) Watchlist "Inbox"/alerting half — deferred, needs real
+    prior-state history or new canonical alert semantics not present
+    anywhere available to this environment; (b) Daily Brief (priority
+    #3) — needs live operational data this environment doesn't have;
+    (c) Position/journal view (priority #5).
   - Continue reviewing other existing Drive Operations/Shared Workflow
     artifacts for further integration-with-tests candidates, following
     the same pattern as the ops/ increment (pull verbatim, test against
@@ -48,9 +49,9 @@ VALIDATION REQUIRED
 COMPLETED, AWAITING CANONICAL SYNCHRONIZATION
 -------------------------------------------------
   - ops/ integration (cac4df1), mobile contract + PWA slice (56dd1d2),
-    Opportunity Landscape view (aae6fea), cross-section navigation
-    (3a66e90) — private-repo-only code artifacts; not candidates for
-    Drive canon promotion (code doesn't belong in the Drive canon
-    layer), but flagged per the recovery rule as not yet reconciled
-    anywhere else. No action needed unless the user wants any
-    referenced from Drive.
+    Opportunity Landscape (aae6fea), cross-section navigation
+    (3a66e90), Watchlist roster (95cb051) — private-repo-only code
+    artifacts; not candidates for Drive canon promotion (code doesn't
+    belong in the Drive canon layer), but flagged per the recovery
+    rule as not yet reconciled anywhere else. No action needed unless
+    the user wants any referenced from Drive.

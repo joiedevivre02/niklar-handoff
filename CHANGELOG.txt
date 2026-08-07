@@ -89,3 +89,14 @@ NIKLAR-HANDOFF — CHANGELOG
     Pure UI wiring, no scoring logic. Real-browser verified. 47/47
     tests + smoke test unaffected. Gate PASS/PASS. No blockers, no
     drift.
+
+2026-08-07 (protocol expanded to sync/cont/stop; Watchlist increment)
+  - User expanded coordination keyword from "sync" alone to
+    sync/cont/stop (see DECISIONS_CURRENT.txt #9, updated).
+    niklar-handoff commit 4b766e7.
+  - "cont": added Watchlist roster view (PWA priority #4, roster
+    half). 8 new tests (55/55 suite), real-browser verified with the
+    two existing sections. Alerting half explicitly deferred
+    (documented reason). Gate PASS/PASS. niklar-stocks commit 95cb051.
+  - This entry doubles as the "sync" checkpoint requested after the
+    above.
