@@ -1,5 +1,10 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-07 (autonomous session RESUMED after handshake ack)
+Last updated: 2026-08-07 (PAUSED — see CURRENT_HANDOFF.txt)
+
+PAUSED — awaiting "cont" or user input
+------------------------------------------
+  - Session is paused on explicit user instruction. No autonomous
+    mutation should resume until "cont" (or equivalent) is given.
 
 AWAITING USER DECISION
 ------------------------

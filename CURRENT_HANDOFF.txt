@@ -1,26 +1,38 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-07 (autonomous session, continuous — no blockers)
+Last updated: 2026-08-07 (PAUSED — user sent "Sync" then "Pause")
 Maintained by: Claude, working in the private niklar-stocks environment
 
-LATEST DELTA (this update)
-------------------------------
-Second "cont" of this cycle. niklar-stocks commit 9549f65: added mypy
-static type-checking to CI (pyproject.toml config + pinned mypy
-1.13.0 CI step, targeting ops/). Zero code changes — clean validation
-result (0 issues across all 5 ops/ modules) kept as ongoing regression
-protection. Chosen because the remaining PWA views are now blocked on
-data/semantics this environment doesn't have (Watchlist alerting,
-Daily Brief, Position/journal — see TODO_CURRENT.txt), so this cycle's
-second increment was a safe technical-debt item instead of forcing
-another PWA feature. Gate PASS/PASS.
-Prior delta this cycle (niklar-stocks 95cb051): Watchlist roster view
-— see "ops/ + PWA history" below for full detail.
-No blockers, no drift, nothing new pending beyond the existing
-PENDING CANONICAL RECONCILIATION flag on private-repo code artifacts
-(DECISIONS_CURRENT.txt). Next action: awaiting the user — remaining
-safe work needs either a "cont" for another technical-debt pass, or
-the architecture decision (orchestrator stage-handlers / live data
-source) that has been consistently held open all session.
+PAUSED
+--------
+Session paused on explicit user instruction ("Pause"). No new work was
+performed between the prior sync and this pause — niklar-stocks is
+unchanged at 9549f65, niklar-handoff at 733caf5. Both repos verified
+clean (no uncommitted mutations) before pausing. A stale scheduled
+auto-continue trigger left over from earlier in this session (predates
+the sync/cont/stop protocol) was found and cancelled so nothing
+resumes work automatically while paused.
+No blockers, no drift — this is a clean, deliberate stop, not a
+failure state. Resume only on explicit "cont" from the user (per the
+sync/cont/stop protocol) or an equivalent plain-English instruction.
+
+LATEST DELTA (prior to pause — unchanged since last sync)
+--------------------------------------------------------------
+Second "cont" of the last active cycle. niklar-stocks commit 9549f65:
+added mypy static type-checking to CI (pyproject.toml config + pinned
+mypy 1.13.0 CI step, targeting ops/). Zero code changes — clean
+validation result (0 issues across all 5 ops/ modules) kept as ongoing
+regression protection. Chosen because the remaining PWA views are
+blocked on data/semantics this environment doesn't have (Watchlist
+alerting, Daily Brief, Position/journal — see TODO_CURRENT.txt).
+Gate PASS/PASS.
+Prior delta (niklar-stocks 95cb051): Watchlist roster view — see
+"ops/ + PWA history" below for full detail.
+Nothing new pending beyond the existing PENDING CANONICAL
+RECONCILIATION flag on private-repo code artifacts
+(DECISIONS_CURRENT.txt). Next action when resumed: either another
+"cont" for a technical-debt pass, or the architecture decision
+(orchestrator stage-handlers / live data source) that has been
+consistently held open all session.
 
 STATUS
 ------
