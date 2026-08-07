@@ -1,6 +1,13 @@
 NIKLAR — TODO (current execution queue)
 Last updated: 2026-08-07 (overnight autonomous session, in progress)
 
+BLOCKED — AWAITING CHATGPT ACKNOWLEDGEMENT (highest priority)
+------------------------------------------------------------------
+  - Claude published the mandatory startup control handshake
+    (CLAUDE_STATUS.txt) per NIKLAR_HARD_RULE_COMMIT_GATE and is
+    stopped. No further Niklar mutations resume until the user or
+    ChatGPT (relayed by the user) acknowledges it.
+
 AWAITING USER DECISION
 ------------------------
   - Architecture/stack for the orchestrator's stage-handler

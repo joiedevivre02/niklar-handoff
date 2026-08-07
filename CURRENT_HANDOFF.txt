@@ -1,14 +1,22 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-07 (overnight autonomous session, in progress)
+Last updated: 2026-08-07 (startup control handshake — session PAUSED)
 Maintained by: Claude, working in the private niklar-stocks environment
 
 STATUS
 ------
-Autonomous overnight session in progress per user instruction. This
-handoff reflects state after the FIRST completed implementation
-increment. The private canonical Niklar system (Google Drive) and the
-private niklar-stocks repository remain the source of truth; nothing
-below has been promoted into Drive canon.
+SESSION PAUSED pending ChatGPT acknowledgement. See CLAUDE_STATUS.txt
+in this repo for the full mandatory startup control handshake
+(NIKLAR_HARD_RULE_COMMIT_GATE compliance, drift check result, canon
+files read, reconciliation detail). Summary: drift check PASSED, no
+unresolved canonical conflicts, no uncommitted mutations, handoff
+sanitization PASSED — but Claude has stopped and will not resume
+autonomous Niklar mutations until the user or ChatGPT (relayed by the
+user) acknowledges CLAUDE_STATUS.txt, per NIKLAR_HARD_RULE_COMMIT_GATE
+and the user's explicit instruction. This handoff reflects state after
+the FIRST completed implementation increment (below), then a pause,
+not new work. The private canonical Niklar system (Google Drive) and
+the private niklar-stocks repository remain the source of truth;
+nothing below has been promoted into Drive canon.
 
 PROJECT SUMMARY (sanitized)
 ----------------------------
@@ -109,8 +117,12 @@ PENDING CANONICAL RECONCILIATION
 
 NEXT RECOMMENDED STEPS
 -------------------------
-  - Continue with further safe, bounded technical-debt/reliability
-    increments per the stated priority order (see TODO_CURRENT.txt).
+  - IMMEDIATE: read CLAUDE_STATUS.txt and acknowledge it (per
+    NIKLAR_HARD_RULE_COMMIT_GATE's startup confirmation gate) before
+    Claude resumes any further Niklar mutations.
+  - After acknowledgement: continue with further safe, bounded
+    technical-debt/reliability increments per the stated priority
+    order (see TODO_CURRENT.txt).
   - Architecture decision for stage-handler implementations remains
     with the user.
 

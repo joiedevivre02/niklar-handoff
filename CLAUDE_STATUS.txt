@@ -1,0 +1,120 @@
+NIKLAR — CLAUDE STARTUP CONTROL HANDSHAKE
+Timestamp: 2026-08-07T22:15Z (approx, session-local)
+Published by: Claude (Sonnet-class), niklar-stocks/niklar-handoff session
+
+This is the mandatory startup confirmation required by
+NIKLAR_HARD_RULE_COMMIT_GATE (Drive) before Claude may resume
+autonomous Niklar mutations, and by the user's explicit
+"BEGIN AUTONOMOUS IMPLEMENTATION" / startup-handshake instruction.
+
+CONTROL ASSERTIONS
+---------------------
+HARD-RULE COMMIT GATE LOADED: YES
+  Read in full from Drive (Google Doc "NIKLAR_HARD_RULE_COMMIT_GATE").
+PRIVATE-ONLY / NON-PUBLICATION RULE LOADED: YES
+  Read in full from Drive, both as embedded in
+  NIKLAR_HARD_RULE_COMMIT_GATE section 2 and as the dedicated
+  "PRIVATE-ONLY DISTRIBUTION + HARD-STOP DRIFT RULE" section of
+  NIKLAR_PWA_LIGHTWEIGHT_MOBILE_OUTPUT_RULE.
+PRIVATE PWA RULE LOADED: YES
+  Read in full from Drive (Google Doc
+  "NIKLAR_PWA_LIGHTWEIGHT_MOBILE_OUTPUT_RULE") — product direction,
+  architecture principles, MVP scope, and the private-access-only /
+  hard-stop-drift sections. No PWA implementation work has begun.
+CANONICAL AUTHORITY ORDER LOADED: YES
+  Drive canon > private niklar-stocks repo > this public handoff >
+  conversation summaries/memory, per
+  NIKLAR_CHATGPT_CLAUDE_HANDOFF_RECOVERY_RULE.txt (re-verified this
+  session: Drive modifiedTime unchanged since last read).
+CHATGPT <-> CLAUDE HANDOFF RULE LOADED: YES
+  NIKLAR_CHATGPT_CLAUDE_HANDOFF_RECOVERY_RULE.txt — authority order,
+  stale-canon/handoff gate, and model-routing/token-efficiency
+  guidance already reconciled into this repo's README.md (prior
+  commit aa64908).
+PRE-COMMIT SELF-POLICING ENABLED: YES
+  Adopted for all future commits in this session: every proposed
+  diff will be checked against the 10-point pre-commit gate in
+  NIKLAR_HARD_RULE_COMMIT_GATE and classified PASS — SAFE TO COMMIT
+  or FAIL — HARD RULE VIOLATION / CANONICAL DRIFT before committing.
+POST-COMMIT DIFF VERIFICATION ENABLED: YES
+  Adopted for all future commits in this session: the actual
+  committed diff will be re-inspected after every commit per the
+  same rule's post-commit verification list.
+STARTUP CANONICAL RECONCILIATION COMPLETE: YES
+
+STARTUP DRIFT CHECK: PASS
+  No material drift, contradiction, or unresolved canonical conflict
+  was found between (a) this session's prior actions, (b) the newly
+  read hard-rule/PWA/privacy rules, and (c) existing canon. See
+  RECONCILIATION DETAIL below.
+
+SAFE TO CONTINUE: NO — PENDING CHATGPT ACKNOWLEDGEMENT
+  The drift check passing does not by itself authorize resuming
+  autonomous mutations. Per NIKLAR_HARD_RULE_COMMIT_GATE's "STARTUP
+  CONFIRMATION GATE FOR AUTONOMOUS CLAUDE WORK" item 7 and the user's
+  explicit instruction, Claude must wait until ChatGPT has read this
+  public confirmation and the user (or ChatGPT, relayed by the user)
+  acknowledges the control state before further Niklar mutations
+  resume. Claude has stopped and is waiting.
+
+CANON FILES ACTUALLY READ THIS HANDSHAKE
+--------------------------------------------
+  - NIKLAR_HARD_RULE_COMMIT_GATE (Drive Google Doc) — full content
+  - NIKLAR_PWA_LIGHTWEIGHT_MOBILE_OUTPUT_RULE (Drive Google Doc) — full content
+  - NIKLAR_CHATGPT_CLAUDE_HANDOFF_RECOVERY_RULE.txt (Drive) — freshness
+    re-verified (Drive modifiedTime unchanged since prior read this
+    session; not re-downloaded, per the recovery rule's own
+    token-efficiency guidance not to re-ingest unchanged canon)
+  - Freshness re-verified (modifiedTime unchanged since prior read,
+    not re-downloaded) for the 5 previously-synced authority-chain
+    docs already in niklar-stocks/docs/niklar-reference/: START HERE -
+    NIKLAR CURRENT STATUS.txt, NIKLAR_RUN_RECEIPT_CONTRACT_CURRENT.txt,
+    NIKLAR_MULTI_MARKET_AUTHORITY_MAP_CURRENT.txt,
+    NIKLAR_VALIDATION_ORCHESTRATOR_CURRENT.txt,
+    00_MANDATORY_READ_CURRENT
+  - NIKLAR_RESEARCH_START_HERE_CURRENT.txt (Drive) — newly discovered
+    this handshake, full content read. Informational pointer to
+    research-database locations (Niklar_Research_Database_v3_7.sqlite,
+    PSE market history, research indexes/pointers). No conflict with
+    anything above; no action required by it right now.
+
+PRIVATE REPOSITORY STATE INSPECTED
+--------------------------------------
+  niklar-stocks (private): branch main, commit cac4df1, working tree
+  clean, up to date with origin. Commit sequence: 1f7f4d8 -> b0dd27f
+  -> eb0a196 -> 98cbf5a -> cac4df1.
+  niklar-handoff (this repo): branch main, commit aa64908 prior to
+  this handshake commit, working tree clean, up to date with origin.
+
+RECONCILIATION DETAIL
+-------------------------
+  - Reviewed this session's prior actions (creating niklar-handoff as
+    the sole public repo; syncing canonical reference docs and
+    ops/ code into the PRIVATE niklar-stocks repo; publishing
+    sanitized status/summary docs into niklar-handoff) against the
+    newly-read PRIVATE-ONLY / NON-PUBLICATION rule and PWA rule.
+    Result: consistent. niklar-stocks remains private
+    (GitHub API confirms "private": true). niklar-handoff is the one
+    explicitly authorized public repo and contains only implementation
+    status, architecture summaries at a high level (module names/
+    purposes, not source code, schema field lists, or report section
+    names), decisions, and TODOs — no secrets, credentials, Drive
+    URLs/IDs, emails, proprietary trading content, or source code.
+  - No PWA/mobile work has been started, so there is nothing to check
+    against the PWA private-access-only rule yet.
+  - No new product direction, publication path, or architecture was
+    introduced without canonical basis; the one architecture-shaped
+    decision this session deferred (orchestrator stage-handler /
+    external-integration implementation) was already held for the
+    user before this handshake even required it — consistent with,
+    not in violation of, the hard-stop drift rule.
+  - No uncommitted mutation exists in either repository.
+  - This handoff repo passed a manual sanitization scan (grep for
+    emails, Drive URLs/IDs, secret/token/credential patterns) before
+    this file and the prior commit were pushed.
+
+UNRESOLVED CANONICAL CONFLICTS DETECTED: NONE
+
+UNCOMMITTED MUTATIONS PRE-EXISTING: NONE
+
+PUBLIC HANDOFF SANITIZATION CHECK: PASS

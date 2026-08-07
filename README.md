@@ -86,6 +86,13 @@ Only sanitized coordination information belongs in this repository.
 - `DECISIONS_CURRENT.txt` — decisions affecting future implementation
 - `TODO_CURRENT.txt` — current execution queue
 - `CHANGELOG.txt` — meaningful changes to the handoff state
+- `CLAUDE_STATUS.txt` — mandatory startup control handshake (per
+  NIKLAR_HARD_RULE_COMMIT_GATE, Drive), published before/after
+  autonomous Claude sessions: canonical files read, drift-check
+  result, and whether Claude is clear to continue autonomous
+  mutations or is paused pending acknowledgement
+- `CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt` — durable record of the
+  user's autonomous-operation operating instructions
 - `snapshots/` — older handoff states, kept only when useful for
   recovery/comparison
 

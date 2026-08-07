@@ -23,3 +23,24 @@ NIKLAR-HANDOFF — CHANGELOG
   - Updated CURRENT_HANDOFF.txt, DECISIONS_CURRENT.txt, and this file
     to reflect the above; TODO_CURRENT.txt updated with the next safe
     queue and the one item awaiting user decision.
+
+2026-08-07 (startup control handshake)
+  - Read two new Drive canonical rules in full: NIKLAR_HARD_RULE_COMMIT_GATE
+    (mandatory pre-/post-commit self-policing; startup confirmation gate
+    requiring ChatGPT acknowledgement before autonomous Claude mutations
+    resume) and NIKLAR_PWA_LIGHTWEIGHT_MOBILE_OUTPUT_RULE (private-only,
+    thin-client PWA product direction; not yet implemented).
+  - Also read NIKLAR_RESEARCH_START_HERE_CURRENT.txt (Drive, newly
+    discovered) — informational research-database location pointer,
+    no conflicts.
+  - Re-verified freshness (unchanged) of all previously-read canon.
+  - Performed startup reconciliation/drift check: PASS, no conflicts,
+    no uncommitted mutations, handoff sanitization PASS.
+  - Published CLAUDE_STATUS.txt: the mandatory startup control
+    handshake. SAFE TO CONTINUE: NO — session paused pending ChatGPT
+    acknowledgement, per explicit user instruction and the new gate.
+  - Updated CURRENT_HANDOFF.txt and TODO_CURRENT.txt to reflect the
+    paused state and required next action.
+  - Cancelled a previously-scheduled auto-resume check-in (no longer
+    appropriate now that resumption requires explicit acknowledgement
+    rather than a timer).
