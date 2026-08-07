@@ -97,28 +97,61 @@ push appropriate commits, synchronize authorized canonical changes,
 sanitize and refresh the public handoff, and state the exact next
 action for ChatGPT or Claude.
 
-"SYNC" KEYWORD PROTOCOL (added 2026-08-07, second session)
---------------------------------------------------------------
-The user established a standing coordination keyword: "sync" is the
-Niklar ChatGPT <-> Claude coordination trigger. Verbatim intent:
+SYNC / CONT / STOP KEYWORD PROTOCOL
+(originally "sync" only, added 2026-08-07 second session; expanded to
+three keywords, same day, third session — this is the current version,
+superseding the single-keyword description)
+--------------------------------------------------------------------------
+Standing ChatGPT<->Claude Niklar control protocol, three keywords:
 
-  When the user says "sync" to Claude: immediately refresh the
-  sanitized niklar-handoff with latest completed state, commit/
-  checkpoint, gate results, blockers, pending reconciliation, and
-  exact next action. Do NOT stop autonomous work merely because a
-  sync was requested, unless a hard-rule/drift condition independently
-  requires stopping. ChatGPT will independently read the handoff when
-  the user says sync on their side. Keep the handoff concise and
-  delta-oriented to minimize token use. All existing canonical,
-  privacy, commit-gate, and sanitization rules remain binding on every
-  sync refresh exactly as on any other commit.
+  sync
+  - Immediately refresh the sanitized niklar-handoff with latest
+    completed state.
+  - Update ONLY what materially changed since the prior handoff
+    (delta, not full rewrite — minimize token use).
+  - Include: latest private-repo commit/checkpoint, work completed,
+    gate results, validation/tests, blockers, canonical reconciliation
+    status, pending items, exact next action.
+  - Never expose private/sensitive Niklar content.
+  - Does NOT stop autonomous work — unless a hard-rule/drift/blocker
+    condition independently requires stopping.
+  - A lack of immediate response after sync is not itself a failure;
+    continue working if autonomous execution is already active/safe.
+
+  cont
+  - Continue autonomous Niklar work immediately from the latest
+    approved/reconciled state.
+  - Select the highest-value safe, already-authorized, unblocked next
+    increment.
+  - Do not wait for another scheduled checkpoint.
+  - NEVER overrides: the hard-rule commit gate, the canonical-drift
+    kill switch, the privacy/non-publication rule, an active blocker
+    state, or any failed validation. If explicitly waiting/stopped,
+    resume only on "cont."
+
+  stop
+  - Stop further Niklar mutations at the next safe point.
+  - Preserve the current known-good state.
+  - Publish a sanitized handoff stating exactly where execution
+    stopped and what remains.
+
+All existing governance stays continuously binding under all three
+keywords: Drive canon is authority #1; Niklar is private-only; the PWA
+is private-access only; niklar-handoff is sanitized coordination only;
+NIKLAR_HARD_RULE_COMMIT_GATE runs before every commit; post-commit diff
+verification runs after every commit; material drift or a hard-rule
+failure stops the affected workstream (or all Niklar mutations, if not
+safely isolatable). This protocol is additive to that governance, not
+a replacement for it.
 
 Operating notes: a "sync" refresh is a handoff-doc update like any
-other — it still goes through sanitization and (for this session) the
-commit-gate discipline, but should be the smallest accurate delta
-against the current state rather than a full rewrite, per the user's
-explicit token-efficiency instruction here. "Sync" pauses nothing;
-treat it as "checkpoint now," not "stop and wait."
+other — it still goes through sanitization and the commit-gate
+discipline, but should be the smallest accurate delta against current
+state. "Sync" pauses nothing; treat it as "checkpoint now," not "stop
+and wait." "Cont" is the explicit go/resume signal — always safe to
+act on unless one of the four listed overrides applies. "Stop" is the
+only one of the three that halts work; it takes effect at the next
+safe point, not mid-mutation.
 
 OPERATOR NOTES — HOW THIS WAS ACTUALLY CARRIED OUT
 ------------------------------------------------------

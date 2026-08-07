@@ -96,15 +96,22 @@ Only sanitized coordination information belongs in this repository.
 - `snapshots/` — older handoff states, kept only when useful for
   recovery/comparison
 
-## "sync" keyword
+## sync / cont / stop keywords
 
-The user's word "sync" (to Claude, in their working session) is a
-standing trigger: refresh this handoff's four core files with the
-latest completed state, commit/checkpoint, gate results, blockers,
-pending reconciliation, and exact next action — concisely,
-delta-oriented, not a full rewrite. Sync does not pause autonomous
-work; it's a checkpoint, not a stop. See
-`CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt` for the full definition.
+Standing control protocol between the user and Claude/ChatGPT on
+Niklar work:
+- **sync** — refresh this handoff with a concise delta (not a full
+  rewrite) of what materially changed. Does not pause work.
+- **cont** — continue autonomous work immediately on the
+  highest-value safe, already-authorized, unblocked next increment;
+  don't wait for a scheduled checkpoint. Never overrides the commit
+  gate, drift kill switch, privacy rule, an active blocker, or failed
+  validation.
+- **stop** — halt further mutations at the next safe point, preserve
+  known-good state, publish a sanitized handoff of exactly where
+  execution stopped.
+
+See `CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt` for the full definition.
 
 ## Agent workflow
 
