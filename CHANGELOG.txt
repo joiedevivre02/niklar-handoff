@@ -114,3 +114,12 @@ NIKLAR-HANDOFF — CHANGELOG
     from earlier in the session (predates sync/cont/stop). Both repos
     clean at unchanged commits (niklar-stocks 9549f65, niklar-handoff
     733caf5). Clean, deliberate stop — not a failure state.
+
+2026-08-07 (blocked — missing engineering-authority instruction)
+  - User requested creating ENGINEERING_AUTHORITY_PROMPT.txt from "the
+    latest engineering-authority instruction from ChatGPT" and
+    reconciling joiedevivre02/niklar-operating-engineering-system.
+    Neither is available to this session: the repo doesn't exist/isn't
+    accessible under the current credential, and the instruction text
+    itself wasn't provided or found in Drive. Documented as BLOCKED
+    rather than guessed. Still paused; no mutation made.

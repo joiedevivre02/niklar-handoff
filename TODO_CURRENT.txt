@@ -1,5 +1,31 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-07 (PAUSED — see CURRENT_HANDOFF.txt)
+Last updated: 2026-08-07 (PAUSED + BLOCKED — see CURRENT_HANDOFF.txt)
+
+BLOCKED — missing information, cannot be guessed
+------------------------------------------------------
+  - User instructed: create ENGINEERING_AUTHORITY_PROMPT.txt in this
+    repo "using the latest engineering-authority instruction from
+    ChatGPT," and read/reconcile joiedevivre02/niklar-operating-
+    engineering-system before resuming implementation.
+  - Checked: joiedevivre02/niklar-operating-engineering-system does
+    not exist / is not accessible under the current GitHub credential
+    (list_repos for "niklar" under this account returns only
+    niklar-handoff and niklar-stocks; add_repo returned not-found).
+    Also checked Drive for any matching "engineering authority"
+    document — none found.
+  - The actual text of "the latest engineering-authority instruction
+    from ChatGPT" was not included in the user's message and isn't
+    available anywhere this session can read. It cannot be
+    reconstructed or approximated — doing so would be inventing
+    canonical-adjacent authority content, which every binding rule
+    this session operates under (hard-rule commit gate, drift
+    kill-switch, "never invent evidence") forbids.
+  - Smallest input needed to unblock: (a) the verbatim
+    engineering-authority text (pasted, or a location this session can
+    read it from), and (b) clarification on the
+    niklar-operating-engineering-system repo — correct name/owner, or
+    confirmation it needs to be created first.
+  - No implementation resumed. No mutation made to niklar-stocks.
 
 PAUSED — awaiting "cont" or user input
 ------------------------------------------
