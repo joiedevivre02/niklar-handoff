@@ -1,22 +1,17 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-07 (startup control handshake — session PAUSED)
+Last updated: 2026-08-07 (autonomous session RESUMED after handshake ack)
 Maintained by: Claude, working in the private niklar-stocks environment
 
 STATUS
 ------
-SESSION PAUSED pending ChatGPT acknowledgement. See CLAUDE_STATUS.txt
-in this repo for the full mandatory startup control handshake
-(NIKLAR_HARD_RULE_COMMIT_GATE compliance, drift check result, canon
-files read, reconciliation detail). Summary: drift check PASSED, no
-unresolved canonical conflicts, no uncommitted mutations, handoff
-sanitization PASSED — but Claude has stopped and will not resume
-autonomous Niklar mutations until the user or ChatGPT (relayed by the
-user) acknowledges CLAUDE_STATUS.txt, per NIKLAR_HARD_RULE_COMMIT_GATE
-and the user's explicit instruction. This handoff reflects state after
-the FIRST completed implementation increment (below), then a pause,
-not new work. The private canonical Niklar system (Google Drive) and
-the private niklar-stocks repository remain the source of truth;
-nothing below has been promoted into Drive canon.
+RESUMED. ChatGPT independently verified CLAUDE_STATUS.txt and the user
+relayed approval ("Startup handshake APPROVED... Set SAFE TO CONTINUE:
+YES"). CLAUDE_STATUS.txt has been updated to record the acknowledgement.
+Autonomous implementation continued under the same hard rules (pre-
+commit gate + post-commit verification run and PASSED on every commit
+below; drift kill switch did not trigger). The private canonical Niklar
+system (Google Drive) and the private niklar-stocks repository remain
+the source of truth; nothing below has been promoted into Drive canon.
 
 PROJECT SUMMARY (sanitized)
 ----------------------------
@@ -86,6 +81,44 @@ THIS INCREMENT — ops/ integration (commit cac4df1 on niklar-stocks main):
     or broker connectivity were added — deliberately deferred, see
     TODO_CURRENT.txt.
 
+NEXT INCREMENT — mobile contract + PWA vertical slice
+  (commit 56dd1d2 on niklar-stocks main, after startup handshake ack):
+  - Rationale: no live-data credentials exist in this environment
+    (no PSE EDGE/Sheets/Slack access), so the orchestrator's
+    stage-handler work stays correctly blocked on the user's
+    architecture decision (see TODO_CURRENT.txt). The PWA/mobile
+    output, however, is explicit canonical product direction that
+    needs no external credentials — a thin client over already-tested
+    canonical fields, buildable and testable entirely with synthetic
+    data. That made it the next already-authorized, unblocked
+    increment.
+  - Added a mobile-facing Decision Object contract (pure structural
+    transform of existing canonical Master Database fields — no new
+    fields invented, no decision-language reconstruction, and
+    deliberately does NOT assert LIVE/CURRENT/STALE freshness since no
+    real-time feed exists here — see the module's own documentation for
+    the "don't fabricate confidence" rationale).
+  - Implemented the "Quick Review / Tactical Card" mobile view (the
+    canonical PWA priority-#2 view) as a private-access-only,
+    dependency-free static web app: installable app shell, service
+    worker that caches the shell but never the data (freshness over
+    offline availability), synthetic sample data only. Explicitly
+    private: no deployment, no public hosting, noindex/private banner
+    in the UI.
+  - Test coverage: 11 new unit tests (37/37 total suite passing).
+    Additionally validated end-to-end in a real headless browser this
+    session (used transiently for validation only, not added as a
+    project dependency): happy-path rendering, empty-response,
+    HTTP-error, retry-recovery, and malformed-response states all
+    verified working, not merely assumed. A stdlib-only HTTP smoke
+    test is wired into CI for ongoing regression coverage.
+  - Explicitly out of scope this slice (by design, not oversight): the
+    Home/Opportunity Landscape view, Daily Brief/Inbox, Watchlist, any
+    live data connection, any deployment.
+  - Pre-commit gate run and PASSED (all 10 points); post-commit diff
+    verification run and PASSED (no secrets, no real ticker-looking
+    data beyond the synthetic DEMO1/2/3 fixtures, no deploy config).
+
 DECISIONS ALREADY FROZEN
 --------------------------
 See DECISIONS_CURRENT.txt.
@@ -103,28 +136,27 @@ UNRESOLVED / BLOCKERS
 
 PENDING CANONICAL RECONCILIATION
 -----------------------------------
-  - The ops/ integration (this increment) exists only in the private
-    niklar-stocks repo. It has not been promoted into Drive canon
-    (nor should code artifacts normally live in Drive — this is
-    flagged per the recovery rule's requirement to label
-    not-yet-Drive-reconciled state explicitly, not because promotion
-    is expected here).
+  - The ops/ integration and the mobile contract/PWA slice (both this
+    session) exist only in the private niklar-stocks repo. Not
+    promoted into Drive canon (code artifacts are not expected to
+    live in Drive — flagged per the recovery rule's requirement to
+    label not-yet-Drive-reconciled state explicitly, not because
+    promotion is expected here).
   - This handoff repo's README.md authority-order/stale-canon-gate
-    section was just reconciled against
-    NIKLAR_CHATGPT_CLAUDE_HANDOFF_RECOVERY_RULE.txt in Drive (adding
-    the 4th authority tier and the 10-step gate procedure, both
-    previously summarized more briefly here).
+    section was reconciled against
+    NIKLAR_CHATGPT_CLAUDE_HANDOFF_RECOVERY_RULE.txt in Drive earlier
+    this session (adding the 4th authority tier and the 10-step gate
+    procedure).
 
 NEXT RECOMMENDED STEPS
 -------------------------
-  - IMMEDIATE: read CLAUDE_STATUS.txt and acknowledge it (per
-    NIKLAR_HARD_RULE_COMMIT_GATE's startup confirmation gate) before
-    Claude resumes any further Niklar mutations.
-  - After acknowledgement: continue with further safe, bounded
-    technical-debt/reliability increments per the stated priority
-    order (see TODO_CURRENT.txt).
-  - Architecture decision for stage-handler implementations remains
-    with the user.
+  - Continue with further safe, bounded technical-debt/reliability
+    increments per the stated priority order (see TODO_CURRENT.txt) —
+    e.g. the next PWA views (Home/Opportunity Landscape, Watchlist)
+    once there's real portfolio-level data to back them, or further
+    ops/ hardening.
+  - Architecture decision for stage-handler implementations (and, by
+    extension, a live data source for the PWA) remains with the user.
 
 FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
 --------------------------------------------------------------------------
@@ -133,4 +165,5 @@ FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
     origin)
   - Commits on main: 1f7f4d8 (initial) -> b0dd27f (.gitignore) ->
     eb0a196 (reference docs) -> 98cbf5a (merge) ->
-    cac4df1 (ops/ integration + tests + CI)
+    cac4df1 (ops/ integration + tests + CI) ->
+    56dd1d2 (mobile contract + PWA vertical slice)

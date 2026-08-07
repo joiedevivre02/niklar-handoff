@@ -67,3 +67,40 @@ NIKLAR — DECISIONS (current)
    Affected component: session operating pattern (see
    CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt)
    Status: Provisional — operating pattern, not a Niklar canonical rule.
+   Superseded in part: the scheduled-check-in mechanism from this
+   decision was replaced by the explicit ChatGPT-acknowledgement gate
+   (NIKLAR_HARD_RULE_COMMIT_GATE) once that rule was read — see
+   decisions 7-8.
+
+7) Decision: Adopt NIKLAR_HARD_RULE_COMMIT_GATE's mandatory pre-commit
+   self-audit (10-point checklist -> PASS/FAIL verdict) and post-commit
+   diff re-verification for every Niklar commit going forward this
+   session.
+   Date: 2026-08-07
+   Rationale: Explicit new canonical rule (Drive), non-negotiable,
+   applies to all coding agents. Adopted as-is.
+   Affected component: commit workflow for both niklar-stocks and
+   niklar-handoff
+   Status: Frozen (implemented; verdicts recorded in each commit
+   message from this point forward)
+
+8) Decision: Given no live-data credentials exist in this environment
+   (PSE EDGE / Sheets / Slack / market-data), prioritize the PWA
+   mobile-output vertical slice (private-access only, synthetic data)
+   as the next already-authorized, unblocked implementation increment,
+   ahead of items that require those credentials.
+   Date: 2026-08-07
+   Rationale: The orchestrator stage-handler work and any live
+   research/data acquisition genuinely cannot proceed without
+   credentials this environment doesn't have and a user architecture
+   decision already correctly held open (see TODO_CURRENT.txt). The
+   PWA, by contrast, is explicit "core product direction" canon that
+   needs no external credentials — it's a thin client over already-
+   tested canonical fields. Matches the stated priority order
+   (complete/stabilize already-intended work; no speculative new
+   scope) since the PWA itself, not its eventual live data source, is
+   the already-authorized item.
+   Affected component: niklar-stocks/pwa/, niklar-stocks/ops/mobile_contract.py
+   Status: Frozen (implemented, one vertical slice) — PENDING
+   CANONICAL RECONCILIATION (private-repo-only code artifact, same
+   flag rationale as decision 1/ops integration).

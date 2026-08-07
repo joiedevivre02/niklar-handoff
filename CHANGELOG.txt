@@ -44,3 +44,27 @@ NIKLAR-HANDOFF — CHANGELOG
   - Cancelled a previously-scheduled auto-resume check-in (no longer
     appropriate now that resumption requires explicit acknowledgement
     rather than a timer).
+
+2026-08-07 (handshake re-published in exact required field format)
+  - Re-verified all three governing Drive canon files unchanged; both
+    repos still clean at the same commits. Re-published
+    CLAUDE_STATUS.txt using the exact field labels/order requested,
+    adding PUBLIC HANDOFF SANITIZATION and UNCOMMITTED MUTATIONS
+    PRESENT as distinct top-level fields. No implementation mutation.
+
+2026-08-07 (ChatGPT acknowledgement received — session resumed)
+  - User relayed: "ChatGPT independently verified CLAUDE_STATUS.txt.
+    Startup handshake APPROVED." Updated CLAUDE_STATUS.txt:
+    SAFE TO CONTINUE -> YES. Resumed autonomous implementation with
+    the pre-commit/post-commit gate active per commit.
+  - niklar-stocks: added ops/mobile_contract.py (mobile Decision
+    Object contract, pure structural transform, no fabricated
+    freshness) and pwa/ (private-access-only, dependency-free static
+    PWA implementing the Quick Review/Tactical Card view). 11 new
+    tests (37/37 total passing); validated end-to-end in a real
+    headless browser this session (transient use only, not a project
+    dependency) across happy-path, empty, error, retry, and malformed-
+    response states. Pre-commit gate PASS (10/10), post-commit
+    verification PASS. Commit 56dd1d2.
+  - Updated CURRENT_HANDOFF.txt, DECISIONS_CURRENT.txt, TODO_CURRENT.txt,
+    and this file to record the resumption and the new increment.

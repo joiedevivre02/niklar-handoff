@@ -1,12 +1,5 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-07 (overnight autonomous session, in progress)
-
-BLOCKED — AWAITING CHATGPT ACKNOWLEDGEMENT (highest priority)
-------------------------------------------------------------------
-  - Claude published the mandatory startup control handshake
-    (CLAUDE_STATUS.txt) per NIKLAR_HARD_RULE_COMMIT_GATE and is
-    stopped. No further Niklar mutations resume until the user or
-    ChatGPT (relayed by the user) acknowledges it.
+Last updated: 2026-08-07 (autonomous session RESUMED after handshake ack)
 
 AWAITING USER DECISION
 ------------------------
@@ -21,13 +14,22 @@ AWAITING USER DECISION
     environment integrates with Drive/Sheets/Slack and any market-data
     source — a material architectural + credentials decision, held for
     the user rather than guessed.
+  - Same underlying decision blocks a live data source for the PWA
+    (currently reads a static synthetic sample-data.json only).
 
 READY TO EXECUTE (safe, unblocked, no user decision required)
 ------------------------------------------------------------------
+  - Further PWA views per the canonical priority order (Home/
+    Opportunity Landscape, Daily Brief/Inbox, Watchlist), though Home/
+    Opportunity Landscape needs portfolio-level (multi-ticker) sample
+    data conventions decided first — currently only a per-ticker
+    contract exists.
   - Continue reviewing other existing Drive Operations/Shared Workflow
     artifacts for further integration-with-tests candidates, following
     the same pattern as the ops/ increment (pull verbatim, test against
-    synthetic fixtures, document, no logic changes).
+    synthetic fixtures, document, no logic changes) — none found beyond
+    what's already integrated as of this update (verified: exactly 3
+    Python files exist anywhere in Drive, all already integrated).
   - General repo technical-debt/reliability passes as safe opportunities
     are found (e.g., additional test coverage, error-handling review)
     — evaluated case by case against the priority order in the
@@ -39,13 +41,14 @@ BLOCKED
 
 VALIDATION REQUIRED
 ----------------------
-  - (none currently — the ops/ increment's own validation, the 26-test
-    suite, already ran and passed; see CURRENT_HANDOFF.txt)
+  - (none currently — see CURRENT_HANDOFF.txt for what was already run
+    and passed on both increments)
 
 COMPLETED, AWAITING CANONICAL SYNCHRONIZATION
 -------------------------------------------------
-  - ops/ integration (niklar-stocks commit cac4df1) — private-repo-only
-    code artifact; not a candidate for Drive canon promotion (code
-    doesn't belong in the Drive canon layer), but flagged per the
-    recovery rule as not yet reconciled anywhere else. No action
-    needed unless the user wants it referenced from Drive.
+  - ops/ integration (niklar-stocks commit cac4df1) and mobile
+    contract + PWA slice (commit 56dd1d2) — private-repo-only code
+    artifacts; not candidates for Drive canon promotion (code doesn't
+    belong in the Drive canon layer), but flagged per the recovery
+    rule as not yet reconciled anywhere else. No action needed unless
+    the user wants either referenced from Drive.
