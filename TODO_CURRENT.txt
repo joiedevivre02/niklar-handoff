@@ -19,11 +19,12 @@ AWAITING USER DECISION
 
 READY TO EXECUTE (safe, unblocked, no user decision required)
 ------------------------------------------------------------------
-  - PWA MVP (priorities #1 Home/Opportunity Landscape + #2 Quick
-    Review) now both implemented (niklar-stocks commit aae6fea).
-    Remaining PWA views per canonical priority order: Daily Brief/
-    Inbox, Watchlist. Also: navigation linking a landscape row to its
-    matching tactical card (currently two independent lists).
+  - PWA MVP (priorities #1+#2) implemented and stabilized: both views
+    plus cross-section tap-navigation between them (commit 3a66e90).
+    Remaining PWA views per canonical priority order: Watchlist. Daily
+    Brief/Inbox deferred — no existing canonical field cleanly maps to
+    an "alert/notification" concept; would need new semantics, so
+    treat as its own decision rather than assuming a shape.
   - Continue reviewing other existing Drive Operations/Shared Workflow
     artifacts for further integration-with-tests candidates, following
     the same pattern as the ops/ increment (pull verbatim, test against
@@ -47,8 +48,9 @@ VALIDATION REQUIRED
 COMPLETED, AWAITING CANONICAL SYNCHRONIZATION
 -------------------------------------------------
   - ops/ integration (cac4df1), mobile contract + PWA slice (56dd1d2),
-    Opportunity Landscape view (aae6fea) — private-repo-only code
-    artifacts; not candidates for Drive canon promotion (code doesn't
-    belong in the Drive canon layer), but flagged per the recovery
-    rule as not yet reconciled anywhere else. No action needed unless
-    the user wants any referenced from Drive.
+    Opportunity Landscape view (aae6fea), cross-section navigation
+    (3a66e90) — private-repo-only code artifacts; not candidates for
+    Drive canon promotion (code doesn't belong in the Drive canon
+    layer), but flagged per the recovery rule as not yet reconciled
+    anywhere else. No action needed unless the user wants any
+    referenced from Drive.

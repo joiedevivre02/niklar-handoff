@@ -4,23 +4,22 @@ Maintained by: Claude, working in the private niklar-stocks environment
 
 LATEST DELTA (this update)
 ------------------------------
-niklar-stocks commit aae6fea: added the Home / Opportunity Landscape
-mobile view (PWA priority #1) — ops/mobile_contract.py gained
-to_opportunity_card()/build_opportunity_landscape() (condensed
-multi-ticker rows over existing schema fields; deliberately never
-sorts/ranks — that's canonical decision output this environment can't
-compute). pwa/ restructured into two independent sections (Opportunity
-Landscape + the existing Quick Review) so one section's failure can't
-break the other. 10 new tests (47/47 suite passing); re-validated in a
-real browser (order-preservation and failure-isolation both proven).
-Pre-commit gate PASS (10/10), post-commit verification PASS. Full
-detail below under "ops/ + PWA history."
-No blockers, no drift, nothing awaiting reconciliation beyond the
-existing PENDING CANONICAL RECONCILIATION flag on all private-repo
-code artifacts (unchanged rationale — see DECISIONS_CURRENT.txt).
-Next action: continue with further safe increments (see
-TODO_CURRENT.txt) — same architecture-decision item as before remains
-the only thing held for the user.
+niklar-stocks commit 3a66e90: cross-section navigation — tapping (or
+Tab+Enter on) an Opportunity Landscape row now scrolls to and
+highlights its matching Tactical Card by ticker (live DOM lookup at
+click time); shows an inline "not loaded" message instead of doing
+nothing when no match exists. Pure ticker-string matching, no
+scoring/decision logic. Verified in a real browser: found-match nav,
+missing-match fallback, and keyboard access all confirmed. Existing 47
+tests + smoke test unaffected. Gate PASS/PASS.
+This stabilizes the MVP built in the prior delta (aae6fea, Opportunity
+Landscape view — see "ops/ + PWA history" below for that detail)
+rather than adding new scope.
+No blockers, no drift, nothing new pending beyond the existing PENDING
+CANONICAL RECONCILIATION flag on private-repo code artifacts (see
+DECISIONS_CURRENT.txt). Next action: further safe increments (see
+TODO_CURRENT.txt) — same architecture-decision item remains the only
+thing held for the user.
 
 STATUS
 ------
@@ -187,4 +186,5 @@ FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
     eb0a196 (reference docs) -> 98cbf5a (merge) ->
     cac4df1 (ops/ integration + tests + CI) ->
     56dd1d2 (mobile contract + PWA vertical slice) ->
-    aae6fea (Opportunity Landscape view)
+    aae6fea (Opportunity Landscape view) ->
+    3a66e90 (cross-section navigation)

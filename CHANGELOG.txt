@@ -82,3 +82,10 @@ NIKLAR-HANDOFF — CHANGELOG
     new tests (47/47 suite), re-validated in a real browser (order
     preservation + section-failure isolation both proven). Gate
     PASS/PASS. No blockers, no drift.
+
+2026-08-07 (cross-section navigation — niklar-stocks commit 3a66e90)
+  - Stabilized the MVP: tap/keyboard navigation from an Opportunity row
+    to its matching Tactical Card (or an inline "not loaded" message).
+    Pure UI wiring, no scoring logic. Real-browser verified. 47/47
+    tests + smoke test unaffected. Gate PASS/PASS. No blockers, no
+    drift.
