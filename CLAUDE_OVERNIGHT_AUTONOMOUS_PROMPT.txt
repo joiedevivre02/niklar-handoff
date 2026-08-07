@@ -97,6 +97,29 @@ push appropriate commits, synchronize authorized canonical changes,
 sanitize and refresh the public handoff, and state the exact next
 action for ChatGPT or Claude.
 
+"SYNC" KEYWORD PROTOCOL (added 2026-08-07, second session)
+--------------------------------------------------------------
+The user established a standing coordination keyword: "sync" is the
+Niklar ChatGPT <-> Claude coordination trigger. Verbatim intent:
+
+  When the user says "sync" to Claude: immediately refresh the
+  sanitized niklar-handoff with latest completed state, commit/
+  checkpoint, gate results, blockers, pending reconciliation, and
+  exact next action. Do NOT stop autonomous work merely because a
+  sync was requested, unless a hard-rule/drift condition independently
+  requires stopping. ChatGPT will independently read the handoff when
+  the user says sync on their side. Keep the handoff concise and
+  delta-oriented to minimize token use. All existing canonical,
+  privacy, commit-gate, and sanitization rules remain binding on every
+  sync refresh exactly as on any other commit.
+
+Operating notes: a "sync" refresh is a handoff-doc update like any
+other — it still goes through sanitization and (for this session) the
+commit-gate discipline, but should be the smallest accurate delta
+against the current state rather than a full rewrite, per the user's
+explicit token-efficiency instruction here. "Sync" pauses nothing;
+treat it as "checkpoint now," not "stop and wait."
+
 OPERATOR NOTES — HOW THIS WAS ACTUALLY CARRIED OUT
 ------------------------------------------------------
 Recorded for the next agent's calibration, not as new canon:

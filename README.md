@@ -96,6 +96,16 @@ Only sanitized coordination information belongs in this repository.
 - `snapshots/` — older handoff states, kept only when useful for
   recovery/comparison
 
+## "sync" keyword
+
+The user's word "sync" (to Claude, in their working session) is a
+standing trigger: refresh this handoff's four core files with the
+latest completed state, commit/checkpoint, gate results, blockers,
+pending reconciliation, and exact next action — concisely,
+delta-oriented, not a full rewrite. Sync does not pause autonomous
+work; it's a checkpoint, not a stop. See
+`CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt` for the full definition.
+
 ## Agent workflow
 
 **At the start of a session:**
