@@ -20,6 +20,14 @@ outside the Niklar authority chain entirely -- it executes existing
 test/lint/build commands and talks to the Gemini API over stdlib
 `urllib`; it contains no trading, scoring, or canonical business logic.
 
+**Revision note (RESPONSE_SEQ 2)**: an earlier version of this package
+included the full 207-line `gemini_client.py` as context. Per ChatGPT's
+follow-up ("keep it minimal... exclude broad source snapshots," Drive
+sync doc `RESPONSE_SEQ: 2`), trimmed to just the one function the fix
+touches (`diagnose()`, in full, so all four `except` clauses are
+visible together) -- see "Minimal context" below. The diff and new
+test file sections are unchanged.
+
 ## Commit message (verbatim)
 
 ```
@@ -348,119 +356,21 @@ if __name__ == "__main__":
     unittest.main()
 ```
 
-## Full file for context (post-fix): `scripts/ai_qa/gemini_client.py`
+## Minimal context: the full `diagnose()` function (post-fix)
 
-Reproduced in full (not just the diff) since the finding concerns
-exception-handling flow across the whole function -- useful to see the
-new `except` clause in place alongside the three it sits next to.
+Trimmed per ChatGPT's explicit "keep it minimal... exclude broad source
+snapshots" instruction (Drive sync doc RESPONSE_SEQ 2) -- this replaces
+an earlier version of this package that included the entire 207-line
+file. Below is only the one function the fix touches, in full, so all
+four `except` clauses (including the new one) are visible together --
+the diff's default 3-line context window doesn't show the `HTTPError`
+clause alongside the new one. Omitted as not relevant to this specific
+fix: module docstring, imports, the `_OFF_LIMITS`/`_SYSTEM_INSTRUCTION`/
+`_RESPONSE_SCHEMA` constants, and the `Diagnosis`/`GeminiError` class
+definitions (all unchanged by this commit, already visible in the diff
+context above for the parts that matter).
 
 ```python
-"""Thin REST client for Gemini failure diagnosis.
-
-Ported from gemini-client.js in joiedevivre02/journey-passport (same
-commit noted in config.py) -- a single POST doesn't justify a new SDK
-dependency there, and the same is true here: this uses `urllib.request`
-(stdlib), matching how pwa/smoke_test.py already talks HTTP elsewhere in
-this repo for the same "stay stdlib-only" reason.
-
-Diagnosis-only, by construction: the response schema has no field that
-could cause a source edit, and the caller (run.py) never treats a
-response from here as anything but text for the report. This module
-never decides PASS/FAIL -- that stays purely a function of the
-deterministic steps' exit codes, in run.py.
-
-Differences from a literal port of the Node client (deliberate, not
-oversights -- see README.md "Python-specific correctness fixes"):
- - `urllib.request` raises `urllib.error.HTTPError` on 4xx/5xx instead of
-   resolving normally the way `fetch` does; caught explicitly here.
- - The response body of any error (including the redacted body of an
-   HTTPError) is passed through `redact.sanitize_output` before it can
-   ever reach the caller -- an unsanitized third-party string is exactly
-   the kind of hole this repo's discipline doesn't allow.
- - `finishReason: MAX_TOKENS` (truncated JSON) and `promptFeedback.
-   blockReason` (zero candidates) are both handled as diagnosis failures,
-   not exceptions -- never an unhandled traceback.
-"""
-from __future__ import annotations
-
-import http.client
-import json
-import urllib.error
-import urllib.request
-from dataclasses import dataclass
-
-from . import config
-from .redact import sanitize_output
-
-# The off-limits list is Niklar's own -- NOT a find-replace of the source
-# pattern's product-specific list. If a failure touches any of these,
-# Gemini must return CLAUDE_REQUIRED rather than attempt a diagnosis.
-_OFF_LIMITS = (
-    "canonical Niklar trading logic",
-    "scoring rules",
-    "price-action rules",
-    "entry logic",
-    "invalidation logic",
-    "support/resistance logic",
-    "Decision Object semantics",
-    "research hierarchy",
-    "market-state classification",
-    "database semantics",
-    "security/privacy boundaries",
-    "private deployment rules",
-)
-
-_SYSTEM_INSTRUCTION = (
-    "You are a first-pass CI failure classifier for a private, non-public "
-    "trading-research repository. You may diagnose mechanical problems "
-    "only: test failures, lint failures, type errors, build failures, "
-    "component-rendering failures, mobile/PWA regression failures, "
-    "stale/partial/unknown-state rendering issues, and other mechanical "
-    "UI/test problems. You must NOT propose, imply, or reinterpret any "
-    "change to: " + "; ".join(_OFF_LIMITS) + ". You never edit files and "
-    "your output never determines pass/fail -- you only classify and "
-    "suggest, for a human or a separate coding agent to act on. If the "
-    "failure touches any off-limits area above, OR you are not confident "
-    "it is purely mechanical, you MUST return status CLAUDE_REQUIRED "
-    "rather than attempt a diagnosis. If you cannot classify the failure "
-    "at all, return UNKNOWN. Because this repository's own test suite "
-    "specifically validates trading-logic renderers, schema locks, and "
-    "publication rules, treat any failure inside ops/ or a test file that "
-    "exercises ops/ as CLAUDE_REQUIRED by default unless the failure is "
-    "obviously a trivial, non-semantic issue (e.g. an import error, a "
-    "syntax error, a missing test fixture)."
-)
-
-_RESPONSE_SCHEMA = {
-    "type": "OBJECT",
-    "properties": {
-        "status": {"type": "STRING", "enum": ["MECHANICAL_FIX", "CLAUDE_REQUIRED", "UNKNOWN"]},
-        "summary": {"type": "STRING"},
-        "likely_cause": {"type": "STRING"},
-        "affected_files": {"type": "ARRAY", "items": {"type": "STRING"}},
-        "recommended_fix": {"type": "STRING"},
-        "confidence": {"type": "STRING", "enum": ["HIGH", "MEDIUM", "LOW"]},
-    },
-    "required": ["status", "summary", "likely_cause", "affected_files", "recommended_fix", "confidence"],
-}
-
-
-@dataclass(frozen=True)
-class Diagnosis:
-    status: str
-    summary: str
-    likely_cause: str
-    affected_files: list[str]
-    recommended_fix: str
-    confidence: str
-
-
-class GeminiError(Exception):
-    """Raised for any Gemini-side problem. Message is always already
-    secret-free -- callers may include str(exc) directly in a report.
-    """
-
-
 def diagnose(step_label: str, command: str, exit_code: int, diagnostic_payload: str) -> Diagnosis:
     """Sends only the minimum necessary diagnostic context: the failing
     step's label/command/exit code plus `diagnostic_payload` (already
@@ -563,6 +473,7 @@ def diagnose(step_label: str, command: str, exit_code: int, diagnostic_payload: 
     except KeyError as exc:
         raise GeminiError(f"Gemini's structured output was missing a required field: {exc}") from None
 ```
+
 
 ## Independent review checklist (from the frozen pattern)
 

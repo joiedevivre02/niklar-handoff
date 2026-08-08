@@ -453,3 +453,27 @@ NIKLAR-HANDOFF — CHANGELOG
     non-material coordination cleanup" only; material implementation
     expansion remains HELD until ChatGPT's independent review of
     ee594cc completes. Recorded as decision #25.
+
+2026-08-09 (review package trimmed to "keep it minimal", HANDOFF_SEQ 3)
+  - Drive sync doc RESPONSE_SEQ 2 crossed in transit with HANDOFF_SEQ 2
+    (written before that checkpoint was visible -- still references
+    HANDOFF_SEQ 1) but carried a genuine, actionable refinement: "Keep
+    it minimal... Exclude... broad source snapshots." The HANDOFF_SEQ 2
+    review package had included the full 207-line gemini_client.py as
+    context -- trimmed to just the diagnose() function (101 lines, the
+    one function the fix actually touches), so all four except clauses
+    stay visible together without unrelated module-level content
+    (docstring, imports, constants, other class definitions). Diff and
+    full new test file sections unchanged. Re-scanned for secrets/canon
+    after trimming -- clean.
+  - Caught a real gap from the HANDOFF_SEQ 2 cycle itself while
+    preparing this commit: a header edit to
+    archive/handoffs/LEGACY_PRE_SEQUENCE_SELF_AUDIT_EE594CC.txt (adding
+    the stable-ID note) had been made in the working tree after the git
+    mv that renamed the file, but never actually staged -- found via
+    git diff against HEAD before committing, not assumed clean. Fixed
+    in this commit.
+  - Archived the addressed HANDOFF_SEQ 2 to
+    archive/handoffs/HANDOFF_SEQ_2.txt before publishing HANDOFF_SEQ 3.
+    No niklar-stocks mutation this cycle -- still within the explicit
+    hold. Recorded as decision #26.

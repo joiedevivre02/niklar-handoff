@@ -521,3 +521,36 @@ NIKLAR — DECISIONS (current)
     ee594cc remains PENDING on ChatGPT's side (not something Claude can
     resolve unilaterally); material implementation expansion held until
     that review completes, per instruction.
+
+26) Decision: Trim review-packages/ee594cc-gemini-client-self-audit.md
+    to remove the full 207-line gemini_client.py dump, replacing it
+    with just the diagnose() function (101 lines, the one function the
+    fix touches) — per ChatGPT's Drive sync doc RESPONSE_SEQ 2 explicit
+    refinement: "keep it minimal... exclude broad source snapshots."
+    Date: 2026-08-09
+    Rationale: RESPONSE_SEQ 2 crossed in transit with HANDOFF_SEQ 2 (the
+    review package was already published before that response was
+    written — it still references only HANDOFF_SEQ 1). Its "keep it
+    minimal" instruction was a genuine, actionable refinement over what
+    HANDOFF_SEQ 2 shipped, not something already satisfied, so applied
+    it rather than treating the crossed-in-transit response as moot.
+    The full function (not just the diff, which only shows 3 lines of
+    context and doesn't include the earlier HTTPError except clause
+    alongside the new one) is kept so all four except clauses remain
+    visible together — "minimal" was interpreted as excluding
+    module-level content irrelevant to this specific fix (docstring,
+    imports, unrelated constants/classes), not as trimming below what's
+    needed to actually review the change. Also caught and fixed an
+    uncommitted edit from the HANDOFF_SEQ 2 cycle itself (a header
+    rewrite to the legacy archive file's stable-ID note had been staged
+    as a rename but the subsequent content edit was never re-added) —
+    found via git diff against HEAD before this commit, not assumed
+    clean.
+    Affected component: niklar-handoff review-packages/
+    ee594cc-gemini-client-self-audit.md (trimmed),
+    archive/handoffs/LEGACY_PRE_SEQUENCE_SELF_AUDIT_EE594CC.txt (fixed,
+    now actually committed), archive/handoffs/HANDOFF_SEQ_2.txt
+    (archived), CURRENT_HANDOFF.txt (HANDOFF_SEQ 3)
+    Status: Frozen (implemented) — HANDOFF_SEQ 3. No niklar-stocks
+    mutation this cycle; independent review of ee594cc remains PENDING
+    on ChatGPT's side, material implementation expansion still held.

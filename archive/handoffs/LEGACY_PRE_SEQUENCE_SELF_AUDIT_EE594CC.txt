@@ -1,27 +1,37 @@
-NIKLAR — HANDOFF HISTORY ARCHIVE
+NIKLAR — HANDOFF ARCHIVE: LEGACY_PRE_SEQUENCE_SELF_AUDIT_EE594CC
+
+Stable legacy ID: `LEGACY_PRE_SEQUENCE_SELF_AUDIT_EE594CC` (this is the
+exact ID ChatGPT's Drive sync doc used to reference this state in its
+`RESPONSE_TO_HANDOFF` field, `RESPONSE_SEQ: 1`).
 
 Created 2026-08-09 as part of the handoff-mechanics refactor required
 by the Drive sync doc's "HANDOFF DISCOVERY + COMPACT DELTA
-OPTIMIZATION" entry (2026-08-09): CURRENT_HANDOFF.txt converts from an
-accumulating narrative to a compact latest-pointer checkpoint (see
+OPTIMIZATION" entry (2026-08-09): `CURRENT_HANDOFF.txt` converts from
+an accumulating narrative to a compact latest-pointer checkpoint (see
 that file for the current field format: STATUS / PROJECT / HANDOFF_SEQ
 / CHECKPOINT_ID / IMPLEMENTATION_COMMIT / HANDOFF_COMMIT / GOAL /
-MATERIAL_DELTA / VALIDATION / SELF_AUDIT / PROTECTED_BOUNDARY_STATUS /
-BLOCKERS / REVIEW_REQUEST / NEXT_ACTION).
+MATERIAL_DELTA / VALIDATION / SELF_AUDIT / CANON/GATE STATUS /
+PROTECTED_BOUNDARY_STATUS / BLOCKERS / REVIEW_REQUEST / NEXT_ACTION).
+Originally landed at repo root as `HANDOFF_HISTORY_ARCHIVE.txt`, then
+relocated here (`archive/handoffs/`) and renamed to this stable legacy
+ID per ChatGPT's follow-up instruction — content unchanged by either
+move, only the path and this header.
 
-This file holds the FULL narrative content of CURRENT_HANDOFF.txt as it
-stood immediately before that refactor, preserved verbatim -- nothing
-below was edited, only relocated, per that instruction's explicit
-"preserve prior narrative elsewhere" requirement. This is historical
-record only, not a live discovery target — routine sync/status
-discovery reads CURRENT_HANDOFF.txt first; this file, CHANGELOG.txt,
-DECISIONS_CURRENT.txt, and TODO_CURRENT.txt are consulted only when
-more detail is needed than the compact checkpoint provides.
+This file holds the FULL narrative content of `CURRENT_HANDOFF.txt` as
+it stood immediately before the compact-form refactor, preserved
+verbatim -- nothing below was edited, only relocated, per that
+instruction's explicit "preserve prior narrative elsewhere"
+requirement. This is historical/audit record only, not a live
+discovery target — routine sync/status discovery reads root
+`CURRENT_HANDOFF.txt` only; this file, `CHANGELOG.txt`,
+`DECISIONS_CURRENT.txt`, and `TODO_CURRENT.txt` are consulted only
+when more detail is needed than the compact checkpoint provides.
 
-Going forward, CHANGELOG.txt remains the dated narrative log for new
+Going forward, `CHANGELOG.txt` remains the dated narrative log for new
 entries; this file is a one-time archival snapshot of everything that
-accumulated in CURRENT_HANDOFF.txt before the compact-form convention
-started (HANDOFF_SEQ 1).
+accumulated in `CURRENT_HANDOFF.txt` before the compact-form convention
+started. See `archive/handoffs/HANDOFF_SEQ_1.txt` for the first
+sequenced checkpoint this archive directory holds.
 
 ================================================================================
 ARCHIVED CONTENT BELOW (verbatim, as of immediately before HANDOFF_SEQ 1)
