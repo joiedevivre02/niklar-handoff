@@ -1,9 +1,54 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-08 (ROUTING CLEANUP complete, 2 rounds — see
-CURRENT_HANDOFF.txt / DECISIONS_CURRENT.txt #16-17.
-ROUTING ACCEPTANCE TEST: PASS, 5/5)
+Last updated: 2026-08-08 (DONE — AI QA worker ported, disabled by
+default; niklar-stocks commit 3ffd9b0)
 
-DONE — routing cleanup, round 2 (this update)
+AWAITING USER DECISION (new)
+------------------------------
+  - Turning on Gemini escalation in niklar-stocks scripts/ai_qa/ for
+    real: add the GEMINI_API_KEY GitHub Actions secret and set
+    AI_QA_ENABLE_GEMINI=1 (secret or repo variable) when ready. The
+    worker is fully implemented, tested (incl. live against the real
+    Gemini endpoint with an invalid key), and ships inert — this repo's
+    first outbound network call/credential, deliberately not
+    self-authorized. See niklar-stocks scripts/ai_qa/README.md and
+    AGENTS.md "Held decisions."
+
+DONE — AI QA worker port (this update)
+---------------------------------------------
+  - Ported the proven Gemini QA worker pattern from
+    joiedevivre02/journey-passport (found on an unmerged branch,
+    commit bf4fb61 -- read in full before designing anything) into
+    niklar-stocks/scripts/ai_qa/. Deterministic-first, fail-fast,
+    Gemini-on-failure-only, diagnosis-only (never edits code, never
+    decides pass/fail). .github/workflows/tests.yml replaced with
+    ai-qa.yml (confirmed safe via GitHub API -- no branch protection).
+  - Found and mitigated a real risk the source pattern didn't have:
+    this repo's own test failures can leak canonical trading logic
+    verbatim (verified against the real render_preopen() case, not
+    just synthetic). New module failure_extract.py strips test-step
+    output down to test id/exception class/traceback location only --
+    zero assertion-message content, ever.
+  - Gemini escalation ships OFF by default (see AWAITING USER DECISION
+    above) -- structural, not incidental (gated on an explicit flag,
+    not just the key's presence).
+  - Full validation: unittest 81/81 (17 new), mypy 0/13 files, PWA
+    smoke unaffected, worker tested live 3 ways incl. against the real
+    Gemini endpoint. Gate PASS/PASS.
+
+DONE — cross-repo reference fix (prior update)
+--------------------------------------------------
+  - After the round-2 routing cleanup renamed ENGINEERING_AUTHORITY_
+    PROMPT.txt, grepped niklar-stocks for the old filename and found
+    2 genuinely stale references (AGENTS.md x2,
+    docs/app/NIKLAR_APP_SYSTEM_MAP.md). Fixed both with a short
+    "archived, not live" clarifying note. Full validation re-run
+    (unittest 64/64, smoke test PASS, mypy 0/6). Gate PASS/PASS.
+  - Also recorded a new user-facing convention (not a protocol
+    change): Claude tells the user "sync to chatgpt" whenever
+    publishing a checkpoint meant for ChatGPT to review. See
+    CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt.
+
+DONE — routing cleanup, round 2 (prior update)
 --------------------------------------------------
   - A more specific follow-up "REQUIRED CLAUDE GITHUB-SIDE CLEANUP"
     instruction (Drive sync doc) required: renaming

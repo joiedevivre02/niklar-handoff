@@ -288,3 +288,64 @@ NIKLAR — DECISIONS (current)
     (see README.md "Communication channel"), self-checked before
     declaring PASS per the instruction's own "do not proceed past an
     unresolved routing ambiguity" requirement.
+
+18) Decision: Port the Gemini QA worker pattern from
+    joiedevivre02/journey-passport (unmerged branch
+    claude/automated-qa-gemini-worker-ctk7s1, commit bf4fb61) into
+    niklar-stocks/scripts/ai_qa/ — same architecture (deterministic
+    checks first, fail-fast; Gemini only on failure, diagnosis-only,
+    never decides pass/fail or edits code), adapted to this repo's
+    actual pure-Python stack rather than redesigned. Replace
+    .github/workflows/tests.yml with ai-qa.yml (one workflow, not two
+    that could disagree) after confirming via the GitHub API that main
+    has no branch protection/required checks depending on the old name.
+    Date: 2026-08-08
+    Rationale: Explicit user request. The source pattern didn't exist
+    where first expected (niklar-operating-engineering-system,
+    exhaustively checked) nor on journey-passport's default branch —
+    found on an unmerged branch instead; every file in that commit was
+    read in full before any design work, and a Plan-review pass tested
+    the design against niklar-stocks's real commands/history/gitignore
+    state before implementation, per the standing "never invent
+    evidence" discipline this session has run under throughout.
+    Affected component: niklar-stocks scripts/ai_qa/ (new),
+    .github/workflows/ (tests.yml -> ai-qa.yml), pyproject.toml (mypy
+    scope), 5 doc files with stale CI references (commit 3ffd9b0)
+    Status: Frozen (implemented) — unittest 81/81, mypy 0/13, PWA
+    smoke unaffected, worker verified live 3 ways including against
+    the real Gemini endpoint. See decision #19 for the safety finding
+    this port required acting on.
+
+19) Decision: Ship Gemini escalation DISABLED BY DEFAULT in
+    scripts/ai_qa/ — requires both AI_QA_ENABLE_GEMINI=1 and a real
+    GEMINI_API_KEY, not the key's presence alone. Add
+    failure_extract.py (new module, not in the source pattern) so the
+    `test` step's diagnostic payload NEVER includes any unittest
+    assertion-message content, in any amount, for any failure — only
+    test id / exception class / traceback file-line-function.
+    Date: 2026-08-08
+    Rationale: A real, verified-not-assumed risk the source pattern
+    doesn't have: journey-passport's secret redaction only catches
+    credential-shaped text because its own test failures never contain
+    product prose. This repo's do — a render_preopen assertion failure
+    contains the complete canonical IF-THEN entry/breakout/invalidation
+    ruleset verbatim; publication-validator failures surface all 31
+    canonical section names; schema-lock failures surface
+    FROZEN_SCHEMA's 63 column names. Verified against the REAL case
+    (not just a synthetic one): a temporary deliberate failure was
+    introduced against the actual render_preopen(), the real leak was
+    captured, run through failure_extract.py, and confirmed to produce
+    zero canon fragments in the resulting payload (see
+    tests/test_ai_qa_failure_extract.py's
+    ExtractRealCanonLeakCaseTests) — then reverted, suite reconfirmed
+    clean. Turning Gemini on for real is this repo's first outbound
+    network call and first credential; per AGENTS.md's standing "held
+    decisions" rule, that's left for the user rather than
+    self-authorized as part of landing the tooling.
+    Affected component: niklar-stocks scripts/ai_qa/config.py
+    (gemini_enabled() gate), failure_extract.py (new),
+    AGENTS.md (new held-decision entry)
+    Status: Frozen (implemented) — PENDING CANONICAL RECONCILIATION
+    (private-repo-only code artifact, same flag rationale as prior
+    private-repo decisions). AWAITING USER DECISION: enabling Gemini
+    for real (see TODO_CURRENT.txt).

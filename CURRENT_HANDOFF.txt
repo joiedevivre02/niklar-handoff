@@ -1,11 +1,100 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-08 (ROUTING CLEANUP round 2 complete — ROUTING
-ACCEPTANCE TEST: PASS, 5/5. No niklar-stocks work this update.)
+Last updated: 2026-08-08 (repo-local AI QA worker ported and landed,
+disabled by default; niklar-stocks commit 3ffd9b0)
 Maintained by: Claude, working in the private niklar-stocks environment
 
 LATEST DELTA (this update)
 ------------------------------
-"Cont" -> checked the Drive sync doc first (per the process
+User asked to port an "already-proven, low-cost Gemini QA worker
+pattern" from a sibling project (joiedevivre02/journey-passport) into
+niklar-stocks: deterministic checks first, Gemini only on failure
+(diagnosis-only, never decides pass/fail or edits code), Claude only
+when Gemini says CLAUDE_REQUIRED or the issue touches canonical logic.
+
+The pattern did not exist where first expected (checked
+niklar-operating-engineering-system exhaustively — genuinely absent,
+confirming that repo really is the different, unrelated product it was
+already established to be) nor on journey-passport's default branch —
+found instead on an unmerged branch there
+(claude/automated-qa-gemini-worker-ctk7s1, commit bf4fb61), previously
+built and verified. Read every file in that commit in full before
+designing anything; a Plan-review pass then tested the design against
+niklar-stocks's actual commands/git-history/.gitignore state before
+implementation began, catching a serious finding: this repo's own test
+failures can contain canonical Niklar trading logic verbatim (a
+render_preopen assertion failure includes the full IF-THEN entry/
+breakout/invalidation ruleset; publication-validator failures surface
+all 31 canonical section names; schema-lock failures surface
+FROZEN_SCHEMA's 63 column names) — the source pattern's secret
+redaction only catches credential-shaped text and was never designed
+to catch this, because the source repo's own failures don't contain it.
+
+Built scripts/ai_qa/ (run.py orchestrator, config.py, redact.py ported
+from the source, gemini_client.py via stdlib urllib — no new
+dependency, and a NEW module, failure_extract.py, not in the source
+pattern, that extracts only structurally-safe facts — test id,
+exception class, traceback file/line/function, never the assertion
+message body — from unittest output for the test step specifically).
+Verified the mitigation against the REAL leaking case, not just a
+synthetic one: introduced a temporary deliberate failure against the
+actual render_preopen() renderer, confirmed it leaks the full canonical
+ruleset in raw unittest output, ran it through the extractor, confirmed
+zero canon fragments in the resulting payload, reverted cleanly.
+
+Given that finding, Gemini escalation ships DISABLED BY DEFAULT (needs
+both AI_QA_ENABLE_GEMINI=1 and a real GEMINI_API_KEY, not the key alone)
+— this repo's first outbound network call and first credential, so
+turning it on for real is recorded as a new held-decision in AGENTS.md
+rather than self-authorized as part of landing the tooling.
+
+.github/workflows/tests.yml replaced with ai-qa.yml (confirmed via the
+GitHub API that main has no branch protection/required checks, so this
+was safe) — avoids two workflows that could disagree. Fixed every
+stale tests.yml/CI reference this created (5 locations: README.md,
+ops/README.md, AGENTS.md, 2x in docs/app/NIKLAR_MOBILE_ARCHITECTURE.md).
+docs/app/NIKLAR_APP_SYSTEM_MAP.md gained one sentence noting scripts/
+sits outside the 5-layer authority chain entirely.
+
+Full validation: unittest 81/81 PASS (up from 64, 17 new tests), mypy
+0 issues/13 files (scripts/ added to scope), PWA smoke test PASS
+(unaffected), scripts/ai_qa/run.py tested live 3 ways (clean pass/zero
+network calls; deliberate-failure/Gemini-disabled/clean degrade;
+deliberate-failure/Gemini-enabled-with-invalid-key against the REAL
+Gemini endpoint/clean HTTP 400 handling) — all reverted cleanly.
+Gate PASS/PASS. niklar-stocks main: 4bb9543 -> 3ffd9b0.
+
+No trading/scoring logic touched or duplicated; no client/worker code
+makes an autonomous trading decision; private-only rule unaffected (no
+deployment/hosting change). ENGINEERING AUTHORITY CHECK: N/A this
+cycle (task came directly from the user, not the Drive ChatGPT sync
+channel) — reconciled anyway against existing AGENTS.md hard rules and
+the scope-firewall precedent from niklar-operating-engineering-system;
+no conflict found.
+
+PRIOR DELTA — routing cleanup round 2, cross-repo reference fix
+------------------------------------------------------------------------
+"Cont." User also added a standing instruction: whenever Claude
+publishes a checkpoint meant for ChatGPT to review, tell the user
+"sync to chatgpt" as an explicit flag (recorded in
+CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt — user-facing courtesy signal,
+not a protocol change).
+Checked the Drive sync doc first (no new delta since the round-2
+routing cleanup). Then: following that cleanup's file rename, grepped
+niklar-stocks for any reference to the old filename
+(ENGINEERING_AUTHORITY_PROMPT.txt) and found two genuinely stale ones
+(AGENTS.md x2, docs/app/NIKLAR_APP_SYSTEM_MAP.md) — updated both to
+the new filename with a short "archived, not live" clarifying note.
+Confirmed the two remaining niklar-handoff references elsewhere
+(README.md repo link; NIKLAR_APP_CONTRACT.md's DECISIONS_CURRENT.txt
+#11 reference) are unaffected. Full validation: unittest 64/64, smoke
+test PASS, mypy 0/6. Gate PASS/PASS. niklar-stocks main:
+ac7e334 -> 4bb9543.
+ROUTING ACCEPTANCE TEST: still PASS (5/5) — this update only added a
+consistency fix on the niklar-stocks side, didn't touch the answers.
+
+PRIOR DELTA — routing cleanup round 2 (niklar-handoff ae533f9)
+--------------------------------------------------------------------
+Prior "cont" -> checked the Drive sync doc first (per the process
 correction) and found a more specific follow-up: "REQUIRED CLAUDE
 GITHUB-SIDE CLEANUP." Completed all required actions: renamed
 ENGINEERING_AUTHORITY_PROMPT.txt -> ARCHIVED_ENGINEERING_AUTHORITY_
@@ -359,4 +448,7 @@ FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
     95cb051 (Watchlist roster view) -> 9549f65 (mypy CI validation) ->
     ab74109 (NEXT PHASE architecture package: docs/app/ + AGENTS.md) ->
     4581e59 (mypy CI extended to pwa/smoke_test.py) ->
-    ac7e334 (closed 2 real test-coverage gaps, 55->64 tests)
+    ac7e334 (closed 2 real test-coverage gaps, 55->64 tests) ->
+    4bb9543 (fixed stale niklar-handoff filename references) ->
+    3ffd9b0 (repo-local AI QA worker ported, disabled by default,
+    64->81 tests)

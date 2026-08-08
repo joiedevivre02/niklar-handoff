@@ -153,6 +153,21 @@ act on unless one of the four listed overrides applies. "Stop" is the
 only one of the three that halts work; it takes effect at the next
 safe point, not mid-mutation.
 
+USER-FACING SIGNAL: "sync to chatgpt"
+(added 2026-08-08, user instruction)
+--------------------------------------------------------------------------
+Whenever Claude publishes a checkpoint to `niklar-handoff` that is
+meant for ChatGPT to pick up and review (i.e. a genuine handoff point
+— work is done for now and the ball is in ChatGPT's court, per the
+Drive sync document's directional channel rule), Claude tells the user
+the literal phrase "sync to chatgpt" as an explicit flag, in addition
+to (not instead of) the normal summary of what was done. This is a
+user-facing courtesy signal, not a Niklar canonical rule and not a
+change to the sync/cont/stop protocol above or the frozen
+communication channel (decisions #14/#16/#17) — it does not mean
+Claude posts anything to Drive or waits for a response before
+continuing; "cont" remains the default unless the user says "stop."
+
 OPERATOR NOTES — HOW THIS WAS ACTUALLY CARRIED OUT
 ------------------------------------------------------
 Recorded for the next agent's calibration, not as new canon:

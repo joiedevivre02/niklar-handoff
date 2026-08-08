@@ -262,3 +262,39 @@ NIKLAR-HANDOFF — CHANGELOG
     needed). Recorded as decision #17. ROUTING ACCEPTANCE TEST: PASS
     (5/5, self-verified against actual README.md content). Gate
     PASS/PASS. Documentation-only; no niklar-stocks mutation.
+
+2026-08-08 (cont — fixed stale niklar-handoff filename references)
+  - niklar-stocks commit 4bb9543: after the round-2 routing cleanup
+    renamed ENGINEERING_AUTHORITY_PROMPT.txt, grepped niklar-stocks for
+    the old filename and fixed 2 genuinely stale references (AGENTS.md
+    x2, docs/app/NIKLAR_APP_SYSTEM_MAP.md). Full validation re-run
+    (unittest 64/64, smoke test PASS, mypy 0/6). Gate PASS/PASS.
+
+2026-08-08 (AI QA worker ported from journey-passport, disabled by default)
+  - niklar-stocks commit 3ffd9b0: ported the proven Gemini QA worker
+    pattern from joiedevivre02/journey-passport (found on an unmerged
+    branch, commit bf4fb61, after it turned out not to exist on that
+    repo's default branch or in niklar-operating-engineering-system,
+    where it was first, incorrectly, expected — read in full before
+    designing anything). Deterministic-first (test/typecheck/smoke),
+    fail-fast, Gemini-on-failure-only, diagnosis-only. Replaced
+    .github/workflows/tests.yml with ai-qa.yml (confirmed safe via
+    GitHub API — no branch protection on main); fixed 5 stale
+    tests.yml/CI references this created across README.md,
+    ops/README.md, AGENTS.md, and NIKLAR_MOBILE_ARCHITECTURE.md.
+  - Found and mitigated a real risk the source pattern doesn't have:
+    this repo's test failures can leak canonical trading logic verbatim
+    (verified against the real render_preopen() case). New module
+    failure_extract.py strips the test step's diagnostic payload to
+    test id/exception class/traceback location only — zero assertion-
+    message content, for any test failure, ever.
+  - Gemini escalation ships OFF by default — requires both
+    AI_QA_ENABLE_GEMINI=1 and a real GEMINI_API_KEY. This repo's first
+    outbound network call/credential; enabling it for real is recorded
+    as AWAITING USER DECISION (TODO_CURRENT.txt) rather than
+    self-authorized. Recorded as decisions #18-19.
+  - Full validation: unittest 81/81 (17 new tests), mypy 0/13 files,
+    PWA smoke unaffected, worker tested live 3 ways (clean pass/zero
+    network calls; failure with Gemini disabled/clean degrade; failure
+    with Gemini enabled + invalid key against the real Gemini
+    endpoint/clean HTTP 400 handling). Gate PASS/PASS.
