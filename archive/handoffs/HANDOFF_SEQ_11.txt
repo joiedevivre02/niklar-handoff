@@ -1,0 +1,99 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: HARD_GATE (Batch 3 only — Batch 1/2 remain PASS/queued, see below)
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 11
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq11-delegated-decision-protocol-readme
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 2d9ca84
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Adopt RESPONSE_SEQ 16's three-level decision-authority protocol
+(Drive sync doc, owner-approved), re-check whether it changes Batch
+3's HARD_GATE classification, and land the safe README housekeeping
+identified while doing so.
+
+MATERIAL_DELTA: Adopted the three-level protocol as-is (decision #36):
+LEVEL 1 CLAUDE_DECIDES (ordinary implementation details inside frozen
+canon/MSC/existing interfaces/security rules/current batch
+authorization — resolve directly); LEVEL 2 CHATGPT_DELEGATED_DECISION
+(a judgment call that would otherwise need the owner but is derivable
+from frozen canon and doesn't cross an OWNER_ONLY boundary — record a
+compact decision request — DECISION_ID/question/bounded options/
+Claude's recommendation/applicable canon/reversibility/deadline — in
+the pending-review queue for ChatGPT to reconcile at the next sync);
+LEVEL 3 OWNER_ONLY/HARD_GATE (product scope/behavior/UX not already
+authorized, spending/paid-service activation, privacy/security
+posture or material data-sharing boundary, credentials/account
+permissions/access grants, destructive/hard-to-reverse migration,
+trading/financial/scoring/tactical/invalidation semantics, legal/
+compliance commitments, genuinely new architecture decisions with
+material lock-in — never delegated, never silently decided). Refines
+Section 21's HARD_GATE handling, doesn't replace it.
+
+Re-checked (not assumed) Batch 3's HARD_GATE classification (decision
+#35) against this new framework: unchanged (decision #37). Its
+blocker matches two LEVEL 3 OWNER_ONLY exclusions verbatim
+("credentials/account permissions/access grants"; "genuinely new
+architecture decision with material lock-in not derivable from frozen
+canon") — neither is eligible for LEVEL 2 delegation, since only the
+owner can actually provision/grant credentials.
+
+Landed safe housekeeping under Section 21's carve-out (decision #38):
+`ops/README.md` (niklar-stocks commit 2d9ca84) now documents the two
+new Batch 1/2 modules (`niklar_state_contracts.py`,
+`niklar_normalization_policy.py` — both landed but never described)
+and refreshes stale test/mypy figures (64→148 tests, 6→15 mypy-scoped
+files). Documentation only, no code touched.
+
+VALIDATION: unittest 148/148, mypy 0/15, PWA smoke PASS — all
+unaffected by the doc-only change, re-run to confirm. Real GitHub
+Actions run 31278730314 (commit 2d9ca84) polled directly, conclusion:
+"success".
+
+SELF_AUDIT: README changes are documentation-accuracy only, LEVEL 1
+CLAUDE_DECIDES — no judgment call, no code/canon touched. Section 21's
+HARD_GATE carve-out applies cleanly (cannot compound the Batch 3
+blocker). Batch 3's re-check was a direct, mechanical application of
+RESPONSE_SEQ 16's own exclusion list — no new reasoning invented.
+
+CANON/GATE STATUS: HARD_GATE (Batch 3 only, unchanged). Batch 1
+(221020b) and Batch 2 (598b2d4) remain Frozen/PASS at their own gate
+status.
+
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
+invalidation/Decision Object logic touched. This cycle's only
+niklar-stocks change is a documentation file.
+
+PENDING_REVIEW_QUEUE (Section 21 — chronological, oldest first, unchanged this cycle):
+  1. niklar-stocks commit 598b2d4 (Batch 2) — package:
+     review-packages/598b2d4-batch2-normalization-llm-policy.md —
+     published HANDOFF_SEQ 9, not yet audited.
+  (Batch 1 original (53d2b3f) and its patch (221020b) are both already
+  PASS/closed — not carried in this queue. The README housekeeping
+  (2d9ca84) is documentation-only and not material enough to queue for
+  review.)
+
+BLOCKERS: HARD_GATE on Batch 3 — unchanged from HANDOFF_SEQ 10, now
+reconfirmed against the new three-level protocol rather than merely
+carried forward. The orchestrator stage-handler integration-
+architecture/credentials decision remains OWNER_ONLY per RESPONSE_SEQ
+16's own exclusion list.
+
+REVIEW_REQUEST: (1) Independent audit of the queued Batch 2 package
+(PENDING_REVIEW_QUEUE item 1). (2) Confirm the Batch 3 HARD_GATE
+re-check (decision #37) reads RESPONSE_SEQ 16's exclusion list
+correctly, or correct it if not.
+
+NEXT_ACTION: Awaiting either the owner's integration-architecture/
+credentials decision for Batch 3, an explicit narrowed Batch 3 scope
+that doesn't require them, or ChatGPT's audit of the queued Batch 2
+checkpoint. No LEVEL 2 CHATGPT_DELEGATED_DECISION items are currently
+queued — Batch 3's blocker is squarely LEVEL 3 OWNER_ONLY, not a
+canon-derivable judgment call. Will keep checking for safe, unrelated
+housekeeping/testing/documentation on `cont`, and report honestly if
+none is found rather than manufacture work.

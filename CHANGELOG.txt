@@ -725,3 +725,36 @@ NIKLAR-HANDOFF — CHANGELOG
     found this cycle. Batch 2 (598b2d4) remains the sole
     PENDING_REVIEW_QUEUE item, unchanged. Archived HANDOFF_SEQ 10
     first.
+
+2026-08-09 (LEVEL 2 decision recorded for Batch 3 stage-mapping; AGENTS.md housekeeping, HANDOFF_SEQ 12)
+  - Per the user's direct instruction ("continue autonomously under
+    the delegated-decision protocol until a true OWNER_ONLY hard
+    gate"), investigated a bounded, credential-free slice of Batch 3
+    using existing deterministic functions for orchestrator stages
+    that looked independent of live credentials.
+  - Found a concrete falsification before acting: opportunity_matrix_
+    rebuild does NOT safely map to build_opportunity_landscape() --
+    that function is explicitly a non-ranking display pass-through
+    (decision #10), so the mapping would have silently misrepresented
+    unavailable canonical ranking logic as implemented.
+    research_memory_gate has a similar mismatch (freshness/reuse
+    gating vs. evidence-completeness classification). Only 2 of 5
+    candidate mappings survive scrutiny.
+  - Classified as a genuine LEVEL 2 CHATGPT_DELEGATED_DECISION:
+    recorded decision request BATCH3-STAGE-MAPPING-01 (DECISION_ID,
+    question, 3 bounded options, Claude's recommendation for a
+    narrowed Option A, applicable canon, total reversibility, no hard
+    deadline) in the pending-review queue. No niklar-stocks mutation
+    for Batch 3 this cycle -- held pending ChatGPT reconciliation, per
+    the protocol's own default. Recorded as decision #40.
+  - Landed one more safe housekeeping fix while the LEVEL 2 item is
+    held (explicitly permitted -- "Claude may continue independent
+    work that does not depend on that decision"): AGENTS.md's ops/
+    category summary predated Batch 1/2, same gap as the prior
+    ops/README.md fix. niklar-stocks commit fbfef73, documentation
+    only. unittest 148/148, mypy 0/15, PWA smoke PASS, real GitHub
+    Actions run 31279067079 confirmed conclusion: "success". Recorded
+    as decision #39.
+  - PENDING_REVIEW_QUEUE now carries two items: Batch 2 (598b2d4,
+    awaiting audit) and BATCH3-STAGE-MAPPING-01 (awaiting
+    reconciliation). Archived HANDOFF_SEQ 11 first.

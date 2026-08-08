@@ -937,3 +937,108 @@ NIKLAR — DECISIONS (current)
     touched. unittest 148/148, mypy 0/15, PWA smoke PASS (re-run to
     confirm unaffected). Real GitHub Actions run 31278730314 confirmed
     conclusion: "success".
+
+39) Decision: Housekeeping — mention the two Batch 1/2 module
+    categories (state contracts, normalization/LLM-policy) in
+    AGENTS.md's one-line `ops/` category summary, which predated both
+    batches and only listed the original four.
+    Date: 2026-08-09
+    Rationale: Same category as decision #38 — safe housekeeping under
+    Section 21's carve-out, LEVEL 1 CLAUDE_DECIDES (documentation
+    accuracy, no judgment call).
+    Affected component: niklar-stocks AGENTS.md (commit fbfef73)
+    Status: Frozen (implemented) — documentation only. unittest
+    148/148, mypy 0/15, PWA smoke PASS. Real GitHub Actions run
+    31279067079 confirmed conclusion: "success".
+
+40) Decision: Under the user's direct instruction to "continue
+    autonomously under the delegated-decision protocol until a true
+    OWNER_ONLY hard gate," investigated whether any bounded slice of
+    Batch 3 could be implemented despite the credential blocker (decision
+    #35/#37) — using ONLY existing, already-tested deterministic
+    functions to cover the orchestrator stages that appear, on the
+    surface, not to need live credentials (`master_database_update`,
+    `publication_validation`, `opportunity_matrix_rebuild`,
+    `postflight_verification`, `research_memory_gate`). Concluded this
+    is a genuine LEVEL 2 CHATGPT_DELEGATED_DECISION, not something to
+    guess at unilaterally, and recorded a compact decision request
+    (below) rather than implementing anything — Batch 3 stays untouched
+    this cycle.
+    Date: 2026-08-09
+    Rationale: A concrete check falsified the most tempting mapping
+    before it was acted on: `opportunity_matrix_rebuild` looks like it
+    could map to `mobile_contract.py`'s `build_opportunity_landscape()`,
+    but that function is explicitly, deliberately a non-ranking
+    display pass-through (decision #10 — "Ranking is canonical decision
+    output owned by the upstream Opportunity Matrix, not available in
+    this environment"); treating it as the orchestrator's ranking-
+    *rebuild* stage would have silently misrepresented unavailable
+    canonical decision logic as already implemented. `research_memory_
+    gate` has the same problem in reverse — the architecture doc's
+    actual concept for that stage (Section 6: reuse materially
+    unchanged evidence, don't re-research) is about freshness/reuse
+    gating, not the evidence-completeness classification
+    `compute_evidence_status()` (Batch 1) actually provides. Only 2 of
+    the 5 candidate mappings (`master_database_update`,
+    `publication_validation`) survive scrutiny with reasonable
+    confidence, and even those assume values are supplied pre-computed
+    by an upstream step this repo doesn't have. Given `run_pipeline()`
+    requires all 13 handlers before it will execute at all (fails
+    closed on any missing one), a partial wiring can't even be
+    demonstrated end-to-end — the only genuine deliverable would be
+    standalone functions whose correctness depends on an interpretive
+    mapping decision, which is exactly what LEVEL 2 exists for.
+    DECISION REQUEST (recorded in the pending-review queue, see
+    HANDOFF_SEQ 12):
+      DECISION_ID: BATCH3-STAGE-MAPPING-01
+      QUESTION: Should Claude implement standalone (not `run_pipeline`-
+        wired, since that needs all 13) handler functions for the
+        orchestrator stages that plausibly have existing deterministic
+        coverage, and if so, which interpretive stage-to-function
+        mapping is correct?
+      OPTIONS:
+        A. Implement individually-tested standalone handlers only for
+           stages with defensible mappings after scrutiny —
+           `master_database_update` (apply_strategic_update/
+           apply_tactical_update) and `publication_validation`
+           (existing validator) — explicitly declining
+           `opportunity_matrix_rebuild`/`research_memory_gate`/
+           `postflight_verification` as unverified: document all 5 as
+           open questions rather than guessing at any of them.
+        B. Do nothing on Batch 3 until credentials AND the missing
+           Decision-Object/report-serialization canon are available;
+           treat the whole batch as atomic since a partial pipeline
+           can't run end-to-end regardless.
+        C. Build no-op/pass-through stubs for all 13 purely to
+           demonstrate the pipeline runs mechanically — rejected by
+           Claude: doesn't advance real functionality and risks
+           implying more progress than exists.
+      CLAUDE_RECOMMENDATION: Option A, narrowed to only the 2
+        defensible mappings — genuinely reversible (new standalone
+        functions, no existing file touched, nothing wired into
+        `run_pipeline()`, so no behavior change for any current
+        caller), doesn't fabricate anything, and produces real tested
+        value without guessing at the 3 stages scrutiny couldn't
+        confirm.
+      APPLICABLE CANON: `ops/README.md`'s no-I/O scope; Batch 1's
+        "if an implementation detail is unresolved but does not
+        require owner judgment, choose the minimum-sufficient
+        reversible implementation and document it" precedent;
+        decision #10's explicit ranking-logic-not-available boundary
+        (the concrete falsification above).
+      REVERSIBILITY/DOWNSTREAM_IMPACT: Total — nothing else in the
+        repo depends on these functions yet; deleting/renaming them
+        later costs nothing.
+      DEADLINE/DEPENDENCY: None hard. Blocks further Batch 3 progress
+        toward an actual `run_pipeline()` invocation regardless (still
+        separately gated on credentials/canon).
+    Affected component: none yet — no niklar-stocks mutation this
+    cycle for Batch 3 itself.
+    Status: Recorded, LEVEL 2, held pending ChatGPT reconciliation per
+    the protocol ("the dependent branch remains held ... unless the
+    frozen canon makes one option unambiguously mandatory" — it
+    doesn't, here; multiple people could reasonably disagree on Option
+    A vs. B). Checked for other independent, non-Batch-3-dependent
+    safe work per "Claude may continue independent work that does not
+    depend on that decision" — found and completed decisions #38/#39
+    (README/AGENTS.md housekeeping) instead.

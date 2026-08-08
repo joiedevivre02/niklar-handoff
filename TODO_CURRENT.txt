@@ -1,9 +1,47 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (three-level decision protocol adopted;
-Batch 3 HARD_GATE reconfirmed unchanged under it; README housekeeping
-landed; HANDOFF_SEQ 11.)
+Last updated: 2026-08-09 (LEVEL 2 decision recorded for Batch 3's
+partial stage-handler mapping question (BATCH3-STAGE-MAPPING-01);
+AGENTS.md housekeeping landed; HANDOFF_SEQ 12.)
 
-DONE — adopt three-level decision protocol; reconfirm Batch 3 HARD_GATE; README housekeeping (this update)
+LEVEL 2 DELEGATED — Batch 3 partial stage-handler mapping (BATCH3-STAGE-MAPPING-01) (this update)
+---------------------------------------------------------------------------
+  - Per the user's direct instruction ("continue autonomously under
+    the delegated-decision protocol until a true OWNER_ONLY hard
+    gate"), investigated whether a bounded, credential-free slice of
+    Batch 3 could be implemented using existing deterministic
+    functions for the orchestrator stages that looked, on the surface,
+    independent of live credentials.
+  - Found a concrete falsification before acting on it: the most
+    tempting mapping (opportunity_matrix_rebuild ->
+    build_opportunity_landscape()) is wrong -- that function is
+    explicitly, deliberately a non-ranking display pass-through
+    (decision #10), so treating it as the ranking-rebuild stage would
+    have silently misrepresented unavailable canonical decision logic
+    as implemented. research_memory_gate has a similar mismatch
+    (Section 6's reuse/freshness-gating concept vs.
+    compute_evidence_status()'s completeness classification). Only 2
+    of 5 candidate mappings (master_database_update,
+    publication_validation) survive scrutiny with reasonable
+    confidence.
+  - Classified this as a genuine LEVEL 2 CHATGPT_DELEGATED_DECISION
+    rather than guessing: recorded decision request
+    BATCH3-STAGE-MAPPING-01 in the pending-review queue (full fields
+    in DECISIONS_CURRENT.txt decision #40 and CURRENT_HANDOFF.txt).
+    No niklar-stocks mutation for Batch 3 this cycle -- the dependent
+    branch stays held pending ChatGPT reconciliation.
+  - Checked for other independent, non-Batch-3-dependent safe work
+    (explicitly permitted while a LEVEL 2 item is held) and found one:
+    AGENTS.md's ops/ category summary predated Batch 1/2, same gap as
+    the prior ops/README.md fix. Landed (niklar-stocks commit
+    fbfef73). Documentation only. unittest 148/148, mypy 0/15, PWA
+    smoke PASS, real GitHub Actions run 31279067079 confirmed
+    conclusion: "success". Recorded as decisions #38 (ops/README.md,
+    prior update)/#39 (AGENTS.md, this update).
+  - Archived HANDOFF_SEQ 11 first. PENDING_REVIEW_QUEUE now has two
+    items: Batch 2 (598b2d4, awaiting audit) and
+    BATCH3-STAGE-MAPPING-01 (awaiting reconciliation).
+
+DONE — adopt three-level decision protocol; reconfirm Batch 3 HARD_GATE; README housekeeping (prior update)
 ---------------------------------------------------------------------------
   - Drive sync doc RESPONSE_SEQ 16 (owner-approved): three-level
     decision-authority protocol -- LEVEL 1 CLAUDE_DECIDES (ordinary
