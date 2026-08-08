@@ -145,18 +145,35 @@ See `CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt` for the full definition.
 Never use this repository as justification for overriding canonical
 private artifacts.
 
-## Communication channel (frozen, 2026-08-08)
+## Communication channel (frozen, 2026-08-08; routing clarified 2026-08-08)
 
-Each side of the ChatGPT <-> Claude coordination has one channel of
-record, in one direction only:
+Each side of the ChatGPT <-> Claude coordination has exactly one
+channel of record, in one direction only, and the two directions are
+never the same mailbox:
 - **Claude -> ChatGPT / user**: this GitHub repository
-  (`niklar-handoff`). Claude publishes checkpoints, deltas, decisions,
-  TODOs, and status here — never to Drive, since this repo is the
-  sanitized public surface meant for that purpose.
-- **ChatGPT -> Claude**: the Google Drive canon folder, specifically
-  the ChatGPT -> Claude sync document described in
-  `ENGINEERING_AUTHORITY_PROMPT.txt`. ChatGPT cannot write to GitHub
-  directly, so Drive is its only outbound channel — Claude reads it as
-  part of the `sync` procedure, never assumes GitHub carries
-  ChatGPT-authored content.
+  (`niklar-handoff`) ONLY. Claude publishes checkpoints, deltas,
+  decisions, TODOs, and status here.
+- **ChatGPT -> Claude**: the Google Drive document
+  `NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT` ONLY, read directly from
+  Drive. This is the sole live ChatGPT -> Claude response channel.
+
+Non-negotiable consequences of the above:
+- Claude must NOT search this (or any) GitHub repository for a
+  ChatGPT response. GitHub is Claude's outbound checkpoint channel,
+  not ChatGPT's reply channel.
+- ChatGPT must NOT publish its replies into `niklar-handoff`.
+- Any ChatGPT-authored text that does appear in this repository (e.g.
+  `ENGINEERING_AUTHORITY_PROMPT.txt`) is archival/audit evidence of a
+  past Drive read only — never live, never the current response, never
+  a place to look for ChatGPT's latest reply. See that file's own
+  header for the same statement.
+
+**Routing acceptance test** (a fresh Claude session should answer all
+four correctly from this repo alone):
+1. Where does Claude publish its checkpoint? -> GitHub `niklar-handoff`.
+2. Where does Claude read ChatGPT's response? -> Google Drive
+   `NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT`.
+3. Should Claude search GitHub for ChatGPT's response? -> NO.
+4. Should ChatGPT write its response to GitHub? -> NO.
+
 Do not invent or use any other channel for either direction.

@@ -1,10 +1,23 @@
 NIKLAR — ENGINEERING AUTHORITY PROMPT
-Source: Google Drive, Niklar canon folder — a live ChatGPT -> Claude
-sync document (ChatGPT cannot write to GitHub directly, so this Drive
-document is the outbound channel; Claude reads it as part of "sync").
-Reproduced here near-verbatim (light reformatting only) for durable,
-sanitized reference. No Drive file IDs/links/emails included below.
-Last confirmed read from Drive: 2026-08-08.
+STATUS: ARCHIVED SNAPSHOT — NOT LIVE. NOT A RESPONSE CHANNEL.
+
+This file is a point-in-time, sanitized COPY of part of the Google
+Drive document `NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT`, taken
+2026-08-08. It is kept here only as durable/audit evidence of what
+that document said on that date. It is NOT updated when the Drive
+document changes, and it is NEVER where Claude looks for ChatGPT's
+current or live responses.
+
+THE ONLY LIVE ChatGPT -> Claude CHANNEL is the Google Drive document
+`NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT` itself, read directly from
+Drive. Claude must never search this GitHub repository (or any GitHub
+repository) for a ChatGPT response — GitHub `niklar-handoff` is
+Claude's OUTBOUND checkpoint channel only (Claude -> ChatGPT/user);
+ChatGPT does not and must not publish replies here. See README.md
+"Communication channel" for the full, current rule.
+
+Reproduced content below is near-verbatim (light reformatting only)
+from that 2026-08-08 read. No Drive file IDs/links/emails included.
 
 ======================================================================
 PART 1 — STANDING SYNC PROTOCOL (from the Drive document's own header)

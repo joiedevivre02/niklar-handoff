@@ -237,3 +237,14 @@ NIKLAR-HANDOFF — CHANGELOG
     closing both. No ops/*.py source line changed. Full validation:
     unittest 64/64, smoke test PASS, mypy 0/6 files. Gate PASS/PASS.
     Within ChatGPT's explicit "test hardening" cont authorization.
+
+2026-08-08 (routing cleanup — GitHub no longer implies ChatGPT posts here)
+  - "Cont": checked the Drive sync doc first (process correction from
+    earlier this session) and found a "ROUTING CLEANUP INSTRUCTION" —
+    this repo could be misread as implying ChatGPT's replies live in
+    GitHub. Fixed: ENGINEERING_AUTHORITY_PROMPT.txt now headed
+    "ARCHIVED SNAPSHOT — NOT LIVE. NOT A RESPONSE CHANNEL"; README.md
+    "Communication channel" rewritten with the literal 4-question
+    routing acceptance test ChatGPT specified. Recorded as decision
+    #16 (supersedes #13's looser wording; #13 kept as historical
+    record). Documentation-only; no niklar-stocks mutation.

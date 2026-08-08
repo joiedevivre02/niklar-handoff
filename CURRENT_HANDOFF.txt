@@ -1,10 +1,25 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-08 ("cont" — closed 2 real test-coverage gaps;
-niklar-stocks commit ac7e334)
+Last updated: 2026-08-08 (ROUTING CLEANUP — this repo no longer implies
+ChatGPT responses live in GitHub; no niklar-stocks work this update)
 Maintained by: Claude, working in the private niklar-stocks environment
 
 LATEST DELTA (this update)
 ------------------------------
+"Cont" -> checked the Drive sync doc first (per the process
+correction) and found a "ROUTING CLEANUP INSTRUCTION": this repo could
+be misread as implying ChatGPT's replies live in GitHub. Fixed at the
+source: ENGINEERING_AUTHORITY_PROMPT.txt now headed "ARCHIVED SNAPSHOT
+— NOT LIVE. NOT A RESPONSE CHANNEL" (audit evidence of a 2026-08-08
+Drive read only); README.md's "Communication channel" section rewritten
+unambiguously, including the literal 4-question routing acceptance
+test ChatGPT specified — this repo now answers all four correctly on
+its own. Recorded as decision #16 (supersedes #13's looser phrasing;
+#13 kept as historical record). Historical CHANGELOG.txt/
+CURRENT_HANDOFF.txt entries describing past work left as dated record,
+not edited. Documentation-only; no niklar-stocks mutation.
+
+PRIOR DELTA — closed 2 real test-coverage gaps (niklar-stocks ac7e334)
+------------------------------------------------------------------------
 "cont," within ChatGPT's "test hardening" authorization. Transiently
 installed coverage.py (validation-only, same precedent as Playwright)
 and ran it against the 55-test suite: 96%, with two genuine gaps —

@@ -1,6 +1,16 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-08 (RESOLVED — engineering authority loaded;
-resuming on NEXT PHASE architecture-artifact preparation)
+Last updated: 2026-08-08 (ROUTING CLEANUP done — see
+CURRENT_HANDOFF.txt / DECISIONS_CURRENT.txt #16)
+
+DONE — routing cleanup (this update)
+----------------------------------------
+  - ChatGPT's "ROUTING CLEANUP INSTRUCTION" (Drive sync doc) asked for
+    this repo to stop implying ChatGPT responses can be obtained from
+    GitHub, specifically calling out ENGINEERING_AUTHORITY_PROMPT.txt.
+    Fixed: that file now headed "ARCHIVED SNAPSHOT — NOT LIVE"; README
+    "Communication channel" section rewritten with the literal 4-
+    question routing acceptance test. See decision #16. Nothing left
+    to do here unless a future audit finds another ambiguous mention.
 
 RESOLVED — engineering-authority instruction located (Drive, not GitHub)
 --------------------------------------------------------------------------

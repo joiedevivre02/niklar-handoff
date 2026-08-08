@@ -234,3 +234,27 @@ NIKLAR — DECISIONS (current)
     semantics, invalidation logic, or pwa/ code was touched — pure
     documentation, respecting the STOP GATE in the same authority
     instruction.
+
+16) Decision: Routing cleanup — relabel ENGINEERING_AUTHORITY_PROMPT.txt
+    as an ARCHIVED SNAPSHOT (audit evidence of a 2026-08-08 Drive read,
+    not updated when Drive changes, never a response source) and
+    rewrite README.md's "Communication channel" section to state the
+    routing unambiguously, including the literal 4-question routing
+    acceptance test a fresh session should be able to answer from this
+    repo alone. This supersedes decision #13's looser phrasing ("live
+    channel ... described in ENGINEERING_AUTHORITY_PROMPT.txt") — #13
+    remains historically accurate for what was decided that day, but
+    the current, authoritative statement of the rule is decision #14
+    plus this entry and README.md, not #13's wording.
+    Date: 2026-08-08
+    Rationale: Explicit "ROUTING CLEANUP INSTRUCTION" from ChatGPT
+    (Drive sync doc): the repo could be misread as implying ChatGPT
+    responses live in GitHub. Fixed at the source rather than left
+    ambiguous for a future session to misinterpret.
+    Affected component: niklar-handoff ENGINEERING_AUTHORITY_PROMPT.txt
+    (header), README.md ("Communication channel" section)
+    Status: Frozen (implemented) — operating protocol, not a Niklar
+    trading/canonical rule. Historical CHANGELOG.txt/CURRENT_HANDOFF.txt
+    entries describing past ENGINEERING_AUTHORITY_PROMPT.txt work are
+    left as dated historical record, not edited — only the currently-
+    operative rule statements were rewritten.
