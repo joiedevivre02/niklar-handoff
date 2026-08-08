@@ -511,3 +511,36 @@ NIKLAR-HANDOFF — CHANGELOG
     not duplicated elsewhere. No implementation, no user-facing choice
     requested yet. Archived HANDOFF_SEQ 4 first. Recorded as
     decision #28.
+
+2026-08-09 (owner approved pre-live architecture; Batch 1 implemented, HANDOFF_SEQ 6)
+  - Owner approved the full pre-live architecture (Drive
+    NIKLAR_PRELIVE_ARCHITECTURE_DECISIONS_CURRENT, frozen 2026-08-09;
+    Drive sync doc RESPONSE_SEQ 8, IMPLEMENTATION AUTHORIZATION:
+    RELEASED) -- 18 sections: deterministic engine remains
+    authoritative, zero-by-default production LLM policy, non-blocking
+    evidence degradation, an intraday input roadmap (manual ->
+    screenshot OCR -> ScreenCaptureKit feasibility -> eventual live
+    feed, one shared INTRADAY_OBSERVATION contract), GitHub Actions
+    scheduled orchestration + minimal read-only PWA delivery (no
+    general live API -- confirms Option A from the earlier decision
+    package), and a mandatory 10-batch staged implementation order.
+    Recorded as decision #29.
+  - Per the explicit "do not attempt one giant refactor... begin
+    Batch 1 only" instruction, implemented ONLY Batch 1 (contracts/
+    state layer): new niklar-stocks module
+    ops/niklar_state_contracts.py -- pure, deterministic evidence-
+    status classification, the INTRADAY_OBSERVATION contract, an
+    append-only change ledger, an append-only review queue (8 named
+    trigger conditions), an LLM/manual-review request ledger (always
+    PENDING at construction, no bypass), and a current-state-snapshot
+    builder. No I/O, no credentials, no trading/scoring/tactical logic.
+    27 new tests. unittest 122/122, mypy 0/14, real GitHub Actions run
+    31276045591 confirmed conclusion: "success." Self-audited against
+    the standing 4 criteria before publishing -- no findings. Recorded
+    as decision #30.
+  - Full diff published in niklar-handoff
+    review-packages/53d2b3f-prelive-batch1-state-contracts.md for
+    independent review, proactively (not waiting for another
+    private-repo-connector 404 round-trip). Archived HANDOFF_SEQ 5
+    first. Batches 2-10 not started; next sync checks for review
+    feedback before Batch 2.
