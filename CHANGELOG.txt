@@ -564,3 +564,35 @@ NIKLAR-HANDOFF — CHANGELOG
     address Batch 1 review. Next: begin Batch 2 regardless, since
     overall IMPLEMENTATION AUTHORIZATION remains RELEASED and nothing
     in this response holds Batch 2 specifically.
+
+2026-08-09 (Batch 1 patch: real review findings recovered and fixed, HANDOFF_SEQ 8)
+  - Process gap found and corrected: RESPONSE_SEQ 10 ("CHANGES REQUIRED
+    before Batch 2") had been superseded by RESPONSE_SEQ 11 in the
+    Drive sync doc's compact LATEST_RESPONSE block before it was ever
+    read this session -- checking only the current block missed a real
+    response that had already rotated out. Recovered by searching
+    Drive for ChatGPT's own response-archive doc
+    (NIKLAR_CHATGPT_RESPONSE_ARCHIVE_SEQ_10_2026-08-09) instead of
+    trusting RESPONSE_SEQ 11's brief cross-reference alone. Recorded
+    as a standing process correction in decision #32.
+  - Both findings verified against the actual code (not assumed
+    correct on ChatGPT's word alone) and were real: (1)
+    normalization_exception_count in build_current_state_snapshot()
+    was semantically wrong -- derived from evidence-conditional/
+    insufficient totals instead of actual normalization-exception
+    review_queue entries; (2) the snapshot exposed only counts, not
+    which ticker/reason needed review, contradicting Section 14's
+    requirement. Also fixed the accompanying non-blocking observation
+    (compute_evidence_status() silently dropped non-material
+    unresolved fields in the INSUFFICIENT case).
+  - Patched exactly the two files Batch 1 touched, no new file, no
+    dataclasses/Enums/dependencies added -- per explicit Minimum
+    Sufficient Code instruction. 8 new tests (27->35 for this module,
+    95->130 overall). unittest 130/130, mypy 0/14, PWA smoke
+    unaffected, real GitHub Actions run 31277370000 confirmed
+    conclusion: "success". niklar-stocks main: 53d2b3f -> 221020b.
+  - Full patched diff published in niklar-handoff
+    review-packages/221020b-batch1-patch.md for independent
+    re-review, per RESPONSE_SEQ 10's explicit "hand back for compact
+    re-review" requirement. Batch 2 remains HOLD until that clears.
+    Recorded as decision #32.

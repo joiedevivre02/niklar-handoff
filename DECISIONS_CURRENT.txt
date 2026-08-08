@@ -699,3 +699,48 @@ NIKLAR — DECISIONS (current)
     tactical_consumers_sync orchestrator stages as the natural home for
     "one shared notification service").
     Status: Recorded, deferred. No niklar-stocks mutation this cycle.
+
+32) Decision: Patch Batch 1's contract semantics per ChatGPT's
+    independent review (Drive sync doc RESPONSE_SEQ 10, "CHANGES
+    REQUIRED before Batch 2"). Two real findings, both fixed:
+    (1) `normalization_exception_count` in `build_current_state_
+    snapshot()` was derived from `evidence_conditional_count +
+    evidence_insufficient_count` — semantically wrong, since evidence
+    can be conditional/insufficient for reasons unrelated to a
+    normalization failure. Now derived from actual
+    `REVIEW_REASON_NORMALIZATION_EXCEPTION` entries in the
+    `review_queue` parameter already received — one source of truth,
+    no new ledger. (2) The snapshot exposed only counts, not which
+    ticker/reason needed review — added bounded, compact
+    `pending_review_items`/`pending_llm_review_items` (default 10,
+    with `*_truncated` counts). Also fixed the accompanying non-
+    blocking observation: `compute_evidence_status()` now returns
+    `(status, affected_fields, all_unresolved_fields)` — a 3-tuple —
+    so the INSUFFICIENT case no longer silently drops non-material
+    unresolved fields from all visibility.
+    Date: 2026-08-09
+    Rationale: A genuine process gap surfaced this cycle: RESPONSE_SEQ
+    10 was superseded by RESPONSE_SEQ 11 in the Drive sync doc's
+    compact `LATEST_RESPONSE` block before it was ever read — checking
+    only the current block missed a response that had already rotated
+    out. Recovered by searching Drive for ChatGPT's own response-
+    archive doc (`NIKLAR_CHATGPT_RESPONSE_ARCHIVE_SEQ_10_2026-08-09`)
+    rather than assuming RESPONSE_SEQ 11's brief cross-reference was
+    the complete picture — matching this session's standing "read
+    primary sources, not proxies" discipline. Going forward: whenever
+    a response references a prior RESPONSE_SEQ by number that isn't
+    fully inline, locate and read that response's own archived content
+    before proceeding, don't rely on a summary. Both findings verified
+    against the actual code before fixing (not assumed correct on
+    ChatGPT's word alone, per this session's own "verify, don't
+    invent" discipline applied symmetrically to review feedback too).
+    Affected component: niklar-stocks ops/niklar_state_contracts.py,
+    tests/test_niklar_state_contracts.py (same two files Batch 1
+    touched, patched only, no new file per explicit Minimum Sufficient
+    Code instruction)
+    Status: Frozen (implemented) — commit 221020b. unittest 130/130
+    (35 for this module, 8 new), mypy 0/14, PWA smoke unaffected, real
+    GitHub Actions run 31277370000 confirmed conclusion: "success".
+    Full patched diff published in niklar-handoff for independent
+    re-review, per RESPONSE_SEQ 10's "hand back for compact re-review"
+    requirement. Batch 2 remains HOLD pending that re-review.

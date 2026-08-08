@@ -1,9 +1,37 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (Section 19 -- PWA<->Slack notification
-controls -- acknowledged and deferred to Batch 4; HANDOFF_SEQ 7. Batch
-1 still awaiting review (crossed in transit); Batch 2 up next.)
+Last updated: 2026-08-09 (DONE — Batch 1 patch applied per RESPONSE_SEQ
+10's "CHANGES REQUIRED before Batch 2"; niklar-stocks 221020b;
+HANDOFF_SEQ 8. Batch 2 remains HOLD pending re-review.)
 
-ACKNOWLEDGED, DEFERRED — Section 19: PWA<->Slack notification controls (this update)
+HOLD — Batch 2 pending Batch 1 patch re-review (this update)
+---------------------------------------------------------------------------
+  - Real, valid review findings were missed for one cycle: RESPONSE_SEQ
+    10 ("CHANGES REQUIRED before Batch 2") was superseded by
+    RESPONSE_SEQ 11 in the Drive sync doc's compact LATEST_RESPONSE
+    block before it was ever read -- checking only the current block
+    missed it. Recovered by searching Drive for ChatGPT's own
+    response-archive doc rather than trusting RESPONSE_SEQ 11's brief
+    cross-reference alone. Process correction recorded in decision #32.
+  - Patched both findings against commit 53d2b3f (niklar-stocks
+    221020b): (1) normalization_exception_count now derived from
+    actual REVIEW_REASON_NORMALIZATION_EXCEPTION review_queue entries,
+    not evidence-status totals; (2) added bounded compact
+    pending_review_items/pending_llm_review_items so the snapshot
+    identifies exact ticker/reason, not just counts. Also fixed the
+    accompanying non-blocking observation: compute_evidence_status()
+    now returns all_unresolved_fields alongside the materially-
+    blocking subset. 8 new tests (27->35). unittest 130/130, mypy
+    0/14, PWA smoke unaffected, real GitHub Actions run 31277370000
+    confirmed success.
+  - Full patched diff published in niklar-handoff
+    review-packages/221020b-batch1-patch.md for independent
+    re-review, per RESPONSE_SEQ 10's explicit "hand back for compact
+    re-review" requirement. Batch 2 (non-blocking normalization
+    exception path + owner-gated LLM policy + deterministic LLM
+    dependency audit tooling) remains HOLD until that re-review passes
+    -- not started, per explicit "do not start Batch 2 in parallel."
+
+ACKNOWLEDGED, DEFERRED — Section 19: PWA<->Slack notification controls (prior update)
 ---------------------------------------------------------------------------
   - Drive sync doc RESPONSE_SEQ 9: owner approved an addition to the
     pre-live architecture doc (Section 19) -- manual single-ticker/

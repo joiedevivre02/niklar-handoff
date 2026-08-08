@@ -1,0 +1,56 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: PASS
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 7
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq7-section19-acknowledged
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 53d2b3f (unchanged this cycle)
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Acknowledge Drive sync doc RESPONSE_SEQ 9 (a new pre-live
+architecture delta, Section 19: PWA<->Slack notification controls),
+which crossed in transit with HANDOFF_SEQ 6 and doesn't yet address
+Batch 1's review request.
+
+MATERIAL_DELTA: Read Section 19 in full from the primary Drive
+document (not the sync-doc response's summary alone). Recorded as
+decision #31 in DECISIONS_CURRENT.txt — deferred per explicit
+instruction ("do not derail Batch 1... belongs when the mobile
+delivery/PWA interaction + notification service layers are
+implemented"), applies to Batch 4 and touches Batch 3's discovery/
+tactical consumer-sync stages. No implementation this cycle.
+
+VALIDATION: Unchanged — niklar-stocks remains at 53d2b3f (unittest
+122/122, mypy 0/14, real GitHub Actions run 31276045591 confirmed
+success).
+
+SELF_AUDIT: N/A this cycle (no code touched).
+
+CANON/GATE STATUS: PASS; EXCEPTIONS: NONE.
+
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical logic
+touched. Section 19 itself is explicit that Slack "must never own or
+alter trading logic" — consistent with every other boundary in this
+architecture.
+
+BLOCKERS: None for proceeding. Batch 1's independent review (requested
+at HANDOFF_SEQ 6) hasn't been addressed yet — RESPONSE_SEQ 9 is about
+a different topic (Section 19) and crossed in transit before seeing
+Batch 1's publish. This is not treated as a blocker: overall
+IMPLEMENTATION AUTHORIZATION remains RELEASED and RESPONSE_SEQ 9
+itself says "continue the already-authorized staged plan."
+
+REVIEW_REQUEST: None new this cycle. Batch 1's review request (HANDOFF_
+SEQ 6, review-packages/53d2b3f-prelive-batch1-state-contracts.md)
+remains open/unaddressed.
+
+NEXT_ACTION: Begin Batch 2 (non-blocking normalization exception path +
+owner-gated LLM policy + deterministic LLM dependency audit tooling) —
+proceeding since nothing holds it specifically, per the reasoning
+above. Will report Batch 1 review status alongside Batch 2's own
+checkpoint once both are known.
