@@ -1,8 +1,18 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-08 (DONE — AI QA worker ported, disabled by
-default; niklar-stocks commit 3ffd9b0)
+Last updated: 2026-08-08 (DONE — real CI run verified green after a
+fix; niklar-stocks commit 7543b1c)
 
-AWAITING USER DECISION (new)
+DONE — verified and fixed the real CI run (this update)
+------------------------------------------------------------
+  - Checked the actual GitHub Actions run for the new ai-qa.yml
+    workflow instead of trusting local testing/the prior report's
+    "GitHub Actions ready: YES" claim -- it was wrong. Real run failed
+    (ImportError: relative import). Fixed (workflow + 5 docs needed
+    `python3 -m scripts.ai_qa.run`, not the direct file-path form),
+    re-validated locally, pushed, polled the real API again -- now
+    genuinely conclusion: "success". Gate PASS/PASS.
+
+AWAITING USER DECISION
 ------------------------------
   - Turning on Gemini escalation in niklar-stocks scripts/ai_qa/ for
     real: add the GEMINI_API_KEY GitHub Actions secret and set

@@ -298,3 +298,17 @@ NIKLAR-HANDOFF — CHANGELOG
     network calls; failure with Gemini disabled/clean degrade; failure
     with Gemini enabled + invalid key against the real Gemini
     endpoint/clean HTTP 400 handling). Gate PASS/PASS.
+
+2026-08-08 (cont — real CI run checked, found broken, fixed, reverified)
+  - niklar-stocks commit 7543b1c: "cont" prompted actually checking the
+    real GitHub Actions run for ai-qa.yml rather than trusting local
+    testing -- the prior checkpoint's "GitHub Actions ready: YES" claim
+    was wrong. Real run failed: "ImportError: attempted relative import
+    with no known parent package" -- scripts/ai_qa/run.py needs
+    `python3 -m scripts.ai_qa.run`, not the direct file-path form used
+    in the workflow YAML and 5 doc references (local testing had only
+    ever used the correct form, so the bug never surfaced there).
+    Reproduced the failure locally, fixed every occurrence, re-
+    validated (unittest 81/81, mypy 0/13, worker PASS with the exact
+    corrected command), pushed, and polled the real GitHub Actions API
+    again -- confirmed conclusion: "success". Gate PASS/PASS.

@@ -1,7 +1,32 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-08 (repo-local AI QA worker ported and landed,
-disabled by default; niklar-stocks commit 3ffd9b0)
+Last updated: 2026-08-08 (real CI run verified GREEN after a fix;
+niklar-stocks commit 7543b1c)
 Maintained by: Claude, working in the private niklar-stocks environment
+
+LATEST DELTA (this update)
+------------------------------
+"Cont" -> checked the Drive sync doc first (no new delta), then
+actually verified the AI QA worker's real GitHub Actions run instead
+of trusting local testing/the prior report. Found the "GitHub Actions
+ready: YES" claim in the prior checkpoint was WRONG: the real first run
+(31261077462) failed with "ImportError: attempted relative import with
+no known parent package" -- scripts/ai_qa/run.py uses relative imports
+that only resolve under `python3 -m scripts.ai_qa.run`, but the
+workflow (and this port's own docs) used the direct file-path form
+`python3 scripts/ai_qa/run.py`, which local testing had never actually
+exercised (every local test run had used the correct -m form). Read
+the real failure log via mcp__github__get_job_logs, reproduced it
+locally, fixed every occurrence of the wrong invocation form (workflow
+YAML + 5 doc references), re-validated locally with the exact corrected
+command, committed (7543b1c), pushed, and polled the real GitHub
+Actions API again -- confirmed conclusion: "success" this time. Gate
+PASS/PASS. niklar-stocks main: 3ffd9b0 -> 7543b1c.
+This is exactly the kind of gap "never invent evidence" exists to
+catch -- the fix was real, not assumed, because I checked the actual
+CI system rather than trusting the local sandbox's result.
+
+PRIOR DELTA — AI QA worker port (niklar-stocks 3ffd9b0)
+--------------------------------------------------------------
 
 LATEST DELTA (this update)
 ------------------------------
@@ -451,4 +476,5 @@ FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
     ac7e334 (closed 2 real test-coverage gaps, 55->64 tests) ->
     4bb9543 (fixed stale niklar-handoff filename references) ->
     3ffd9b0 (repo-local AI QA worker ported, disabled by default,
-    64->81 tests)
+    64->81 tests) -> 7543b1c (fixed real CI failure -- -m invocation
+    required; real GitHub Actions run verified green)
