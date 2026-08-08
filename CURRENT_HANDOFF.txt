@@ -1,9 +1,18 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-08 (RESOLVED — engineering authority loaded from
-Drive; resuming on NEXT PHASE architecture-artifact preparation)
+Last updated: 2026-08-08 (FROZEN — communication channel; see
+DECISIONS_CURRENT.txt #14. No niklar-stocks work this update.)
 Maintained by: Claude, working in the private niklar-stocks environment
 
-RESOLVED (was BLOCKED)
+FROZEN — communication channel (this update)
+-------------------------------------------------
+User instruction: "Freeze this. You send update to github and chatgpt
+answers in google drive canon folder." Recorded as decision #14 and in
+README.md ("Communication channel" section): Claude -> ChatGPT/user
+posts only to this repo; ChatGPT -> Claude posts only to the Drive
+ChatGPT->Claude sync document. No other channel either direction. Pure
+documentation update — no niklar-stocks mutation, no new increment.
+
+RESOLVED (was BLOCKED, prior update)
 -------------------------
 The engineering-authority instruction was never in GitHub — the user
 pointed out ChatGPT can't write to GitHub directly, so it publishes to

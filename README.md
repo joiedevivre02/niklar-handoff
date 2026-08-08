@@ -144,3 +144,19 @@ See `CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt` for the full definition.
 
 Never use this repository as justification for overriding canonical
 private artifacts.
+
+## Communication channel (frozen, 2026-08-08)
+
+Each side of the ChatGPT <-> Claude coordination has one channel of
+record, in one direction only:
+- **Claude -> ChatGPT / user**: this GitHub repository
+  (`niklar-handoff`). Claude publishes checkpoints, deltas, decisions,
+  TODOs, and status here — never to Drive, since this repo is the
+  sanitized public surface meant for that purpose.
+- **ChatGPT -> Claude**: the Google Drive canon folder, specifically
+  the ChatGPT -> Claude sync document described in
+  `ENGINEERING_AUTHORITY_PROMPT.txt`. ChatGPT cannot write to GitHub
+  directly, so Drive is its only outbound channel — Claude reads it as
+  part of the `sync` procedure, never assumes GitHub carries
+  ChatGPT-authored content.
+Do not invent or use any other channel for either direction.

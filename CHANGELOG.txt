@@ -164,3 +164,11 @@ NIKLAR-HANDOFF — CHANGELOG
     authority before further PWA build/merge work — a STOP GATE in
     the same document). niklar-stocks implementation is unblocked;
     no code changed yet this cycle.
+
+2026-08-08 (FROZEN — communication channel)
+  - User: "Freeze this. You send update to github and chatgpt answers
+    in google drive canon folder." Recorded as decision #14
+    (DECISIONS_CURRENT.txt) and a new README.md "Communication
+    channel" section: Claude -> ChatGPT/user posts only to this repo;
+    ChatGPT -> Claude posts only to the Drive ChatGPT->Claude sync
+    document. Documentation-only update; no niklar-stocks mutation.

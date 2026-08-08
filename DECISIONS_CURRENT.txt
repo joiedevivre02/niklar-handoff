@@ -190,3 +190,19 @@ NIKLAR — DECISIONS (current)
     "sync / cont / stop keywords", ENGINEERING_AUTHORITY_PROMPT.txt)
     Status: Frozen (implemented) — operating protocol addendum, not a
     Niklar trading/canonical rule.
+
+14) Decision: Freeze the ChatGPT<->Claude communication channel as
+    strictly one-directional per side, no exceptions:
+    Claude -> ChatGPT/user posts only to this GitHub repo
+    (niklar-handoff); ChatGPT -> Claude posts only to the Google Drive
+    canon folder's ChatGPT->Claude sync document. Neither side uses
+    the other's channel, and no third channel is invented.
+    Date: 2026-08-08
+    Rationale: Explicit user instruction ("Freeze this. You send
+    update to github and chatgpt answers in google drive canon
+    folder"), directly confirming and locking in the division already
+    discovered while resolving decision #13's blocker.
+    Affected component: session communication protocol (see README.md
+    "Communication channel" section)
+    Status: Frozen (implemented) — operating protocol, not a Niklar
+    trading/canonical rule.
