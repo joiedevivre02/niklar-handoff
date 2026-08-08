@@ -1,10 +1,25 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-08 (FROZEN — communication channel; see
-DECISIONS_CURRENT.txt #14. No niklar-stocks work this update.)
+Last updated: 2026-08-08 (SYNC — ChatGPT independently confirmed the
+frozen communication channel from its side. No niklar-stocks work
+this update.)
 Maintained by: Claude, working in the private niklar-stocks environment
 
-FROZEN — communication channel (this update)
--------------------------------------------------
+SYNC — ChatGPT confirmation of frozen channel (this update)
+------------------------------------------------------------------
+Re-read the Drive ChatGPT->Claude sync document per the sync
+procedure (step 1) and found a new dated entry not present at the
+prior sync: "FROZEN HANDOFF LOCATION RULE — 2026-08-08." It mirrors
+decision #14 exactly from ChatGPT's side: ChatGPT reads this GitHub
+repo (niklar-handoff) for Claude's checkpoints when the user says
+"sync"/"status," reconciles against Drive canon and the existing
+handoff/recovery rules, and does NOT search Drive for Claude's
+handoff material. Both sides now independently enforce the same
+one-directional-per-side channel. No conflict with Drive canon, no
+drift — reconciliation step 2-5 all clear. This entry is that
+delta, published per step 6.
+
+FROZEN — communication channel (prior update, 2026-08-08)
+-------------------------------------------------------------
 User instruction: "Freeze this. You send update to github and chatgpt
 answers in google drive canon folder." Recorded as decision #14 and in
 README.md ("Communication channel" section): Claude -> ChatGPT/user

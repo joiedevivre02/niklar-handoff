@@ -172,3 +172,12 @@ NIKLAR-HANDOFF — CHANGELOG
     channel" section: Claude -> ChatGPT/user posts only to this repo;
     ChatGPT -> Claude posts only to the Drive ChatGPT->Claude sync
     document. Documentation-only update; no niklar-stocks mutation.
+
+2026-08-08 (sync — ChatGPT confirmed the frozen channel independently)
+  - Re-read the Drive ChatGPT->Claude sync document per the sync
+    procedure and found a new entry, "FROZEN HANDOFF LOCATION RULE —
+    2026-08-08," mirroring decision #14 from ChatGPT's side: ChatGPT
+    reads niklar-handoff (GitHub) for Claude's checkpoints, not Drive.
+    No conflict, no drift — both sides now mutually enforce the same
+    rule. Decision #14 status note updated. Documentation-only;
+    no niklar-stocks mutation.

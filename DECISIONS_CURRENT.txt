@@ -205,4 +205,8 @@ NIKLAR — DECISIONS (current)
     Affected component: session communication protocol (see README.md
     "Communication channel" section)
     Status: Frozen (implemented) — operating protocol, not a Niklar
-    trading/canonical rule.
+    trading/canonical rule. Independently confirmed from ChatGPT's
+    side on 2026-08-08 via a "FROZEN HANDOFF LOCATION RULE" entry
+    appended to the Drive ChatGPT->Claude sync document (ChatGPT reads
+    niklar-handoff for Claude's checkpoints, not Drive) — both sides
+    now enforce the same rule, mutually confirmed.
