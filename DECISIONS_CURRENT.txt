@@ -349,3 +349,19 @@ NIKLAR — DECISIONS (current)
     (private-repo-only code artifact, same flag rationale as prior
     private-repo decisions). AWAITING USER DECISION: enabling Gemini
     for real (see TODO_CURRENT.txt).
+
+20) Decision: Adopt the cross-agent engineering quality rule ChatGPT
+    announced (Drive sync doc): implementations must cover happy path,
+    failure paths, recovery behavior, and definition of done; AI agents
+    must not treat local success as sufficient when the real execution
+    environment materially differs. Recorded as-is, not reworded.
+    Date: 2026-08-09
+    Rationale: Explicit rule from the loaded engineering authority,
+    directly prompted by (and validated against) the AI QA worker's
+    real CI invocation bug this session already fixed the hard way —
+    adopting it formalizes a practice already demonstrated, not a new
+    behavior being promised untested.
+    Affected component: session/agent operating discipline (see
+    niklar-handoff CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt)
+    Status: Frozen (implemented) — operating protocol, not a Niklar
+    trading/canonical rule.

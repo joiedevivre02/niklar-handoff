@@ -168,6 +168,24 @@ communication channel (decisions #14/#16/#17) — it does not mean
 Claude posts anything to Drive or waits for a response before
 continuing; "cont" remains the default unless the user says "stop."
 
+CROSS-AGENT ENGINEERING QUALITY RULE
+(announced by ChatGPT via the Drive sync doc, 2026-08-09 01:39 +08:00 entry)
+--------------------------------------------------------------------------
+"Implementations must cover happy path, failure paths, recovery
+behavior, and definition of done; AI agents must not treat local
+success as sufficient when the real execution environment materially
+differs." Prompted by (and explicitly citing) the AI QA worker CI
+invocation bug: local testing had only ever exercised the correct `-m`
+invocation, so a real GitHub Actions failure (wrong invocation form)
+went uncaught until the actual workflow run was checked. Not a new
+Niklar canonical rule -- an engineering-process rule, same tier as the
+sync/cont/stop protocol and the "sync to chatgpt" signal above.
+Practical effect going forward: a "PASS"/"ready" claim about anything
+that runs in a different environment than the one it was tested in
+(local sandbox vs. real CI, most concretely) is not safe to make from
+local success alone -- verify against the real target environment
+before asserting it, the way the CI-run check above did.
+
 OPERATOR NOTES — HOW THIS WAS ACTUALLY CARRIED OUT
 ------------------------------------------------------
 Recorded for the next agent's calibration, not as new canon:

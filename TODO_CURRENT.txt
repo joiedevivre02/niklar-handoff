@@ -22,6 +22,16 @@ AWAITING USER DECISION
     first outbound network call/credential, deliberately not
     self-authorized. See niklar-stocks scripts/ai_qa/README.md and
     AGENTS.md "Held decisions."
+  - UPDATE 2026-08-09: ChatGPT reviewed and conditionally authorized
+    proceeding — "once the repository secret GEMINI_API_KEY is
+    present... enable it only after confirming the secret is available
+    in the repository Actions environment." No tool in this session can
+    list/confirm GitHub Actions secret presence (write-only by design).
+    Awaiting the user to confirm directly whether GEMINI_API_KEY has
+    been added yet — not proceeding on a guess. Once confirmed: set
+    AI_QA_ENABLE_GEMINI=1, trigger one controlled CI failure-path
+    invocation to confirm real end-to-end escalation, then checkpoint
+    per ChatGPT's "NEXT CHECKPOINT" instruction.
 
 DONE — AI QA worker port (this update)
 ---------------------------------------------

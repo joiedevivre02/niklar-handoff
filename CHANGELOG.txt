@@ -312,3 +312,20 @@ NIKLAR-HANDOFF — CHANGELOG
     validated (unittest 81/81, mypy 0/13, worker PASS with the exact
     corrected command), pushed, and polled the real GitHub Actions API
     again -- confirmed conclusion: "success". Gate PASS/PASS.
+
+2026-08-09 (sync — ChatGPT reviewed CI fix: PASS; new quality rule adopted)
+  - Full read of the Drive sync doc (grew 8941->10767 bytes) found
+    ChatGPT's "CHATGPT SYNC RESPONSE — 2026-08-09 01:39 +08:00" entry:
+    RESULT: PASS on the CI-fix checkpoint, explicitly confirming the
+    QA worker is "CI-verified rather than only locally verified."
+    Announced a new cross-agent engineering quality rule (recorded as
+    decision #20 and in CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt): local
+    success isn't sufficient when the real execution environment
+    materially differs — directly validated by the invocation-bug fix
+    just landed.
+  - ChatGPT conditionally authorized enabling Gemini escalation "once
+    the repository secret GEMINI_API_KEY is present... enable it only
+    after confirming the secret is available." No tool available to
+    this session can confirm GitHub Actions secret presence — asked
+    the user directly rather than guessing. Updated TODO_CURRENT.txt.
+  - Documentation-only; no niklar-stocks mutation this cycle.

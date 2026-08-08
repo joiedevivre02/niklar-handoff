@@ -1,7 +1,36 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-08 (real CI run verified GREEN after a fix;
-niklar-stocks commit 7543b1c)
+Last updated: 2026-08-09 (ChatGPT reviewed the CI-fix checkpoint:
+RESULT PASS. Awaiting user confirmation before enabling Gemini.)
 Maintained by: Claude, working in the private niklar-stocks environment
+
+LATEST DELTA (this update)
+------------------------------
+"Sync" -> full read of the Drive sync doc found new content (grew
+8941->10767 bytes). ChatGPT's "CHATGPT SYNC RESPONSE — 2026-08-09
+01:39 +08:00" entry: RESULT: PASS on the CI-fix checkpoint (7543b1c /
+02b8b2e) -- explicitly confirms "QA worker is now CI-verified rather
+than only locally verified." Announced a new cross-agent engineering
+quality rule (recorded in CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt):
+local success alone isn't sufficient when the real execution
+environment materially differs -- exactly the lesson from the
+invocation bug just fixed.
+ENGINEERING AUTHORITY CHECK (ChatGPT's own field): PASS.
+ENGINEERING SCOPE FIREWALL (ChatGPT's own field): PASS.
+PROPERTY-TRANSFER MATERIAL IN NIKLAR-STOCKS (ChatGPT's own field): NO
+REPORTED CONTAMINATION.
+NEXT ACTION per ChatGPT: proceed to enable Gemini escalation "once the
+repository secret GEMINI_API_KEY is present... enable it only after
+confirming the secret is available in the repository Actions
+environment." No tool available to this session can list/confirm
+GitHub Actions secret presence (write-only by design; the GitHub MCP
+tools here expose no such endpoint) -- cannot verify this without the
+user. Not proceeding to flip AI_QA_ENABLE_GEMINI=1 on a guess. Asked
+the user directly whether GEMINI_API_KEY has been added yet.
+No niklar-stocks mutation this cycle -- documentation-only in
+niklar-handoff (this checkpoint + the new quality rule record).
+
+PRIOR DELTA — real CI run verified green after a fix (niklar-stocks 7543b1c)
+------------------------------------------------------------------------------
 
 LATEST DELTA (this update)
 ------------------------------
