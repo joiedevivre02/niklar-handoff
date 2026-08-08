@@ -1,21 +1,30 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-07 (PAUSED — user sent "Sync" then "Pause")
+Last updated: 2026-08-07 (BLOCKED — engineering-authority content not
+found; see below. Was PAUSED before this investigation.)
 Maintained by: Claude, working in the private niklar-stocks environment
 
-PAUSED
---------
-Session paused on explicit user instruction ("Pause"). No new work was
-performed between the prior sync and this pause — niklar-stocks is
-unchanged at 9549f65, niklar-handoff at 733caf5. Both repos verified
-clean (no uncommitted mutations) before pausing. A stale scheduled
-auto-continue trigger left over from earlier in this session (predates
-the sync/cont/stop protocol) was found and cancelled so nothing
-resumes work automatically while paused.
-No blockers, no drift — this is a clean, deliberate stop, not a
-failure state. Resume only on explicit "cont" from the user (per the
-sync/cont/stop protocol) or an equivalent plain-English instruction.
+BLOCKED
+---------
+User instructed creating ENGINEERING_AUTHORITY_PROMPT.txt from "the
+latest engineering-authority instruction from ChatGPT" and to
+read/reconcile joiedevivre02/niklar-operating-engineering-system first.
+That repo is now accessible (a prior add_repo attempt had failed; a
+retry succeeded) and has been read in full at the orientation-doc
+level. Finding: it is a genuinely different Niklar product — a
+guided-journey/case-record-recovery/property-eligibility/verified-save
+web app with its own separate Founder-Constitution-rooted governance
+stack (NES standards, AI Agent Constitution, ADRs) — with zero
+references to stocks/PSE/options/crypto/trading anywhere in it, and no
+file that is "the latest engineering-authority instruction from
+ChatGPT." Full detail in TODO_CURRENT.txt. ENGINEERING_AUTHORITY_
+PROMPT.txt was NOT created (would require fabricating content or
+misattributing this other product's governance, both forbidden). No
+niklar-stocks implementation resumed, per the user's own instruction
+to hold implementation until the engineering authority is loaded --
+which cannot happen until the user clarifies. This is a reported
+finding, not a guess dressed up as one.
 
-LATEST DELTA (prior to pause — unchanged since last sync)
+LATEST DELTA (prior to this — unchanged since last sync)
 --------------------------------------------------------------
 Second "cont" of the last active cycle. niklar-stocks commit 9549f65:
 added mypy static type-checking to CI (pyproject.toml config + pinned
@@ -157,8 +166,9 @@ See DECISIONS_CURRENT.txt.
 
 UNRESOLVED / BLOCKERS
 ------------------------
-  - No blockers currently. Session continuing to further safe,
-    unblocked increments.
+  - BLOCKED (this update): ENGINEERING_AUTHORITY_PROMPT.txt cannot be
+    created — see "BLOCKED" section above and TODO_CURRENT.txt for
+    full detail. Awaiting user clarification.
   - Architecture/stack decision for stage-handler implementations
     (Drive/Sheets/Slack/market-data integration) is explicitly NOT
     being made autonomously — see TODO_CURRENT.txt
@@ -182,11 +192,14 @@ PENDING CANONICAL RECONCILIATION
 
 NEXT RECOMMENDED STEPS
 -------------------------
-  - Continue with further safe, bounded technical-debt/reliability
-    increments per the stated priority order (see TODO_CURRENT.txt) —
-    e.g. the next PWA views (Home/Opportunity Landscape, Watchlist)
-    once there's real portfolio-level data to back them, or further
-    ops/ hardening.
+  - Awaiting user clarification on the engineering-authority blocker
+    above before any niklar-stocks implementation resumes (per the
+    user's own instruction).
+  - Once unblocked (or if the user lifts that hold): continue with
+    further safe, bounded technical-debt/reliability increments per
+    the stated priority order (see TODO_CURRENT.txt) — e.g. the next
+    PWA views (Home/Opportunity Landscape, Watchlist) once there's
+    real portfolio-level data to back them, or further ops/ hardening.
   - Architecture decision for stage-handler implementations (and, by
     extension, a live data source for the PWA) remains with the user.
 

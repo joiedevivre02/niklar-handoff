@@ -123,3 +123,23 @@ NIKLAR-HANDOFF — CHANGELOG
     accessible under the current credential, and the instruction text
     itself wasn't provided or found in Drive. Documented as BLOCKED
     rather than guessed. Still paused; no mutation made.
+
+2026-08-07 (blocked — engineering-authority repo read, no match found)
+  - User said "Try the repository again." Retried add_repo for
+    joiedevivre02/niklar-operating-engineering-system — succeeded this
+    time. Cloned and read it (README, CLAUDE.md, IMPLEMENTATION_STATUS.
+    md, CONTRIBUTING.md, prompts/ pack incl. AI_AGENT_CONSTITUTION.md +
+    CLAUDE_PRIMARY_IMPLEMENTATION.md, runtime/niklar-dwe/CLAUDE.md);
+    grepped the whole tree for "chatgpt", "engineering authority", and
+    every stocks-domain term (stock/PSE/ticker/trading/options/crypto)
+    — zero domain-term hits. Finding: this is a different, separately
+    governed Niklar product (guided-journey/case-record-recovery/
+    property-eligibility/verified-save web app; Founder Constitution ->
+    NES standards -> AI Agent Constitution -> ADRs authority chain), not
+    the stocks-research system this repo coordinates. No file in it is
+    "the latest engineering-authority instruction from ChatGPT" — the
+    only two incidental hits are a reviewer-role sentence and an
+    unrelated negative rule about model-naming. Per the drift kill
+    switch, did not fabricate or import content: ENGINEERING_AUTHORITY_
+    PROMPT.txt was NOT created. Reported to user as BLOCKED, awaiting
+    clarification. Still paused; no mutation made to niklar-stocks.

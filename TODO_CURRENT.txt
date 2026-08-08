@@ -1,30 +1,59 @@
 NIKLAR — TODO (current execution queue)
 Last updated: 2026-08-07 (PAUSED + BLOCKED — see CURRENT_HANDOFF.txt)
 
-BLOCKED — missing information, cannot be guessed
-------------------------------------------------------
+BLOCKED — repo accessible now, but no matching content exists
+-------------------------------------------------------------------
   - User instructed: create ENGINEERING_AUTHORITY_PROMPT.txt in this
     repo "using the latest engineering-authority instruction from
     ChatGPT," and read/reconcile joiedevivre02/niklar-operating-
     engineering-system before resuming implementation.
-  - Checked: joiedevivre02/niklar-operating-engineering-system does
-    not exist / is not accessible under the current GitHub credential
-    (list_repos for "niklar" under this account returns only
-    niklar-handoff and niklar-stocks; add_repo returned not-found).
-    Also checked Drive for any matching "engineering authority"
-    document — none found.
-  - The actual text of "the latest engineering-authority instruction
-    from ChatGPT" was not included in the user's message and isn't
-    available anywhere this session can read. It cannot be
-    reconstructed or approximated — doing so would be inventing
-    canonical-adjacent authority content, which every binding rule
-    this session operates under (hard-rule commit gate, drift
-    kill-switch, "never invent evidence") forbids.
-  - Smallest input needed to unblock: (a) the verbatim
-    engineering-authority text (pasted, or a location this session can
-    read it from), and (b) clarification on the
-    niklar-operating-engineering-system repo — correct name/owner, or
-    confirmation it needs to be created first.
+  - Update: on retry, joiedevivre02/niklar-operating-engineering-system
+    IS now accessible. Cloned and read (README, CLAUDE.md,
+    IMPLEMENTATION_STATUS.md, CONTRIBUTING.md, DECISIONS.md-adjacent
+    files, the prompts/ pack including AI_AGENT_CONSTITUTION.md and
+    CLAUDE_PRIMARY_IMPLEMENTATION.md, runtime/niklar-dwe/CLAUDE.md) and
+    grepped exhaustively for "chatgpt" / "engineering authority" /
+    "stock" / "PSE" / "ticker" / "trading" / "options" / "crypto"
+    across the whole tree.
+  - Finding: this repository is a different Niklar product line —
+    "Niklar Operating and Engineering System RC8.5," a guided-journey /
+    case-record-recovery / property-eligibility / verified-save web app
+    (Journey Control Numbers, Workspace saving, marketplace
+    orchestration, PDF assessment/roadmap outputs) governed by its own
+    separate authority chain: Founder Constitution -> NES standards ->
+    AI Agent Constitution -> approved warehouse/seed artifacts -> ADRs.
+    Zero references anywhere in it to PSE/US stocks, options, crypto,
+    tickers, or trading. No cross-reference to niklar-stocks or
+    niklar-handoff exists in either direction.
+  - "ChatGPT" appears exactly once in the whole repo
+    (runtime/niklar-dwe/CLAUDE.md: "ChatGPT performs architecture and
+    warehouse-conformance review. Founder approves material semantics
+    and scope.") -- a reviewer-role description, not an authored
+    instruction document. "Engineering authority" appears exactly once
+    (CAPABILITY_ROUTING_POLICY.md), as a negative rule: "A model name,
+    vendor, subscription tier, or current benchmark result is never
+    product or engineering authority." Neither is "the latest
+    engineering-authority instruction from ChatGPT."
+  - No file anywhere in this repository is a ChatGPT-authored
+    engineering-authority instruction for the stocks system. The
+    closest candidates (AI_AGENT_CONSTITUTION.md,
+    CLAUDE_PRIMARY_IMPLEMENTATION.md) are Founder-authored governance
+    for the OTHER product, not from ChatGPT, and not applicable to
+    niklar-stocks.
+  - Per the canonical drift kill switch: this is a material
+    contradiction between the user's instruction (implying this repo
+    holds ChatGPT-authored engineering authority for Niklar stocks) and
+    verified repo content (a same-brand but unrelated, separately
+    governed product with no such content). Rather than guess which
+    interpretation is right or import unrelated governance, this is
+    recorded as BLOCKED and reported to the user. ENGINEERING_AUTHORITY_
+    PROMPT.txt was NOT created -- no legitimate source content exists to
+    populate it without fabrication.
+  - Smallest input needed to unblock: user confirmation of what "the
+    latest engineering-authority instruction from ChatGPT" actually is
+    -- e.g. pasted verbatim text, a different repo/path reference, or
+    confirmation that this domain mismatch means the instruction
+    doesn't apply / was intended for a different Niklar workstream.
   - No implementation resumed. No mutation made to niklar-stocks.
 
 PAUSED — awaiting "cont" or user input
