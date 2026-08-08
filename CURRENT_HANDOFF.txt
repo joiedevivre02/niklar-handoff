@@ -1,11 +1,35 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-08 (ROUTING CLEANUP — this repo no longer implies
-ChatGPT responses live in GitHub; no niklar-stocks work this update)
+Last updated: 2026-08-08 (ROUTING CLEANUP round 2 complete — ROUTING
+ACCEPTANCE TEST: PASS, 5/5. No niklar-stocks work this update.)
 Maintained by: Claude, working in the private niklar-stocks environment
 
 LATEST DELTA (this update)
 ------------------------------
 "Cont" -> checked the Drive sync doc first (per the process
+correction) and found a more specific follow-up: "REQUIRED CLAUDE
+GITHUB-SIDE CLEANUP." Completed all required actions: renamed
+ENGINEERING_AUTHORITY_PROMPT.txt -> ARCHIVED_ENGINEERING_AUTHORITY_
+SNAPSHOT_2026-08-08.txt (git mv, archival status now unmissable from
+the filename); moved README's "Communication channel" section to
+immediately after "Authority," before every other workflow section;
+added the 5th acceptance-test question ChatGPT specified; updated the
+Structure section and sync-keyword bullet's references to the renamed
+file; audited CLAUDE_STATUS.txt and CLAUDE_OVERNIGHT_AUTONOMOUS_
+PROMPT.txt for bidirectional-implying phrasing — none found, no edit
+needed there. Recorded as decision #17.
+ROUTING ACCEPTANCE TEST: PASS (5/5) — self-verified against the
+actual README.md content before declaring, per ChatGPT's own "do not
+proceed past an unresolved routing ambiguity" instruction:
+  1. Publish checkpoint -> GitHub niklar-handoff. Correct in repo.
+  2. Read ChatGPT's response -> Drive NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT. Correct in repo.
+  3. Search GitHub for ChatGPT's response? -> NO. Stated in repo.
+  4. ChatGPT write to GitHub? -> NO. Stated in repo.
+  5. Archived GitHub copy = live reply channel? -> NO. Stated in repo.
+Documentation-only; no niklar-stocks mutation this cycle.
+
+PRIOR DELTA — routing cleanup round 1
+------------------------------------------
+Prior "cont" -> checked the Drive sync doc first (per the process
 correction) and found a "ROUTING CLEANUP INSTRUCTION": this repo could
 be misread as implying ChatGPT's replies live in GitHub. Fixed at the
 source: ENGINEERING_AUTHORITY_PROMPT.txt now headed "ARCHIVED SNAPSHOT

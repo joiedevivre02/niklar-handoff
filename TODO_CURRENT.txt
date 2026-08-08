@@ -1,16 +1,30 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-08 (ROUTING CLEANUP done — see
-CURRENT_HANDOFF.txt / DECISIONS_CURRENT.txt #16)
+Last updated: 2026-08-08 (ROUTING CLEANUP complete, 2 rounds — see
+CURRENT_HANDOFF.txt / DECISIONS_CURRENT.txt #16-17.
+ROUTING ACCEPTANCE TEST: PASS, 5/5)
 
-DONE — routing cleanup (this update)
-----------------------------------------
+DONE — routing cleanup, round 2 (this update)
+--------------------------------------------------
+  - A more specific follow-up "REQUIRED CLAUDE GITHUB-SIDE CLEANUP"
+    instruction (Drive sync doc) required: renaming
+    ENGINEERING_AUTHORITY_PROMPT.txt to make its archival status
+    unmissable from the filename (done: git mv to
+    ARCHIVED_ENGINEERING_AUTHORITY_SNAPSHOT_2026-08-08.txt); moving
+    README's communication rule before every other workflow section
+    (done); a 5th acceptance-test question (done); updating remaining
+    filename references (done); auditing CLAUDE_STATUS.txt and
+    CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt (done — clean, no edit
+    needed). See decision #17. ROUTING ACCEPTANCE TEST: PASS (5/5,
+    self-verified against README.md before declaring).
+
+DONE — routing cleanup, round 1 (prior update)
+----------------------------------------------------
   - ChatGPT's "ROUTING CLEANUP INSTRUCTION" (Drive sync doc) asked for
     this repo to stop implying ChatGPT responses can be obtained from
     GitHub, specifically calling out ENGINEERING_AUTHORITY_PROMPT.txt.
-    Fixed: that file now headed "ARCHIVED SNAPSHOT — NOT LIVE"; README
-    "Communication channel" section rewritten with the literal 4-
-    question routing acceptance test. See decision #16. Nothing left
-    to do here unless a future audit finds another ambiguous mention.
+    Fixed: that file (now renamed, see above) headed "ARCHIVED
+    SNAPSHOT — NOT LIVE"; README "Communication channel" section
+    rewritten. See decision #16.
 
 RESOLVED — engineering-authority instruction located (Drive, not GitHub)
 --------------------------------------------------------------------------

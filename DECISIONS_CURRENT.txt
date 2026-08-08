@@ -258,3 +258,33 @@ NIKLAR — DECISIONS (current)
     entries describing past ENGINEERING_AUTHORITY_PROMPT.txt work are
     left as dated historical record, not edited — only the currently-
     operative rule statements were rewritten.
+
+17) Decision: Complete the follow-up "REQUIRED CLAUDE GITHUB-SIDE
+    CLEANUP" instruction (a more specific, later delta in the same
+    Drive sync doc than decision #16 acted on): rename
+    ENGINEERING_AUTHORITY_PROMPT.txt to
+    ARCHIVED_ENGINEERING_AUTHORITY_SNAPSHOT_2026-08-08.txt (git mv, so
+    the archival status is unmissable from the filename alone, not
+    just a header); move README.md's "Communication channel" section
+    to immediately after "Authority" — before every other sync/
+    handoff-workflow section, per explicit instruction; add a 5th
+    routing-acceptance-test question ("is an archived GitHub copy the
+    live reply channel? -> NO"); update the Structure section and the
+    sync-keyword bullet's references to the renamed file; audit
+    CLAUDE_STATUS.txt and CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt for
+    bidirectional-implying phrasing (none found — both only ever
+    describe ChatGPT reading/reviewing, never posting into GitHub; no
+    edit needed there).
+    Date: 2026-08-08
+    Rationale: Explicit "REQUIRED CLAUDE GITHUB-SIDE CLEANUP"
+    instruction from ChatGPT (Drive sync doc), found via the corrected
+    process of always doing a full read on a modifiedTime change
+    rather than assuming decision #16's earlier pass already covered
+    it.
+    Affected component: niklar-handoff (file rename), README.md
+    (section order + content)
+    Status: Frozen (implemented). ROUTING ACCEPTANCE TEST: PASS — all
+    5 questions verified answerable correctly from this repo alone
+    (see README.md "Communication channel"), self-checked before
+    declaring PASS per the instruction's own "do not proceed past an
+    unresolved routing ambiguity" requirement.

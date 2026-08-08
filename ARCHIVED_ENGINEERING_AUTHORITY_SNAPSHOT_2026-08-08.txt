@@ -1,5 +1,7 @@
-NIKLAR — ENGINEERING AUTHORITY PROMPT
+NIKLAR — ARCHIVED ENGINEERING AUTHORITY SNAPSHOT (2026-08-08)
 STATUS: ARCHIVED SNAPSHOT — NOT LIVE. NOT A RESPONSE CHANNEL.
+(Formerly named ENGINEERING_AUTHORITY_PROMPT.txt; renamed 2026-08-08
+so the archival status is unmissable from the filename alone.)
 
 This file is a point-in-time, sanitized COPY of part of the Google
 Drive document `NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT`, taken

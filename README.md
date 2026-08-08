@@ -34,6 +34,43 @@ Drive):
 
 If sources conflict, higher authority wins.
 
+## Communication channel (frozen, 2026-08-08; routing clarified 2026-08-08)
+
+Stated here, first, before any other sync/handoff workflow in this
+file, because it governs how every other section is used. Each side
+of the ChatGPT <-> Claude coordination has exactly one channel of
+record, in one direction only, and the two directions are never the
+same mailbox:
+- **Claude -> ChatGPT / user**: this GitHub repository
+  (`niklar-handoff`) ONLY. Claude publishes checkpoints, deltas,
+  decisions, TODOs, and status here.
+- **ChatGPT -> Claude**: the Google Drive document
+  `NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT` ONLY, read directly from
+  Drive. This is the sole live ChatGPT -> Claude response channel.
+
+Non-negotiable consequences of the above:
+- Claude must NOT search this (or any) GitHub repository for a
+  ChatGPT response. GitHub is Claude's outbound checkpoint channel,
+  not ChatGPT's reply channel.
+- ChatGPT must NOT publish its replies into `niklar-handoff`.
+- Any ChatGPT-authored text that does appear in this repository (e.g.
+  `ARCHIVED_ENGINEERING_AUTHORITY_SNAPSHOT_2026-08-08.txt`) is
+  archival/audit evidence of a past Drive read only — never live,
+  never the current response, never a place to look for ChatGPT's
+  latest reply. See that file's own header for the same statement.
+
+**Routing acceptance test** (a fresh Claude session should answer all
+five correctly from this repo alone):
+1. Where does Claude publish its checkpoint? -> GitHub `niklar-handoff`.
+2. Where does Claude read ChatGPT's response? -> Google Drive
+   `NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT`.
+3. Should Claude search GitHub for ChatGPT's response? -> NO.
+4. Should ChatGPT write its response to GitHub? -> NO.
+5. If a copied ChatGPT instruction exists in GitHub (e.g. the archived
+   snapshot file), is it the live reply channel? -> NO.
+
+Do not invent or use any other channel for either direction.
+
 ## Stale-canon / handoff gate
 
 Before concluding that Niklar context is missing, outdated, or must be
@@ -93,12 +130,14 @@ Only sanitized coordination information belongs in this repository.
   mutations or is paused pending acknowledgement
 - `CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt` — durable record of the
   user's autonomous-operation operating instructions
-- `ENGINEERING_AUTHORITY_PROMPT.txt` — sanitized reproduction of the
-  latest ChatGPT-authored engineering-authority instruction (source:
-  a Drive ChatGPT->Claude sync document, since ChatGPT cannot write to
-  GitHub directly), including the scope firewall for treating
+- `ARCHIVED_ENGINEERING_AUTHORITY_SNAPSHOT_2026-08-08.txt` — an
+  ARCHIVED, NON-LIVE, point-in-time sanitized copy of part of the
+  Drive ChatGPT->Claude sync document, kept only as audit evidence
+  (includes the scope firewall for treating
   joiedevivre02/niklar-operating-engineering-system as read-only
-  project-agnostic-engineering reference only
+  project-agnostic-engineering reference only, as it stood on that
+  date). Never the live reply channel — see "Communication channel"
+  above.
 - `snapshots/` — older handoff states, kept only when useful for
   recovery/comparison
 
@@ -108,11 +147,12 @@ Standing control protocol between the user and Claude/ChatGPT on
 Niklar work:
 - **sync** — refresh this handoff with a concise delta (not a full
   rewrite) of what materially changed. Does not pause work. Also read
-  the Drive ChatGPT->Claude sync document for the newest ChatGPT
-  delta (that document is the outbound channel since ChatGPT can't
-  write to GitHub directly — see `ENGINEERING_AUTHORITY_PROMPT.txt`),
-  reconcile against Drive canon and this handoff, and publish a
-  concise sanitized delta back here.
+  the Drive `NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT` document directly
+  from Drive for the newest ChatGPT delta (see "Communication channel"
+  above — that Drive document, not GitHub, is the only live ChatGPT
+  reply channel), reconcile against Drive canon and this handoff, and
+  publish a concise sanitized delta back here — then read the Drive
+  document again for any ChatGPT response to that checkpoint.
 - **cont** — continue autonomous work immediately on the
   highest-value safe, already-authorized, unblocked next increment;
   don't wait for a scheduled checkpoint. Never overrides the commit
@@ -144,36 +184,3 @@ See `CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt` for the full definition.
 
 Never use this repository as justification for overriding canonical
 private artifacts.
-
-## Communication channel (frozen, 2026-08-08; routing clarified 2026-08-08)
-
-Each side of the ChatGPT <-> Claude coordination has exactly one
-channel of record, in one direction only, and the two directions are
-never the same mailbox:
-- **Claude -> ChatGPT / user**: this GitHub repository
-  (`niklar-handoff`) ONLY. Claude publishes checkpoints, deltas,
-  decisions, TODOs, and status here.
-- **ChatGPT -> Claude**: the Google Drive document
-  `NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT` ONLY, read directly from
-  Drive. This is the sole live ChatGPT -> Claude response channel.
-
-Non-negotiable consequences of the above:
-- Claude must NOT search this (or any) GitHub repository for a
-  ChatGPT response. GitHub is Claude's outbound checkpoint channel,
-  not ChatGPT's reply channel.
-- ChatGPT must NOT publish its replies into `niklar-handoff`.
-- Any ChatGPT-authored text that does appear in this repository (e.g.
-  `ENGINEERING_AUTHORITY_PROMPT.txt`) is archival/audit evidence of a
-  past Drive read only — never live, never the current response, never
-  a place to look for ChatGPT's latest reply. See that file's own
-  header for the same statement.
-
-**Routing acceptance test** (a fresh Claude session should answer all
-four correctly from this repo alone):
-1. Where does Claude publish its checkpoint? -> GitHub `niklar-handoff`.
-2. Where does Claude read ChatGPT's response? -> Google Drive
-   `NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT`.
-3. Should Claude search GitHub for ChatGPT's response? -> NO.
-4. Should ChatGPT write its response to GitHub? -> NO.
-
-Do not invent or use any other channel for either direction.

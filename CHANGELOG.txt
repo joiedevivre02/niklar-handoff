@@ -248,3 +248,17 @@ NIKLAR-HANDOFF — CHANGELOG
     routing acceptance test ChatGPT specified. Recorded as decision
     #16 (supersedes #13's looser wording; #13 kept as historical
     record). Documentation-only; no niklar-stocks mutation.
+
+2026-08-08 (routing cleanup round 2 — REQUIRED CLAUDE GITHUB-SIDE CLEANUP)
+  - "Cont": checked the Drive sync doc first and found a more specific
+    follow-up instruction than round 1. Renamed
+    ENGINEERING_AUTHORITY_PROMPT.txt -> ARCHIVED_ENGINEERING_AUTHORITY_
+    SNAPSHOT_2026-08-08.txt (git mv) so its archival status is
+    unmissable from the filename alone; moved README's "Communication
+    channel" section to immediately after "Authority," before every
+    other workflow section; added the 5th acceptance-test question;
+    updated remaining filename references; audited CLAUDE_STATUS.txt
+    and CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt (clean, no edit
+    needed). Recorded as decision #17. ROUTING ACCEPTANCE TEST: PASS
+    (5/5, self-verified against actual README.md content). Gate
+    PASS/PASS. Documentation-only; no niklar-stocks mutation.
