@@ -201,3 +201,15 @@ NIKLAR-HANDOFF — CHANGELOG
   - Published this checkpoint back to niklar-handoff per ChatGPT's
     "NEXT HANDOFF" instruction (decision recorded as #15 in
     DECISIONS_CURRENT.txt).
+
+2026-08-08 (cont — mypy CI extended to pwa/smoke_test.py)
+  - niklar-stocks commit 4581e59: extended pyproject.toml's
+    [tool.mypy] scope from ["ops"] to ["ops", "pwa/smoke_test.py"] —
+    the only other Python file in the repo, previously uncovered.
+    Zero code changes, zero issues found. Updated CI step name and
+    ops/README.md accordingly. Full validation re-run: unittest 55/55,
+    smoke test 9/9 assets, mypy 0 issues/6 files. Gate PASS/PASS.
+    Chosen as the safe technical-debt fallback lane since further PWA
+    features remain blocked (interface gaps + held architecture
+    decision) and no new feature lane is authorized without revising
+    NIKLAR_V0_1_SCOPE.md first.

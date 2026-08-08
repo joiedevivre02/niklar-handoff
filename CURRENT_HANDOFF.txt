@@ -1,9 +1,22 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-08 (NEXT PHASE COMPLETE — architecture package
-prepared and audited; niklar-stocks commit ab74109)
+Last updated: 2026-08-08 ("cont" — mypy CI extended to
+pwa/smoke_test.py; niklar-stocks commit 4581e59)
 Maintained by: Claude, working in the private niklar-stocks environment
 
-NEXT PHASE COMPLETE — architecture package + audit (this update)
+LATEST DELTA (this update)
+------------------------------
+"cont" after the NEXT PHASE checkpoint. Since further PWA features are
+blocked (interface gaps + held architecture decision) and no new
+feature lane is authorized without revising docs/app/
+NIKLAR_V0_1_SCOPE.md first, picked the next safe technical-debt/
+reliability item: extended mypy's CI scope from ops/ only to
+ops/ + pwa/smoke_test.py (the only other Python file in the repo).
+Zero code changes, zero issues found (clean before and after).
+Full local validation re-run: unittest 55/55 PASS, PWA smoke test PASS
+(9/9 assets), mypy 0 issues across 6 source files. Gate PASS/PASS.
+niklar-stocks main: ab74109 -> 4581e59.
+
+PRIOR — NEXT PHASE COMPLETE — architecture package + audit
 ------------------------------------------------------------------
 BRANCH/COMMIT STATE: niklar-stocks main @ ab74109 (up from 9549f65).
 niklar-handoff main @ d9f060f before this commit.
@@ -272,4 +285,5 @@ FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
     aae6fea (Opportunity Landscape view) ->
     3a66e90 (cross-section navigation) ->
     95cb051 (Watchlist roster view) -> 9549f65 (mypy CI validation) ->
-    ab74109 (NEXT PHASE architecture package: docs/app/ + AGENTS.md)
+    ab74109 (NEXT PHASE architecture package: docs/app/ + AGENTS.md) ->
+    4581e59 (mypy CI extended to pwa/smoke_test.py)
