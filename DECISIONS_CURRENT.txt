@@ -400,3 +400,59 @@ NIKLAR — DECISIONS (current)
     Both required gates (GEMINI_API_KEY secret, AI_QA_ENABLE_GEMINI=1)
     are live in niklar-stocks main, and the escalation path is proven
     working end-to-end in the real environment.
+
+22) Decision: Adopt ChatGPT's newly frozen independent engineering
+    review pattern (Drive sync doc, 2026-08-09 01:40 +08:00 entry),
+    with scripts/ai_qa/ as the named first reference case: Claude
+    performs its own simplification/self-audit against Minimum
+    Sufficient Code, unnecessary abstraction/dependency, duplicate
+    logic, missing failure-envelope coverage, security/privacy
+    leakage, and architecture/canon drift, then publishes a compact
+    review handoff sufficient for ChatGPT to independently inspect the
+    actual diff/code.
+    Date: 2026-08-09
+    Rationale: Explicit instruction from the loaded engineering
+    authority, applied immediately rather than deferred, since
+    scripts/ai_qa/ was already the named reference case and fresh in
+    context. The audit found one genuine defect (see below), not zero
+    — validating the pattern's value rather than being a rubber stamp.
+    Affected component: session/agent operating discipline; see the
+    "DONE — self-audit" entry in this cycle's checkpoint for the
+    concrete finding it produced.
+    Status: Frozen (implemented) — operating protocol, not a Niklar
+    trading/canonical rule. See decision #23 for the finding itself.
+
+23) Decision: Fix a real, self-audit-found defect in
+    scripts/ai_qa/gemini_client.py — diagnose()'s try/except around the
+    Gemini HTTP call caught HTTPError/URLError/TimeoutError (all three
+    cover failures during connection setup) but not a connection that
+    succeeds and is then reset, or returns an incomplete body, while
+    streaming the response (ConnectionResetError; http.client.
+    IncompleteRead, which is not even an OSError subclass). Since
+    run.py's main() only ever catches GeminiError, that failure mode
+    would have propagated past gemini_client.py entirely and crashed
+    the whole worker, losing the deterministic FAIL report the run had
+    already earned — contradicting the module's own documented "never
+    an unhandled traceback" guarantee.
+    Date: 2026-08-09
+    Rationale: Found by reading the code during the self-audit (decision
+    #22), not by a live failure — exactly the kind of gap automated
+    review is for. Fixed with `except (OSError, http.client.
+    HTTPException)`, mapped to GeminiError like every other Gemini-side
+    failure mode. Also closed gemini_client.py's prior
+    zero-automated-test-coverage gap in the same pass (it previously had
+    only ad-hoc manual verification against the real endpoint) — added
+    tests/test_ai_qa_gemini_client.py, 14 tests covering the happy path,
+    every network-failure mode (including two regression tests for this
+    exact finding), and every malformed-response shape the code already
+    handled (blockReason, MAX_TOKENS, zero candidates, non-JSON body,
+    non-JSON structured text, missing required field). All mocked, no
+    real network call in the test suite. Reviewed the rest of
+    scripts/ai_qa/ (redact.py, failure_extract.py, run.py, config.py)
+    against the same six criteria — no other findings.
+    Affected component: niklar-stocks scripts/ai_qa/gemini_client.py,
+    tests/test_ai_qa_gemini_client.py (new), scripts/ai_qa/README.md
+    (commit ee594cc)
+    Status: Frozen (implemented) — unittest 95/95 (81->95, 14 new),
+    mypy 0/13, PWA smoke unaffected, real GitHub Actions run polled and
+    confirmed conclusion: "success".

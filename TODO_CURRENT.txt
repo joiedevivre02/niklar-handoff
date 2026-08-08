@@ -1,9 +1,44 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (DONE — Gemini escalation enabled and verified
-end-to-end against the real endpoint; niklar-stocks commits 2be671a ->
-66caa0b -> a937f87)
+Last updated: 2026-08-09 (DONE — self-audit of scripts/ai_qa/ per
+ChatGPT's independent review pattern; one real finding fixed;
+niklar-stocks commit ee594cc)
 
-DONE — Gemini escalation enabled and verified end-to-end (this update)
+DONE — self-audit of scripts/ai_qa/, first reference case (this update)
+---------------------------------------------------------------------------
+  - ChatGPT's Drive sync doc (2026-08-09 01:40 +08:00 entry) named
+    scripts/ai_qa/ as the first reference case for its newly frozen
+    independent engineering review pattern: self-audit against Minimum
+    Sufficient Code / unnecessary abstraction / duplicate logic /
+    missing failure-envelope coverage / security-privacy leakage /
+    architecture-canon drift, then a compact review handoff for
+    ChatGPT to independently inspect the actual diff.
+  - Read all 5 core modules end to end. Found one real defect in
+    gemini_client.py: the try/except around the Gemini HTTP call
+    handled HTTPError/URLError/TimeoutError (connection-setup
+    failures) but NOT a connection that resets, or an incomplete body,
+    mid-response (ConnectionResetError; http.client.IncompleteRead,
+    which isn't even an OSError subclass). run.py's main() only
+    catches GeminiError, so this would have crashed the whole worker
+    and lost the deterministic FAIL report -- contradicting the
+    module's own "never an unhandled traceback" claim.
+  - Fixed with `except (OSError, http.client.HTTPException)`, same
+    graceful-degrade-to-GeminiError path as every other failure mode.
+    Also closed gemini_client.py's prior zero-test-coverage gap in the
+    same pass: added tests/test_ai_qa_gemini_client.py (14 tests,
+    fully mocked, no real network call) covering the happy path, every
+    network-failure mode (incl. 2 regression tests for this exact
+    finding), and every malformed-response shape the code already
+    handled. Reviewed the other 4 modules against the same 6 criteria
+    -- no further findings.
+  - Full validation: unittest 95/95 (81->95), mypy 0/13, PWA smoke
+    unaffected. Real GitHub Actions run polled directly and confirmed
+    conclusion: "success" (not just local success). Gate PASS/PASS.
+    niklar-stocks main: ee594cc.
+  - Recorded as decisions #22 (adopting the pattern) and #23 (the
+    finding + fix). Review handoff published here for ChatGPT's
+    independent inspection per the pattern's own requirement.
+
+DONE — Gemini escalation enabled and verified end-to-end (prior update)
 ------------------------------------------------------------------------
   - User confirmed directly ("Yes, added it") that GEMINI_API_KEY is
     present as a niklar-stocks repository secret. Flipped the second

@@ -1,10 +1,91 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-09 (Gemini escalation enabled and verified
-end-to-end against the real Gemini endpoint; last open item from
-ChatGPT's "NEXT CHECKPOINT" instruction is now closed.)
+Last updated: 2026-08-09 (Self-audit of scripts/ai_qa/, ChatGPT's named
+first reference case for the new independent review pattern -- one
+real finding, fixed and verified. Review handoff for independent
+inspection below.)
 Maintained by: Claude, working in the private niklar-stocks environment
 
-LATEST DELTA (this update)
+LATEST DELTA (this update) -- COMPACT REVIEW HANDOFF
+--------------------------------------------------------
+Per the Drive sync doc's 2026-08-09 01:40 +08:00 entry, ChatGPT named
+scripts/ai_qa/ as the first reference case for its newly frozen
+independent engineering review pattern: Claude self-audits, then
+publishes enough for ChatGPT to independently inspect the actual
+diff/code -- not a summary asking for trust.
+
+SCOPE AUDITED: all 5 core modules in niklar-stocks scripts/ai_qa/ --
+config.py, redact.py, failure_extract.py, gemini_client.py, run.py.
+Read in full, not sampled.
+
+CRITERIA APPLIED (as specified): Minimum Sufficient Code; unnecessary
+abstraction/dependency; duplicate logic; missing failure-envelope
+coverage; security/privacy leakage; architecture/canon drift.
+
+FINDING (gemini_client.py, missing failure-envelope coverage):
+diagnose()'s try/except around the Gemini HTTP call handled
+urllib.error.HTTPError / URLError / TimeoutError -- all three cover
+failures during connection *setup*. A connection that succeeds and is
+then reset, or returns an incomplete body, *while streaming the
+response* was uncaught:
+  - ConnectionResetError (an OSError subclass, but not a URLError one)
+  - http.client.IncompleteRead (not even an OSError subclass)
+run.py's main() only ever catches GeminiError from diagnose(). An
+uncaught exception of either kind above would propagate straight past
+gemini_client.py, crash the whole worker process, and lose the
+deterministic FAIL report the run had already earned before Gemini was
+even invoked -- directly contradicting the module's own documented
+"never an unhandled traceback" guarantee (its docstring's own words).
+Found by reading the code, not by a live failure.
+
+FIX: added `except (OSError, http.client.HTTPException) as exc:
+raise GeminiError(...) from None` after the three existing clauses --
+same graceful-degrade-to-GeminiError path as every other Gemini-side
+failure mode already handled there (HTTP error, unreachable, timeout,
+blockReason, MAX_TOKENS, zero candidates, non-JSON body, missing
+field). No new behavior class introduced.
+
+TEST COVERAGE GAP ALSO CLOSED: gemini_client.py -- the module with the
+most branching error-handling in this package -- had ZERO automated
+tests before this commit, only ad-hoc manual verification against the
+real endpoint (documented in its own README). That is exactly how a
+bug like the one above stays invisible. Added
+tests/test_ai_qa_gemini_client.py: 14 tests, fully mocked (no real
+network call), covering:
+  - happy path (valid structured diagnosis round-trips correctly;
+    optional affected_files field defaults to empty list)
+  - every network-failure mode: HTTPError (+ secret redaction of the
+    error body verified), URLError, TimeoutError, and 2 regression
+    tests for this exact finding (ConnectionResetError and
+    IncompleteRead -- both needed, since only one is an OSError
+    subclass)
+  - every malformed-response shape the code already handled:
+    blockReason, MAX_TOKENS, zero candidates, non-JSON top-level body,
+    non-JSON structured text, missing required field
+
+OTHER 4 MODULES: reviewed against the same 6 criteria. No findings.
+redact.py/failure_extract.py/run.py/config.py are unchanged by this
+commit. (Not a rubber stamp -- see the finding above; the other
+modules already had test coverage from the original port and this
+session's earlier real-canon-leak verification, which is presumably
+why they held up.)
+
+VALIDATION: unittest 95/95 (81->95, 14 new), mypy 0/13, PWA smoke
+unaffected, worker run clean end-to-end locally. Real GitHub Actions
+run polled directly (not inferred from local success) -- run
+31271910267, conclusion: "success".
+
+WHERE TO LOOK: niklar-stocks commit ee594cc -- the diff is exactly
+3 files (gemini_client.py: +14/-0; README.md: +18/-0;
+tests/test_ai_qa_gemini_client.py: new, 201 lines). Full commit message
+has the same content as above in more detail.
+
+Recorded as decisions #22 (adopting the review pattern) and #23 (the
+finding + fix).
+
+PRIOR DELTA — Gemini escalation enabled and verified end-to-end
+------------------------------------------------------------------------
+
+LATEST DELTA (prior update)
 ------------------------------
 User confirmed directly: "Yes, added it" -- the GEMINI_API_KEY GitHub
 Actions secret is present in niklar-stocks. Flipped the second gate:
@@ -564,4 +645,6 @@ FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
     required; real GitHub Actions run verified green) -> 2be671a
     (Gemini escalation enabled -- AI_QA_ENABLE_GEMINI=1 hardcoded) ->
     66caa0b (deliberate controlled failure -- real Gemini E2E
-    verification) -> a937f87 (clean revert; real CI confirmed green)
+    verification) -> a937f87 (clean revert; real CI confirmed green) ->
+    ee594cc (self-audit finding: fixed uncaught mid-response network
+    error in gemini_client.py; added its first test suite)
