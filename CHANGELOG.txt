@@ -682,3 +682,46 @@ NIKLAR-HANDOFF — CHANGELOG
     manufacturing work. Batch 2 (commit 598b2d4) remains queued for
     independent review, now referenced from CURRENT_HANDOFF.txt's
     PENDING_REVIEW_QUEUE field. Archived HANDOFF_SEQ 9 first.
+
+2026-08-09 (Three-level decision protocol adopted; Batch 3 HARD_GATE reconfirmed; README housekeeping, HANDOFF_SEQ 11)
+  - Drive sync doc RESPONSE_SEQ 16 (owner-approved): adopted a
+    three-level decision-authority protocol. LEVEL 1 CLAUDE_DECIDES:
+    ordinary implementation details clearly inside frozen canon,
+    Minimum Sufficient Code, existing interfaces, established
+    security/privacy rules, and current batch authorization -- resolve
+    directly. LEVEL 2 CHATGPT_DELEGATED_DECISION: a judgment call that
+    would otherwise need the owner, but is derivable from already-
+    frozen canon/principles and doesn't cross an OWNER_ONLY boundary --
+    record a compact decision request (DECISION_ID, question, bounded
+    options, Claude's recommendation, applicable canon, reversibility/
+    downstream impact, deadline/dependency) in the pending-review
+    queue for ChatGPT to reconcile at the next sync. LEVEL 3
+    OWNER_ONLY/HARD_GATE: product scope/behavior/UX not already
+    authorized, spending/paid-service activation, privacy/security
+    posture or material data-sharing boundary, credentials/account
+    permissions/access grants, destructive/hard-to-reverse migration,
+    trading/financial/scoring/tactical/invalidation semantics, legal/
+    compliance commitments, genuinely new architecture decisions with
+    material lock-in -- never delegated, never silently decided.
+    Explicitly refines Section 21's HARD_GATE handling, doesn't
+    replace it. Recorded as decision #36.
+  - Re-checked (not assumed) Batch 3's HARD_GATE classification
+    (decision #35) against the new framework: unchanged. Its blocker
+    matches two LEVEL 3 OWNER_ONLY exclusions verbatim ("credentials/
+    account permissions/access grants"; "genuinely new architecture
+    decision with material lock-in not derivable from frozen canon")
+    -- neither is eligible for LEVEL 2 delegation, since only the owner
+    can actually provision/grant credentials. Recorded as decision #37.
+  - Safe housekeeping under Section 21's carve-out ("unrelated safe
+    housekeeping/testing/documentation may continue"): updated
+    ops/README.md to document niklar_state_contracts.py and
+    niklar_normalization_policy.py (both landed but never described in
+    the module list) and refreshed stale test/mypy figures (64->148
+    tests, 6->15 mypy-scoped files). Documentation only, no code
+    touched. unittest 148/148, mypy 0/15, PWA smoke PASS, real GitHub
+    Actions run 31278730314 confirmed conclusion: "success".
+    niklar-stocks main: 598b2d4 -> 2d9ca84. Recorded as decision #38.
+  - No other safe, already-authorized, unblocked material increment
+    found this cycle. Batch 2 (598b2d4) remains the sole
+    PENDING_REVIEW_QUEUE item, unchanged. Archived HANDOFF_SEQ 10
+    first.

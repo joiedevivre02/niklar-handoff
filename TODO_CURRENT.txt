@@ -1,9 +1,48 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (HARD_GATE — Batch 3 blocked on the
-long-standing orchestrator integration-architecture/credentials
-decision, per Section 21's self-check; HANDOFF_SEQ 10.)
+Last updated: 2026-08-09 (three-level decision protocol adopted;
+Batch 3 HARD_GATE reconfirmed unchanged under it; README housekeeping
+landed; HANDOFF_SEQ 11.)
 
-HARD_GATE — Batch 3 blocked: orchestrator stage-handler integration architecture/credentials (this update)
+DONE — adopt three-level decision protocol; reconfirm Batch 3 HARD_GATE; README housekeeping (this update)
+---------------------------------------------------------------------------
+  - Drive sync doc RESPONSE_SEQ 16 (owner-approved): three-level
+    decision-authority protocol -- LEVEL 1 CLAUDE_DECIDES (ordinary
+    implementation details inside frozen canon/MSC/existing interfaces/
+    security rules/current batch authorization), LEVEL 2
+    CHATGPT_DELEGATED_DECISION (judgment calls derivable from frozen
+    canon that don't cross an OWNER_ONLY boundary -- recorded as a
+    compact decision request in the pending-review queue for ChatGPT
+    to reconcile), LEVEL 3 OWNER_ONLY/HARD_GATE (product scope/
+    behavior, spending/paid-service activation, privacy/security
+    posture or material data-sharing boundary, credentials/account
+    permissions/access grants, destructive/hard-to-reverse migration,
+    trading/financial/scoring/tactical/invalidation semantics, legal/
+    compliance commitments, genuinely new architecture decisions with
+    material lock-in -- never delegated, never silently decided).
+    Refines Section 21's HARD_GATE handling, doesn't replace it.
+    Recorded as decision #36.
+  - Re-checked Batch 3's HARD_GATE classification (decision #35)
+    against the new framework rather than assuming it still holds:
+    unchanged. Its blocker matches two LEVEL 3 OWNER_ONLY exclusions
+    verbatim ("credentials/account permissions/access grants";
+    "genuinely new architecture decision with material lock-in") --
+    neither is eligible for LEVEL 2 delegation, since actually
+    provisioning credentials is an act only the owner can take.
+    Recorded as decision #37.
+  - Safe housekeeping under Section 21's carve-out: updated
+    niklar-stocks ops/README.md to document the two new Batch 1/2
+    modules (niklar_state_contracts.py, niklar_normalization_policy.py)
+    and refresh stale test/mypy counts (64->148 tests, 6->15 mypy-
+    scoped files) left outdated since before either batch landed.
+    Documentation only, no code touched. unittest 148/148, mypy 0/15,
+    PWA smoke PASS, real GitHub Actions run 31278730314 confirmed
+    conclusion: "success". niklar-stocks main: 598b2d4 -> 2d9ca84.
+    Recorded as decision #38.
+  - No other safe, already-authorized, unblocked material increment
+    found. Batch 2 (598b2d4) remains the sole PENDING_REVIEW_QUEUE
+    item. Archived HANDOFF_SEQ 10 first.
+
+HARD_GATE — Batch 3 blocked: orchestrator stage-handler integration architecture/credentials (prior update)
 ---------------------------------------------------------------------------
   - Drive sync doc RESPONSE_SEQ 15 (owner-approved): adopted Section 21
     (ASYNCHRONOUS REVIEW QUEUE / OVERNIGHT AUTONOMY) — REVIEW_REQUIRED

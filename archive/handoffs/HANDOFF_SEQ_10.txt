@@ -1,0 +1,95 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: HARD_GATE (Batch 3 only — Batch 1/2 remain PASS/queued, see below)
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 10
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq10-section21-batch3-hardgate
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 598b2d4 (unchanged this cycle)
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Adopt Section 21 of the pre-live architecture doc (ASYNCHRONOUS
+REVIEW QUEUE / OVERNIGHT AUTONOMY, Drive sync doc RESPONSE_SEQ 15,
+owner-approved) and apply its autonomous-continuation self-check to
+determine whether Batch 3 can proceed now.
+
+MATERIAL_DELTA: Adopted Section 21 as-is (decision #34):
+REVIEW_REQUIRED no longer automatically means STOP_REQUIRED — Claude
+may continue through already-authorized staged work while independent
+review accumulates, subject to a 5-question self-check (already
+authorized? canon-preserving? independently safe if prior review
+later changes? reversible? full validation green?); HARD_GATE still
+applies verbatim for owner-judgment items, canon conflicts, unresolved
+security/privacy/credential decisions, destructive/hard-to-reverse
+migrations, dependence on an unaudited decision, red CI, missing
+external credentials, or an explicit stop authorization. Read in full
+from the primary Drive document, not just the sync-doc summary.
+
+Applied the self-check to Batch 3 ("Daily acquisition/orchestrator
+stage handlers wired to the canonical engine"): HARD_GATE (decision
+#35). Batch 3 requires wiring the orchestrator's 13 canonical stage
+handlers to real Drive/Sheets/Slack/market-data integrations — the
+same "Architecture/stack for the orchestrator's stage-handler
+implementations... requires deciding how/whether this environment
+integrates with Drive/Sheets/Slack and any market-data source" item
+that has stood as AWAITING USER DECISION since decision #8/#28,
+re-confirmed still open by re-reading TODO_CURRENT.txt directly before
+concluding, not assumed. Two HARD_GATE triggers apply verbatim: owner
+judgment required, and required external credentials/permissions are
+missing (this environment holds no Drive/Sheets/Slack/market-data
+credentials — only GEMINI_API_KEY for the QA worker). No
+niklar-stocks mutation this cycle. Checked for any other safe,
+already-authorized, unblocked material increment first — none found,
+reported honestly rather than manufactured.
+
+VALIDATION: N/A this cycle (no code change). Batch 2's own validation
+(unittest 148/148, mypy 0/15, PWA smoke PASS, real CI run 31278234207
+success) is unchanged and still holds.
+
+SELF_AUDIT: Section 21's own 5-question self-check applied to Batch 3,
+documented above and in decision #35 — resolved HARD_GATE, not a
+rubber-stamp continuation.
+
+CANON/GATE STATUS: HARD_GATE (Batch 3 only). Batch 1 (221020b) and
+Batch 2 (598b2d4) remain Frozen/PASS at their own gate status — this
+HARD_GATE does not reopen or affect either.
+
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
+invalidation/Decision Object logic touched. No niklar-stocks file
+changed this cycle.
+
+PENDING_REVIEW_QUEUE (Section 21 — chronological, oldest first):
+  1. niklar-stocks commit 598b2d4 (Batch 2) — package:
+     review-packages/598b2d4-batch2-normalization-llm-policy.md —
+     published HANDOFF_SEQ 9, not yet audited (RESPONSE_SEQ 15's
+     RESPONSE_TO_HANDOFF_SEQ was 8, predating this checkpoint).
+  (Batch 1 original (53d2b3f) and its patch (221020b) are both already
+  PASS/closed per RESPONSE_SEQ 3 and RESPONSE_SEQ 14 respectively —
+  not carried in this queue.)
+
+BLOCKERS: HARD_GATE on Batch 3 — the orchestrator stage-handler
+integration-architecture/credentials decision (which stack for
+Drive/Sheets/Slack/market-data, and how credentials reach this
+environment) remains held for the owner, per decision #8/#28,
+unresolved by either the pre-live architecture's owner approval or by
+Section 21 itself. Not something Claude can resolve unilaterally or
+guess at.
+
+REVIEW_REQUEST: (1) Independent audit of the queued Batch 2 package
+(PENDING_REVIEW_QUEUE item 1). (2) Confirm or correct the Batch 3
+HARD_GATE classification — if a narrower Batch 3 scope was intended
+that doesn't require live credentials, please specify it explicitly;
+otherwise this remains held for the owner's integration-architecture
+decision.
+
+NEXT_ACTION: Awaiting either the owner's integration-architecture/
+credentials decision for Batch 3, an explicit narrowed Batch 3 scope
+that doesn't require them, or ChatGPT's audit of the queued Batch 2
+checkpoint. Per Section 21: this HARD_GATE does not block unrelated
+safe housekeeping, but none is currently identified as needed — will
+report honestly on `cont` rather than manufacture work, matching
+decision #27's precedent.
