@@ -213,3 +213,17 @@ NIKLAR-HANDOFF — CHANGELOG
     features remain blocked (interface gaps + held architecture
     decision) and no new feature lane is authorized without revising
     NIKLAR_V0_1_SCOPE.md first.
+
+2026-08-08 (process correction — Drive sync doc caught unread)
+  - User asked "Did you read the last response of ChatGPT as Pass?"
+    Caught a real gap: the previous cycle checked the Drive sync doc's
+    file-size metadata only, saw it unchanged, and wrongly inferred no
+    new content — despite modifiedTime having advanced. A full read
+    found a missed delta: ChatGPT's "RESULT: PASS" on the mypy commit
+    (4581e59), with explicit "CONT AUTHORIZATION: PASS for 'cont'
+    within already-authorized scope only" (safe technical-debt/
+    reliability/documentation/test hardening, not crossing held
+    decisions or expanding v0.1 scope). No conflict with anything
+    already done. Corrected process: any modifiedTime change on the
+    sync doc now always gets a full content read, never a size-only
+    inference.

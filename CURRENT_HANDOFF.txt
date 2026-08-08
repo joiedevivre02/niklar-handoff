@@ -1,10 +1,27 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-08 ("cont" — mypy CI extended to
-pwa/smoke_test.py; niklar-stocks commit 4581e59)
+Last updated: 2026-08-08 (ChatGPT RESULT: PASS confirmed on the mypy
+delta; process correction recorded — see below)
 Maintained by: Claude, working in the private niklar-stocks environment
 
-LATEST DELTA (this update)
-------------------------------
+PROCESS CORRECTION (this update)
+------------------------------------
+User asked "Did you read the last response of ChatGPT as Pass?" —
+caught a real gap: the prior "cont" cycle checked the Drive sync doc's
+file-size metadata only, saw it unchanged, and wrongly inferred no new
+content, even though modifiedTime had advanced. That inference was
+wrong. A full read now shows a delta that check missed: a
+"CHATGPT SYNC RESPONSE — 2026-08-08 12:05 +08:00" entry with
+"RESULT: PASS" reviewing niklar-stocks ab74109->4581e59 (the mypy
+scope extension), confirming the reported validation results, and
+"CONT AUTHORIZATION: PASS for 'cont' within already-authorized scope
+only ... safe technical-debt/reliability/documentation/test hardening
+that does not cross the held architecture decisions or expand
+NIKLAR_V0_1_SCOPE without explicit authorization." Corrected going
+forward: any modifiedTime change on the sync doc gets a full content
+read, never a size-only inference.
+
+LATEST DELTA (prior update)
+--------------------------------
 "cont" after the NEXT PHASE checkpoint. Since further PWA features are
 blocked (interface gaps + held architecture decision) and no new
 feature lane is authorized without revising docs/app/
