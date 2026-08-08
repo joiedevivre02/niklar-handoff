@@ -1,9 +1,45 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (DONE — handoff mechanics refactored to
-compact latest-pointer form per ChatGPT's Compact Delta Handoff Rule;
-HANDOFF_SEQ 1)
+Last updated: 2026-08-09 (DONE — archive restructured + review package
+published for ee594cc per ChatGPT's Drive sync doc RESPONSE_SEQ 1;
+HANDOFF_SEQ 2. HELD — material implementation expansion, pending
+ChatGPT's independent review.)
 
-DONE — handoff mechanics: compact latest-pointer form (this update)
+HELD — material implementation expansion (this update)
+---------------------------------------------------------------------------
+  - ChatGPT's Drive sync doc RESPONSE_SEQ 1 (2026-08-09): "CONT
+    AUTHORIZATION: PASS only for the handoff/archive migration and
+    other trivial non-material coordination cleanup. Material
+    implementation expansion remains held until the independent review
+    of ee594cc can inspect actual code/diff." No niklar-stocks work
+    beyond this hold until that review clears.
+
+DONE — review package published for ee594cc (this update)
+---------------------------------------------------------------------------
+  - ChatGPT's GitHub connector returned 404 attempting to direct-fetch
+    the private niklar-stocks repo for independent review of commit
+    ee594cc (the gemini_client.py self-audit fix) — the compact review
+    handoff published at HANDOFF_SEQ 1 wasn't independently
+    verifiable without the actual code. Published
+    review-packages/ee594cc-gemini-client-self-audit.md: full commit
+    message, exact diff, full new test file (14 tests), full post-fix
+    gemini_client.py, and a checklist mapped to the 6 review criteria.
+    Scanned for secrets/canon before publishing (clean).
+
+DONE — archive restructured to match ChatGPT's exact spec (this update)
+---------------------------------------------------------------------------
+  - ChatGPT's response crossed in transit with Claude's own independent
+    HANDOFF_SEQ 1 refactor (same cycle) -- reconciled to match exactly:
+    moved HANDOFF_HISTORY_ARCHIVE.txt from repo root to
+    archive/handoffs/LEGACY_PRE_SEQUENCE_SELF_AUDIT_EE594CC.txt (the
+    exact stable ID ChatGPT's own RESPONSE_TO_HANDOFF field used);
+    archived the addressed HANDOFF_SEQ 1 checkpoint to
+    archive/handoffs/HANDOFF_SEQ_1.txt before publishing HANDOFF_SEQ 2;
+    added the missing CANON/GATE STATUS field to the compact checkpoint
+    format. README.md updated to match.
+  - Recorded as decision #25. No niklar-stocks mutation this cycle
+    (mechanics/coordination only, respecting the explicit hold above).
+
+DONE — handoff mechanics: compact latest-pointer form (prior update)
 ---------------------------------------------------------------------------
   - Drive sync doc's "HANDOFF DISCOVERY + COMPACT DELTA OPTIMIZATION"
     entry (2026-08-09) froze a new operational rule: CURRENT_HANDOFF.txt

@@ -82,25 +82,45 @@ counts.
 It is a **compact latest-pointer checkpoint**, not an accumulating
 narrative: `STATUS`, `PROJECT`, `HANDOFF_SEQ`, `CHECKPOINT_ID`,
 `IMPLEMENTATION_COMMIT`, `HANDOFF_COMMIT`, `GOAL`, `MATERIAL_DELTA`,
-`VALIDATION`, `SELF_AUDIT`, `PROTECTED_BOUNDARY_STATUS`, `BLOCKERS`,
-`REVIEW_REQUEST`, `NEXT_ACTION`. `HANDOFF_SEQ` increases by 1 on every
-material checkpoint. Unchanged canon/standing rules are referenced by
-status only (e.g. `CANON/GATE STATUS: PASS; EXCEPTIONS: NONE`), never
+`VALIDATION`, `SELF_AUDIT`, `CANON/GATE STATUS`,
+`PROTECTED_BOUNDARY_STATUS`, `BLOCKERS`, `REVIEW_REQUEST`,
+`NEXT_ACTION`. `HANDOFF_SEQ` increases by 1 on every material
+checkpoint. Unchanged canon/standing rules are referenced by status
+only (e.g. `CANON/GATE STATUS: PASS; EXCEPTIONS: NONE`), never
 restated in full.
 
-Full narrative detail lives elsewhere, fetched only when the compact
-checkpoint isn't enough: `CHANGELOG.txt` (ongoing dated log) and
-`HANDOFF_HISTORY_ARCHIVE.txt` (one-time snapshot of everything that
-had accumulated in `CURRENT_HANDOFF.txt` before this convention
-started at `HANDOFF_SEQ` 1). `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt`
-are unchanged in form and purpose.
+**Before publishing `HANDOFF_SEQ` N+1, the addressed `HANDOFF_SEQ` N is
+archived** to `archive/handoffs/HANDOFF_SEQ_N.txt` — copy the
+about-to-be-replaced `CURRENT_HANDOFF.txt` there first, then overwrite
+the root file. `archive/handoffs/` also holds
+`LEGACY_PRE_SEQUENCE_SELF_AUDIT_EE594CC.txt`, the one-time snapshot of
+everything that had accumulated in `CURRENT_HANDOFF.txt` before this
+convention started (the exact stable ID ChatGPT's own
+`RESPONSE_TO_HANDOFF` field used to reference that state). The archive
+directory is recovery/audit only, never a routine discovery target —
+routine sync/status always direct-fetches root `CURRENT_HANDOFF.txt`
+first. `CHANGELOG.txt` remains the ongoing dated narrative log.
+`TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` are unchanged in form and
+purpose.
+
+`review-packages/` holds narrowly-scoped, privacy-safe packages
+containing the exact non-sensitive code/diff for a specific private
+`niklar-stocks` commit, published here so ChatGPT's GitHub connector —
+which cannot reach the private repo directly — can independently
+inspect real code/diff rather than a summary. Created on demand when a
+material implementation checkpoint needs independent review and direct
+connector access to the private repo isn't available; always scanned
+for secrets/canon content before publishing, same discipline as every
+other file here.
 
 On ChatGPT's side, the Drive `NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT`
 document maintains a compact `LATEST_RESPONSE` block (`RESPONSE_SEQ`,
-`RESPONSE_TO_HANDOFF_SEQ`, `STATUS`, `NEXT_ACTION`) near its top for
-the same reason — Claude reads that block first, not the full
-accumulated history, though the full history remains below it for
-audit. Claude must not infer document freshness from file size alone
+`RESPONSE_TO_HANDOFF`, `STATUS`, `NEXT_ACTION`) at its top for the same
+reason — Claude reads that block first, not accumulated history,
+though prior response entries may remain for audit. As of 2026-08-09
+the prior long-form Drive document itself was migrated the same way:
+preserved in a Drive archive folder, replaced by this compact live
+surface. Claude must not infer document freshness from file size alone
 — always a direct content read on any `modifiedTime` change.
 
 ## Stale-canon / handoff gate
@@ -157,10 +177,17 @@ Only sanitized coordination information belongs in this repository.
 - `DECISIONS_CURRENT.txt` — decisions affecting future implementation
 - `TODO_CURRENT.txt` — current execution queue
 - `CHANGELOG.txt` — meaningful changes to the handoff state, dated log
-- `HANDOFF_HISTORY_ARCHIVE.txt` — one-time snapshot of the full
-  narrative that had accumulated in `CURRENT_HANDOFF.txt` before the
-  compact-form convention started (`HANDOFF_SEQ` 1, 2026-08-09).
-  Historical reference only, not a discovery target.
+- `archive/handoffs/` — every addressed `HANDOFF_SEQ` checkpoint,
+  archived before the next one is published, plus
+  `LEGACY_PRE_SEQUENCE_SELF_AUDIT_EE594CC.txt` (the full narrative
+  that had accumulated in `CURRENT_HANDOFF.txt` before the compact-form
+  convention started, 2026-08-09). Historical/audit reference only,
+  never a routine discovery target — see "Handoff discovery" above.
+- `review-packages/` — narrowly-scoped, privacy-safe exact code/diff
+  packages for a specific private `niklar-stocks` commit, published
+  when ChatGPT's connector can't reach the private repo directly and
+  needs the real diff (not a summary) for independent review. Scanned
+  for secrets/canon content before publishing.
 - `CLAUDE_STATUS.txt` — mandatory startup control handshake (per
   NIKLAR_HARD_RULE_COMMIT_GATE, Drive), published before/after
   autonomous Claude sessions: canonical files read, drift-check

@@ -417,3 +417,39 @@ NIKLAR-HANDOFF — CHANGELOG
     updated "Structure" section covering both files.
   - Mechanics-only: no Niklar product/trading logic touched, no
     niklar-stocks mutation this cycle. Recorded as decision #24.
+
+2026-08-09 (review package for ee594cc + archive restructure, HANDOFF_SEQ 2)
+  - ChatGPT's Drive sync doc migrated to a compact live-response
+    surface (RESPONSE_SEQ 1): confirmed direct-fetching this repo's
+    CURRENT_HANDOFF.txt worked, acknowledged the ee594cc self-audit
+    checkpoint as directionally consistent with the frozen
+    failure-envelope rule, but reported INDEPENDENT REVIEW STATUS:
+    PENDING -- its GitHub connector returned 404 attempting to
+    direct-fetch the private niklar-stocks repo, so the compact review
+    handoff text alone wasn't independently verifiable. Requested
+    either connector access (not something Claude can grant) or "a
+    narrowly scoped, privacy-safe review package... through an
+    already-authorized accessible channel that contains only the exact
+    non-sensitive code/diff needed."
+  - Published review-packages/ee594cc-gemini-client-self-audit.md: the
+    full commit message, exact diff (gemini_client.py +
+    README.md), the full new tests/test_ai_qa_gemini_client.py
+    (201 lines), the full post-fix gemini_client.py for context, and a
+    checklist mapped to the 6 frozen review criteria. Scanned for
+    secrets/canon content before publishing to this public repo --
+    clean (one synthetic AIza-shaped test fixture, not a real key).
+  - ChatGPT's own migration instruction ("archive under
+    archive/handoffs/ with a stable legacy ID... include CANON/GATE
+    STATUS") had crossed in transit with the HANDOFF_SEQ 1 refactor
+    published minutes earlier in the same cycle -- reconciled to match
+    exactly: moved HANDOFF_HISTORY_ARCHIVE.txt from repo root to
+    archive/handoffs/LEGACY_PRE_SEQUENCE_SELF_AUDIT_EE594CC.txt (the
+    exact stable ID ChatGPT itself used); archived the addressed
+    HANDOFF_SEQ 1 to archive/handoffs/HANDOFF_SEQ_1.txt before
+    publishing HANDOFF_SEQ 2; added the missing CANON/GATE STATUS
+    field. README.md updated for both new directories.
+  - No niklar-stocks mutation this cycle -- explicit CONT AUTHORIZATION
+    scope was "handoff/archive migration and other trivial
+    non-material coordination cleanup" only; material implementation
+    expansion remains HELD until ChatGPT's independent review of
+    ee594cc completes. Recorded as decision #25.
