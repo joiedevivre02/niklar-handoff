@@ -1,0 +1,679 @@
+NIKLAR — HANDOFF HISTORY ARCHIVE
+
+Created 2026-08-09 as part of the handoff-mechanics refactor required
+by the Drive sync doc's "HANDOFF DISCOVERY + COMPACT DELTA
+OPTIMIZATION" entry (2026-08-09): CURRENT_HANDOFF.txt converts from an
+accumulating narrative to a compact latest-pointer checkpoint (see
+that file for the current field format: STATUS / PROJECT / HANDOFF_SEQ
+/ CHECKPOINT_ID / IMPLEMENTATION_COMMIT / HANDOFF_COMMIT / GOAL /
+MATERIAL_DELTA / VALIDATION / SELF_AUDIT / PROTECTED_BOUNDARY_STATUS /
+BLOCKERS / REVIEW_REQUEST / NEXT_ACTION).
+
+This file holds the FULL narrative content of CURRENT_HANDOFF.txt as it
+stood immediately before that refactor, preserved verbatim -- nothing
+below was edited, only relocated, per that instruction's explicit
+"preserve prior narrative elsewhere" requirement. This is historical
+record only, not a live discovery target — routine sync/status
+discovery reads CURRENT_HANDOFF.txt first; this file, CHANGELOG.txt,
+DECISIONS_CURRENT.txt, and TODO_CURRENT.txt are consulted only when
+more detail is needed than the compact checkpoint provides.
+
+Going forward, CHANGELOG.txt remains the dated narrative log for new
+entries; this file is a one-time archival snapshot of everything that
+accumulated in CURRENT_HANDOFF.txt before the compact-form convention
+started (HANDOFF_SEQ 1).
+
+================================================================================
+ARCHIVED CONTENT BELOW (verbatim, as of immediately before HANDOFF_SEQ 1)
+================================================================================
+
+NIKLAR — CURRENT HANDOFF
+Last updated: 2026-08-09 (Self-audit of scripts/ai_qa/, ChatGPT's named
+first reference case for the new independent review pattern -- one
+real finding, fixed and verified. Review handoff for independent
+inspection below.)
+Maintained by: Claude, working in the private niklar-stocks environment
+
+LATEST DELTA (this update) -- COMPACT REVIEW HANDOFF
+--------------------------------------------------------
+Per the Drive sync doc's 2026-08-09 01:40 +08:00 entry, ChatGPT named
+scripts/ai_qa/ as the first reference case for its newly frozen
+independent engineering review pattern: Claude self-audits, then
+publishes enough for ChatGPT to independently inspect the actual
+diff/code -- not a summary asking for trust.
+
+SCOPE AUDITED: all 5 core modules in niklar-stocks scripts/ai_qa/ --
+config.py, redact.py, failure_extract.py, gemini_client.py, run.py.
+Read in full, not sampled.
+
+CRITERIA APPLIED (as specified): Minimum Sufficient Code; unnecessary
+abstraction/dependency; duplicate logic; missing failure-envelope
+coverage; security/privacy leakage; architecture/canon drift.
+
+FINDING (gemini_client.py, missing failure-envelope coverage):
+diagnose()'s try/except around the Gemini HTTP call handled
+urllib.error.HTTPError / URLError / TimeoutError -- all three cover
+failures during connection *setup*. A connection that succeeds and is
+then reset, or returns an incomplete body, *while streaming the
+response* was uncaught:
+  - ConnectionResetError (an OSError subclass, but not a URLError one)
+  - http.client.IncompleteRead (not even an OSError subclass)
+run.py's main() only ever catches GeminiError from diagnose(). An
+uncaught exception of either kind above would propagate straight past
+gemini_client.py, crash the whole worker process, and lose the
+deterministic FAIL report the run had already earned before Gemini was
+even invoked -- directly contradicting the module's own documented
+"never an unhandled traceback" guarantee (its docstring's own words).
+Found by reading the code, not by a live failure.
+
+FIX: added `except (OSError, http.client.HTTPException) as exc:
+raise GeminiError(...) from None` after the three existing clauses --
+same graceful-degrade-to-GeminiError path as every other Gemini-side
+failure mode already handled there (HTTP error, unreachable, timeout,
+blockReason, MAX_TOKENS, zero candidates, non-JSON body, missing
+field). No new behavior class introduced.
+
+TEST COVERAGE GAP ALSO CLOSED: gemini_client.py -- the module with the
+most branching error-handling in this package -- had ZERO automated
+tests before this commit, only ad-hoc manual verification against the
+real endpoint (documented in its own README). That is exactly how a
+bug like the one above stays invisible. Added
+tests/test_ai_qa_gemini_client.py: 14 tests, fully mocked (no real
+network call), covering:
+  - happy path (valid structured diagnosis round-trips correctly;
+    optional affected_files field defaults to empty list)
+  - every network-failure mode: HTTPError (+ secret redaction of the
+    error body verified), URLError, TimeoutError, and 2 regression
+    tests for this exact finding (ConnectionResetError and
+    IncompleteRead -- both needed, since only one is an OSError
+    subclass)
+  - every malformed-response shape the code already handled:
+    blockReason, MAX_TOKENS, zero candidates, non-JSON top-level body,
+    non-JSON structured text, missing required field
+
+OTHER 4 MODULES: reviewed against the same 6 criteria. No findings.
+redact.py/failure_extract.py/run.py/config.py are unchanged by this
+commit. (Not a rubber stamp -- see the finding above; the other
+modules already had test coverage from the original port and this
+session's earlier real-canon-leak verification, which is presumably
+why they held up.)
+
+VALIDATION: unittest 95/95 (81->95, 14 new), mypy 0/13, PWA smoke
+unaffected, worker run clean end-to-end locally. Real GitHub Actions
+run polled directly (not inferred from local success) -- run
+31271910267, conclusion: "success".
+
+WHERE TO LOOK: niklar-stocks commit ee594cc -- the diff is exactly
+3 files (gemini_client.py: +14/-0; README.md: +18/-0;
+tests/test_ai_qa_gemini_client.py: new, 201 lines). Full commit message
+has the same content as above in more detail.
+
+Recorded as decisions #22 (adopting the review pattern) and #23 (the
+finding + fix).
+
+PRIOR DELTA — Gemini escalation enabled and verified end-to-end
+------------------------------------------------------------------------
+
+LATEST DELTA (prior update)
+------------------------------
+User confirmed directly: "Yes, added it" -- the GEMINI_API_KEY GitHub
+Actions secret is present in niklar-stocks. Flipped the second gate:
+AI_QA_ENABLE_GEMINI hardcoded to "1" in .github/workflows/ai-qa.yml
+(commit 2be671a; a plain committed value, not a second secret -- the
+flag itself isn't sensitive, and committing it keeps enable/disable
+state visible in version control). Polled the real GitHub Actions run
+for this enable-only commit first -- confirmed conclusion: "success"
+before going further, per the standing quality rule (never assert
+readiness from local success alone; verify the real run).
+
+Then completed the real end-to-end verification ChatGPT's "NEXT
+CHECKPOINT" instruction called for: introduced one deliberate,
+temporary, controlled failure -- a mechanical, canon-free mypy type
+error in scripts/ai_qa/config.py (commit 66caa0b), unrelated to ops/ or
+any trading logic. Pushed, then read the real job log directly
+(mcp__github__get_job_logs) rather than trusting the report shape
+alone. It showed a genuine round-trip against the live Gemini endpoint:
+
+  GEMINI_API_KEY: *** (present) / AI_QA_ENABLE_GEMINI: 1
+  [FAIL] mypy static type check
+  Gemini diagnosis: MECHANICAL_FIX (HIGH confidence)
+  Mypy type check failed due to an incompatible type assignment in
+  scripts/ai_qa/config.py.
+
+This is a real structured classification from the real endpoint --
+not just clean error handling, which is all the earlier invalid-key
+check had proven. It correctly diagnosed the deliberate mechanical
+failure as MECHANICAL_FIX. No canon content, secrets, or repository
+material appeared anywhere in the run log.
+
+Reverted the deliberate failure immediately (commit a937f87) --
+confirmed byte-for-byte identical to 2be671a's config.py via diff, not
+assumed. Local re-check: unittest 81/81, mypy 0 issues. Polled the real
+run for the revert commit -- confirmed conclusion: "success", real CI
+green again.
+
+Recorded as decision #21 (resolves #19's AWAITING USER DECISION).
+scripts/ai_qa/README.md and AGENTS.md updated to reflect the resolved
+decision (prior disabled-by-default rationale kept as history, not
+deleted; AGENTS.md gained a "Resolved decisions" section). Updated
+TODO_CURRENT.txt, DECISIONS_CURRENT.txt, CHANGELOG.txt in this repo to
+match. niklar-stocks main: 2be671a -> 66caa0b -> a937f87.
+
+This closes the last open item from ChatGPT's "NEXT CHECKPOINT"
+instruction (enable + one controlled failure-path invocation, then
+checkpoint). The AI QA worker's Gemini escalation path is now proven
+working end-to-end in the real environment, not just locally and not
+just with clean-error-handling on an invalid key.
+
+PRIOR DELTA — Gemini enable authorized pending secret confirmation
+------------------------------------------------------------------------
+
+LATEST DELTA (prior update)
+------------------------------
+"Sync" -> full read of the Drive sync doc found new content (grew
+8941->10767 bytes). ChatGPT's "CHATGPT SYNC RESPONSE — 2026-08-09
+01:39 +08:00" entry: RESULT: PASS on the CI-fix checkpoint (7543b1c /
+02b8b2e) -- explicitly confirms "QA worker is now CI-verified rather
+than only locally verified." Announced a new cross-agent engineering
+quality rule (recorded in CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt):
+local success alone isn't sufficient when the real execution
+environment materially differs -- exactly the lesson from the
+invocation bug just fixed.
+ENGINEERING AUTHORITY CHECK (ChatGPT's own field): PASS.
+ENGINEERING SCOPE FIREWALL (ChatGPT's own field): PASS.
+PROPERTY-TRANSFER MATERIAL IN NIKLAR-STOCKS (ChatGPT's own field): NO
+REPORTED CONTAMINATION.
+NEXT ACTION per ChatGPT: proceed to enable Gemini escalation "once the
+repository secret GEMINI_API_KEY is present... enable it only after
+confirming the secret is available in the repository Actions
+environment." No tool available to this session can list/confirm
+GitHub Actions secret presence (write-only by design; the GitHub MCP
+tools here expose no such endpoint) -- cannot verify this without the
+user. Not proceeding to flip AI_QA_ENABLE_GEMINI=1 on a guess. Asked
+the user directly whether GEMINI_API_KEY has been added yet.
+No niklar-stocks mutation this cycle -- documentation-only in
+niklar-handoff (this checkpoint + the new quality rule record).
+
+PRIOR DELTA — real CI run verified green after a fix (niklar-stocks 7543b1c)
+------------------------------------------------------------------------------
+
+LATEST DELTA (this update)
+------------------------------
+"Cont" -> checked the Drive sync doc first (no new delta), then
+actually verified the AI QA worker's real GitHub Actions run instead
+of trusting local testing/the prior report. Found the "GitHub Actions
+ready: YES" claim in the prior checkpoint was WRONG: the real first run
+(31261077462) failed with "ImportError: attempted relative import with
+no known parent package" -- scripts/ai_qa/run.py uses relative imports
+that only resolve under `python3 -m scripts.ai_qa.run`, but the
+workflow (and this port's own docs) used the direct file-path form
+`python3 scripts/ai_qa/run.py`, which local testing had never actually
+exercised (every local test run had used the correct -m form). Read
+the real failure log via mcp__github__get_job_logs, reproduced it
+locally, fixed every occurrence of the wrong invocation form (workflow
+YAML + 5 doc references), re-validated locally with the exact corrected
+command, committed (7543b1c), pushed, and polled the real GitHub
+Actions API again -- confirmed conclusion: "success" this time. Gate
+PASS/PASS. niklar-stocks main: 3ffd9b0 -> 7543b1c.
+This is exactly the kind of gap "never invent evidence" exists to
+catch -- the fix was real, not assumed, because I checked the actual
+CI system rather than trusting the local sandbox's result.
+
+PRIOR DELTA — AI QA worker port (niklar-stocks 3ffd9b0)
+--------------------------------------------------------------
+
+LATEST DELTA (this update)
+------------------------------
+User asked to port an "already-proven, low-cost Gemini QA worker
+pattern" from a sibling project (joiedevivre02/journey-passport) into
+niklar-stocks: deterministic checks first, Gemini only on failure
+(diagnosis-only, never decides pass/fail or edits code), Claude only
+when Gemini says CLAUDE_REQUIRED or the issue touches canonical logic.
+
+The pattern did not exist where first expected (checked
+niklar-operating-engineering-system exhaustively — genuinely absent,
+confirming that repo really is the different, unrelated product it was
+already established to be) nor on journey-passport's default branch —
+found instead on an unmerged branch there
+(claude/automated-qa-gemini-worker-ctk7s1, commit bf4fb61), previously
+built and verified. Read every file in that commit in full before
+designing anything; a Plan-review pass then tested the design against
+niklar-stocks's actual commands/git-history/.gitignore state before
+implementation began, catching a serious finding: this repo's own test
+failures can contain canonical Niklar trading logic verbatim (a
+render_preopen assertion failure includes the full IF-THEN entry/
+breakout/invalidation ruleset; publication-validator failures surface
+all 31 canonical section names; schema-lock failures surface
+FROZEN_SCHEMA's 63 column names) — the source pattern's secret
+redaction only catches credential-shaped text and was never designed
+to catch this, because the source repo's own failures don't contain it.
+
+Built scripts/ai_qa/ (run.py orchestrator, config.py, redact.py ported
+from the source, gemini_client.py via stdlib urllib — no new
+dependency, and a NEW module, failure_extract.py, not in the source
+pattern, that extracts only structurally-safe facts — test id,
+exception class, traceback file/line/function, never the assertion
+message body — from unittest output for the test step specifically).
+Verified the mitigation against the REAL leaking case, not just a
+synthetic one: introduced a temporary deliberate failure against the
+actual render_preopen() renderer, confirmed it leaks the full canonical
+ruleset in raw unittest output, ran it through the extractor, confirmed
+zero canon fragments in the resulting payload, reverted cleanly.
+
+Given that finding, Gemini escalation ships DISABLED BY DEFAULT (needs
+both AI_QA_ENABLE_GEMINI=1 and a real GEMINI_API_KEY, not the key alone)
+— this repo's first outbound network call and first credential, so
+turning it on for real is recorded as a new held-decision in AGENTS.md
+rather than self-authorized as part of landing the tooling.
+
+.github/workflows/tests.yml replaced with ai-qa.yml (confirmed via the
+GitHub API that main has no branch protection/required checks, so this
+was safe) — avoids two workflows that could disagree. Fixed every
+stale tests.yml/CI reference this created (5 locations: README.md,
+ops/README.md, AGENTS.md, 2x in docs/app/NIKLAR_MOBILE_ARCHITECTURE.md).
+docs/app/NIKLAR_APP_SYSTEM_MAP.md gained one sentence noting scripts/
+sits outside the 5-layer authority chain entirely.
+
+Full validation: unittest 81/81 PASS (up from 64, 17 new tests), mypy
+0 issues/13 files (scripts/ added to scope), PWA smoke test PASS
+(unaffected), scripts/ai_qa/run.py tested live 3 ways (clean pass/zero
+network calls; deliberate-failure/Gemini-disabled/clean degrade;
+deliberate-failure/Gemini-enabled-with-invalid-key against the REAL
+Gemini endpoint/clean HTTP 400 handling) — all reverted cleanly.
+Gate PASS/PASS. niklar-stocks main: 4bb9543 -> 3ffd9b0.
+
+No trading/scoring logic touched or duplicated; no client/worker code
+makes an autonomous trading decision; private-only rule unaffected (no
+deployment/hosting change). ENGINEERING AUTHORITY CHECK: N/A this
+cycle (task came directly from the user, not the Drive ChatGPT sync
+channel) — reconciled anyway against existing AGENTS.md hard rules and
+the scope-firewall precedent from niklar-operating-engineering-system;
+no conflict found.
+
+PRIOR DELTA — routing cleanup round 2, cross-repo reference fix
+------------------------------------------------------------------------
+"Cont." User also added a standing instruction: whenever Claude
+publishes a checkpoint meant for ChatGPT to review, tell the user
+"sync to chatgpt" as an explicit flag (recorded in
+CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt — user-facing courtesy signal,
+not a protocol change).
+Checked the Drive sync doc first (no new delta since the round-2
+routing cleanup). Then: following that cleanup's file rename, grepped
+niklar-stocks for any reference to the old filename
+(ENGINEERING_AUTHORITY_PROMPT.txt) and found two genuinely stale ones
+(AGENTS.md x2, docs/app/NIKLAR_APP_SYSTEM_MAP.md) — updated both to
+the new filename with a short "archived, not live" clarifying note.
+Confirmed the two remaining niklar-handoff references elsewhere
+(README.md repo link; NIKLAR_APP_CONTRACT.md's DECISIONS_CURRENT.txt
+#11 reference) are unaffected. Full validation: unittest 64/64, smoke
+test PASS, mypy 0/6. Gate PASS/PASS. niklar-stocks main:
+ac7e334 -> 4bb9543.
+ROUTING ACCEPTANCE TEST: still PASS (5/5) — this update only added a
+consistency fix on the niklar-stocks side, didn't touch the answers.
+
+PRIOR DELTA — routing cleanup round 2 (niklar-handoff ae533f9)
+--------------------------------------------------------------------
+Prior "cont" -> checked the Drive sync doc first (per the process
+correction) and found a more specific follow-up: "REQUIRED CLAUDE
+GITHUB-SIDE CLEANUP." Completed all required actions: renamed
+ENGINEERING_AUTHORITY_PROMPT.txt -> ARCHIVED_ENGINEERING_AUTHORITY_
+SNAPSHOT_2026-08-08.txt (git mv, archival status now unmissable from
+the filename); moved README's "Communication channel" section to
+immediately after "Authority," before every other workflow section;
+added the 5th acceptance-test question ChatGPT specified; updated the
+Structure section and sync-keyword bullet's references to the renamed
+file; audited CLAUDE_STATUS.txt and CLAUDE_OVERNIGHT_AUTONOMOUS_
+PROMPT.txt for bidirectional-implying phrasing — none found, no edit
+needed there. Recorded as decision #17.
+ROUTING ACCEPTANCE TEST: PASS (5/5) — self-verified against the
+actual README.md content before declaring, per ChatGPT's own "do not
+proceed past an unresolved routing ambiguity" instruction:
+  1. Publish checkpoint -> GitHub niklar-handoff. Correct in repo.
+  2. Read ChatGPT's response -> Drive NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT. Correct in repo.
+  3. Search GitHub for ChatGPT's response? -> NO. Stated in repo.
+  4. ChatGPT write to GitHub? -> NO. Stated in repo.
+  5. Archived GitHub copy = live reply channel? -> NO. Stated in repo.
+Documentation-only; no niklar-stocks mutation this cycle.
+
+PRIOR DELTA — routing cleanup round 1
+------------------------------------------
+Prior "cont" -> checked the Drive sync doc first (per the process
+correction) and found a "ROUTING CLEANUP INSTRUCTION": this repo could
+be misread as implying ChatGPT's replies live in GitHub. Fixed at the
+source: ENGINEERING_AUTHORITY_PROMPT.txt now headed "ARCHIVED SNAPSHOT
+— NOT LIVE. NOT A RESPONSE CHANNEL" (audit evidence of a 2026-08-08
+Drive read only); README.md's "Communication channel" section rewritten
+unambiguously, including the literal 4-question routing acceptance
+test ChatGPT specified — this repo now answers all four correctly on
+its own. Recorded as decision #16 (supersedes #13's looser phrasing;
+#13 kept as historical record). Historical CHANGELOG.txt/
+CURRENT_HANDOFF.txt entries describing past work left as dated record,
+not edited. Documentation-only; no niklar-stocks mutation.
+
+PRIOR DELTA — closed 2 real test-coverage gaps (niklar-stocks ac7e334)
+------------------------------------------------------------------------
+"cont," within ChatGPT's "test hardening" authorization. Transiently
+installed coverage.py (validation-only, same precedent as Playwright)
+and ran it against the 55-test suite: 96%, with two genuine gaps —
+niklar_stocks_ops_v4.py's private _p()/_zone() formatting helpers'
+None/empty and non-numeric-passthrough branches (only ever reached
+through call sites that already guard those values first), and the
+publication validator's documented CLI entrypoint (zero coverage).
+Added 9 targeted tests (55->64) closing both. No ops/*.py source line
+changed — verbatim Drive modules untouched, tests + docs only.
+Post-commit check caught its own shell-backtick commit-message
+corruption; fixed via amend before push (message only, no source
+content affected). Full validation: unittest 64/64, smoke test PASS,
+mypy 0/6 files. Gate PASS/PASS. niklar-stocks main: 4581e59 -> ac7e334.
+
+PRIOR — PROCESS CORRECTION
+------------------------------------
+User asked "Did you read the last response of ChatGPT as Pass?" —
+caught a real gap: the prior "cont" cycle checked the Drive sync doc's
+file-size metadata only, saw it unchanged, and wrongly inferred no new
+content, even though modifiedTime had advanced. That inference was
+wrong. A full read now shows a delta that check missed: a
+"CHATGPT SYNC RESPONSE — 2026-08-08 12:05 +08:00" entry with
+"RESULT: PASS" reviewing niklar-stocks ab74109->4581e59 (the mypy
+scope extension), confirming the reported validation results, and
+"CONT AUTHORIZATION: PASS for 'cont' within already-authorized scope
+only ... safe technical-debt/reliability/documentation/test hardening
+that does not cross the held architecture decisions or expand
+NIKLAR_V0_1_SCOPE without explicit authorization." Corrected going
+forward: any modifiedTime change on the sync doc gets a full content
+read, never a size-only inference.
+
+LATEST DELTA (prior update)
+--------------------------------
+"cont" after the NEXT PHASE checkpoint. Since further PWA features are
+blocked (interface gaps + held architecture decision) and no new
+feature lane is authorized without revising docs/app/
+NIKLAR_V0_1_SCOPE.md first, picked the next safe technical-debt/
+reliability item: extended mypy's CI scope from ops/ only to
+ops/ + pwa/smoke_test.py (the only other Python file in the repo).
+Zero code changes, zero issues found (clean before and after).
+Full local validation re-run: unittest 55/55 PASS, PWA smoke test PASS
+(9/9 assets), mypy 0 issues across 6 source files. Gate PASS/PASS.
+niklar-stocks main: ab74109 -> 4581e59.
+
+PRIOR — NEXT PHASE COMPLETE — architecture package + audit
+------------------------------------------------------------------
+BRANCH/COMMIT STATE: niklar-stocks main @ ab74109 (up from 9549f65).
+niklar-handoff main @ d9f060f before this commit.
+
+FIVE FILES CREATED (niklar-stocks):
+  - docs/app/NIKLAR_APP_SYSTEM_MAP.md
+  - docs/app/NIKLAR_APP_CONTRACT.md
+  - docs/app/NIKLAR_MOBILE_ARCHITECTURE.md
+  - docs/app/NIKLAR_V0_1_SCOPE.md
+  - AGENTS.md (root)
+Also updated niklar-stocks README.md to link the new package.
+
+PROVISIONAL IMPLEMENTATION AUDIT OUTCOME: every existing ops/
+mobile_contract.py/pwa/ component classifies COMPLIANT against the
+derived contract. Zero REFACTOR REQUIRED, zero REMOVE-DO NOT RELY ON.
+Full table in docs/app/NIKLAR_APP_CONTRACT.md. The contract was
+derived by generalizing the discipline that implementation was already
+built under (never-fabricate-freshness, never-sort/rank, trace-every-
+field-to-schema, private-only) — existing code did not get to author
+the contract; it was checked against one stated independently first.
+
+INTERFACE GAPS (both already known, not newly discovered):
+  1. No schema distinction between a real executed position and a
+     simulated/"Shadow Journal" entry — blocks any future Position/
+     Journal view. `Position Entry`/`Position Status` exist in
+     FROZEN_SCHEMA but nothing marks real-vs-simulated.
+  2. No live data source for the PWA or orchestrator stage handlers —
+     same underlying held integration decision as before.
+
+EXPLICIT USER DECISIONS REQUIRED: unchanged — the orchestrator stage-
+handler / live-data-source architecture (Drive/Sheets/Slack/market-
+data + credentials). Not made autonomously; architecture docs
+presented it as a held decision, not a choice.
+
+SAFE TO RESUME: YES, within already-authorized scope only. v0.1 stays
+exactly as documented in NIKLAR_V0_1_SCOPE.md; no new feature lane,
+live data, or deployment work without that scope doc being revised
+first. Test suite re-verified 55/55 passing (docs-only change, no
+regression). Gate PASS/PASS on both the niklar-stocks and niklar-
+handoff commits this cycle.
+
+PRIOR SYNC — ChatGPT confirmation of frozen channel
+------------------------------------------------------------------
+Re-read the Drive ChatGPT->Claude sync document per the sync
+procedure (step 1) and found a new dated entry not present at the
+prior sync: "FROZEN HANDOFF LOCATION RULE — 2026-08-08." It mirrors
+decision #14 exactly from ChatGPT's side: ChatGPT reads this GitHub
+repo (niklar-handoff) for Claude's checkpoints when the user says
+"sync"/"status," reconciles against Drive canon and the existing
+handoff/recovery rules, and does NOT search Drive for Claude's
+handoff material. Both sides now independently enforce the same
+one-directional-per-side channel. No conflict with Drive canon, no
+drift — reconciliation step 2-5 all clear. This entry is that
+delta, published per step 6.
+
+FROZEN — communication channel (prior update, 2026-08-08)
+-------------------------------------------------------------
+User instruction: "Freeze this. You send update to github and chatgpt
+answers in google drive canon folder." Recorded as decision #14 and in
+README.md ("Communication channel" section): Claude -> ChatGPT/user
+posts only to this repo; ChatGPT -> Claude posts only to the Drive
+ChatGPT->Claude sync document. No other channel either direction. Pure
+documentation update — no niklar-stocks mutation, no new increment.
+
+RESOLVED (was BLOCKED, prior update)
+-------------------------
+The engineering-authority instruction was never in GitHub — the user
+pointed out ChatGPT can't write to GitHub directly, so it publishes to
+Google Drive instead. Found the actual document there (a live
+ChatGPT -> Claude outbound sync doc, newest content dated 2026-08-08)
+and reproduced it sanitized in this repo's new
+ENGINEERING_AUTHORITY_PROMPT.txt. It confirms the prior investigation
+of joiedevivre02/niklar-operating-engineering-system was correct in
+substance: that repo is READ-ONLY REFERENCE MATERIAL for Niklar
+Stocks, scoped to project-agnostic engineering practice only (never
+its own product/domain material) — a scope firewall, not a rejection
+of the repo. Compliance audit against niklar-stocks (full working tree
++ all-branch git history) found zero trace of that repo's domain
+material. Full detail in TODO_CURRENT.txt.
+niklar-stocks implementation may resume — see "NEXT PHASE" in
+TODO_CURRENT.txt for what the loaded authority actually authorizes
+next (architecture-artifact preparation, not further PWA build/merge
+yet — a STOP GATE in the same document covers that distinction).
+
+LATEST DELTA
+----------------
+This update: engineering-authority blocker resolved (above). No
+niklar-stocks code changed yet this cycle — next action is preparing
+the 5 NEXT PHASE architecture artifacts (see TODO_CURRENT.txt).
+Prior delta (niklar-stocks 9549f65): mypy static type-checking added
+to CI, 0 issues, ops/ only. Gate PASS/PASS.
+Prior to that (95cb051): Watchlist roster view — see "ops/ + PWA
+history" below for full detail.
+
+STATUS
+------
+RESUMED. ChatGPT independently verified CLAUDE_STATUS.txt and the user
+relayed approval ("Startup handshake APPROVED... Set SAFE TO CONTINUE:
+YES"). CLAUDE_STATUS.txt has been updated to record the acknowledgement.
+Autonomous implementation continued under the same hard rules (pre-
+commit gate + post-commit verification run and PASSED on every commit
+below; drift kill switch did not trigger). The private canonical Niklar
+system (Google Drive) and the private niklar-stocks repository remain
+the source of truth; nothing below has been promoted into Drive canon.
+
+PROJECT SUMMARY (sanitized)
+----------------------------
+Niklar is a research and decision-automation system covering PSE
+stocks, US stocks, options, and crypto, governed by a canonical
+rulebook and multi-market routing/validation contracts in a private
+Google Drive folder. The private niklar-stocks repository now holds:
+curated canonical reference docs (docs/niklar-reference/), and (new
+this session) a first slice of deterministic operational code
+(ops/) with a test suite.
+
+CANONICAL FILES THE NEXT AGENT SHOULD CONSULT
+-----------------------------------------------
+In the PRIVATE niklar-stocks repository under docs/niklar-reference/
+(file names only, not reproduced here):
+  00_MANDATORY_READ_CURRENT.txt, START_HERE_CURRENT_STATUS.txt,
+  README_FIRST_CURRENT.txt, NIKLAR_MULTI_MARKET_AUTHORITY_MAP_CURRENT.txt,
+  PSE_EXECUTION_MANIFEST_CURRENT.txt, US_STOCKS_EXECUTION_MANIFEST_CURRENT.txt,
+  OPTIONS_EXECUTION_MANIFEST_CURRENT.txt, CRYPTO_EXECUTION_MANIFEST_CURRENT.txt,
+  NIKLAR_VALIDATION_ORCHESTRATOR_CURRENT.txt, NIKLAR_RUN_RECEIPT_CONTRACT_CURRENT.txt
+
+In Drive (not yet mirrored anywhere, read directly):
+  NIKLAR_CHATGPT_CLAUDE_HANDOFF_RECOVERY_RULE.txt — governs this
+  handoff repo's use, ChatGPT/Claude authority order, stale-canon gate,
+  and Claude model-routing/token-efficiency guidance. See this repo's
+  README.md for the authority-order and stale-canon-gate summary now
+  reconciled into it.
+
+Drive remains authority #1 above all of the above; re-sync if stale.
+
+ops/ + PWA history (private niklar-stocks repo) — full detail
+------------------------------------------------------------------
+Prior turns (already in earlier handoff versions, unchanged):
+  - Repository initialized; docs/niklar-reference/ synced (10 docs +
+    index); .gitignore added; no LICENSE; reference-docs branch merged
+    to main.
+
+THIS INCREMENT — ops/ integration (commit cac4df1 on niklar-stocks main):
+  - Pulled three existing Niklar Python modules from the canonical
+    Drive folder (Operations/Shared Workflow) into niklar-stocks/ops/,
+    VERBATIM, unmodified:
+      * niklar_stocks_ops_v4.py — Master Database schema v4.0 lock,
+        strategic-vs-dynamic field-ownership enforcement, and
+        deterministic preopen/intraday/near-close card renderers.
+      * niklar_single_stock_publication_validator.py — fail-closed
+        31-section canonical report validator.
+      * niklar_single_stock_orchestrator.py — canonical execution
+        pipeline stage runner (stage list + fail-closed sequencing;
+        no stage-handler implementations).
+  - Wrote a 26-test unittest suite (niklar-stocks/tests/) against
+    synthetic fixture data (no real tickers/prices/research content):
+    schema-lock violations (missing/extra/reordered columns),
+    field-ownership boundaries, all three renderers (incl. fail-closed
+    behavior on missing fields and "Unknown" null handling), the
+    publication validator, and orchestrator stage-ordering/failure
+    behavior.
+  - Ran the suite against the unmodified source: ALL 26 PASS. No bugs
+    found in the existing modules (one apparent schema-hash-length
+    discrepancy was checked and is a non-issue — the hash matches).
+  - Added GitHub Actions CI (.github/workflows/tests.yml) to run the
+    suite on every push/PR.
+  - Updated niklar-stocks root README.md to document ops/ and link
+    this handoff repo.
+  - This is integration + verification of already-existing Niklar
+    artifacts, NOT new trading/decision logic. No stage-handler
+    implementations, no Drive/Sheets/Slack integration, no market-data
+    or broker connectivity were added — deliberately deferred, see
+    TODO_CURRENT.txt.
+
+NEXT INCREMENT — mobile contract + PWA vertical slice
+  (commit 56dd1d2 on niklar-stocks main, after startup handshake ack):
+  - Rationale: no live-data credentials exist in this environment
+    (no PSE EDGE/Sheets/Slack access), so the orchestrator's
+    stage-handler work stays correctly blocked on the user's
+    architecture decision (see TODO_CURRENT.txt). The PWA/mobile
+    output, however, is explicit canonical product direction that
+    needs no external credentials — a thin client over already-tested
+    canonical fields, buildable and testable entirely with synthetic
+    data. That made it the next already-authorized, unblocked
+    increment.
+  - Added a mobile-facing Decision Object contract (pure structural
+    transform of existing canonical Master Database fields — no new
+    fields invented, no decision-language reconstruction, and
+    deliberately does NOT assert LIVE/CURRENT/STALE freshness since no
+    real-time feed exists here — see the module's own documentation for
+    the "don't fabricate confidence" rationale).
+  - Implemented the "Quick Review / Tactical Card" mobile view (the
+    canonical PWA priority-#2 view) as a private-access-only,
+    dependency-free static web app: installable app shell, service
+    worker that caches the shell but never the data (freshness over
+    offline availability), synthetic sample data only. Explicitly
+    private: no deployment, no public hosting, noindex/private banner
+    in the UI.
+  - Test coverage: 11 new unit tests (37/37 total suite passing).
+    Additionally validated end-to-end in a real headless browser this
+    session (used transiently for validation only, not added as a
+    project dependency): happy-path rendering, empty-response,
+    HTTP-error, retry-recovery, and malformed-response states all
+    verified working, not merely assumed. A stdlib-only HTTP smoke
+    test is wired into CI for ongoing regression coverage.
+  - Explicitly out of scope this slice (by design, not oversight): the
+    Home/Opportunity Landscape view, Daily Brief/Inbox, Watchlist, any
+    live data connection, any deployment.
+  - Pre-commit gate run and PASSED (all 10 points); post-commit diff
+    verification run and PASSED (no secrets, no real ticker-looking
+    data beyond the synthetic DEMO1/2/3 fixtures, no deploy config).
+
+DECISIONS ALREADY FROZEN
+--------------------------
+See DECISIONS_CURRENT.txt.
+
+UNRESOLVED / BLOCKERS
+------------------------
+  - None from the engineering-authority item — resolved this update
+    (see "RESOLVED" section above).
+  - Architecture/stack decision for stage-handler implementations
+    (Drive/Sheets/Slack/market-data integration) is explicitly NOT
+    being made autonomously — see TODO_CURRENT.txt
+    "AWAITING USER DECISION". This is exactly the kind of "material
+    architectural decision with no existing authoritative basis" the
+    operating instructions say to hold for the user rather than guess.
+
+PENDING CANONICAL RECONCILIATION
+-----------------------------------
+  - The ops/ integration and the mobile contract/PWA slice (both this
+    session) exist only in the private niklar-stocks repo. Not
+    promoted into Drive canon (code artifacts are not expected to
+    live in Drive — flagged per the recovery rule's requirement to
+    label not-yet-Drive-reconciled state explicitly, not because
+    promotion is expected here).
+  - This handoff repo's README.md authority-order/stale-canon-gate
+    section was reconciled against
+    NIKLAR_CHATGPT_CLAUDE_HANDOFF_RECOVERY_RULE.txt in Drive earlier
+    this session (adding the 4th authority tier and the 10-step gate
+    procedure).
+  - This update: ENGINEERING_AUTHORITY_PROMPT.txt reconciled against
+    the Drive ChatGPT->Claude sync document (see TODO_CURRENT.txt).
+    That Drive document is explicitly NOT canon itself (its own text
+    says so) — it's an outbound operational handoff. Standing rules
+    stay in their owning authorities.
+
+NEXT RECOMMENDED STEPS
+-------------------------
+  - Prepare the 5 NEXT PHASE architecture artifacts named in
+    TODO_CURRENT.txt (NIKLAR_APP_SYSTEM_MAP, NIKLAR_APP_CONTRACT,
+    NIKLAR_MOBILE_ARCHITECTURE, NIKLAR_V0_1_SCOPE, root AGENTS.md) —
+    the loaded engineering authority's explicit next step, gated ahead
+    of further PWA build/merge work.
+  - Architecture decision for stage-handler implementations (and, by
+    extension, a live data source for the PWA) remains with the user
+    — unchanged by this update.
+
+FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
+--------------------------------------------------------------------------
+  - Default branch: main
+  - Branch: claude/niklar-folder-reference-vzytcg (merged, still on
+    origin)
+  - Commits on main: 1f7f4d8 (initial) -> b0dd27f (.gitignore) ->
+    eb0a196 (reference docs) -> 98cbf5a (merge) ->
+    cac4df1 (ops/ integration + tests + CI) ->
+    56dd1d2 (mobile contract + PWA vertical slice) ->
+    aae6fea (Opportunity Landscape view) ->
+    3a66e90 (cross-section navigation) ->
+    95cb051 (Watchlist roster view) -> 9549f65 (mypy CI validation) ->
+    ab74109 (NEXT PHASE architecture package: docs/app/ + AGENTS.md) ->
+    4581e59 (mypy CI extended to pwa/smoke_test.py) ->
+    ac7e334 (closed 2 real test-coverage gaps, 55->64 tests) ->
+    4bb9543 (fixed stale niklar-handoff filename references) ->
+    3ffd9b0 (repo-local AI QA worker ported, disabled by default,
+    64->81 tests) -> 7543b1c (fixed real CI failure -- -m invocation
+    required; real GitHub Actions run verified green) -> 2be671a
+    (Gemini escalation enabled -- AI_QA_ENABLE_GEMINI=1 hardcoded) ->
+    66caa0b (deliberate controlled failure -- real Gemini E2E
+    verification) -> a937f87 (clean revert; real CI confirmed green) ->
+    ee594cc (self-audit finding: fixed uncaught mid-response network
+    error in gemini_client.py; added its first test suite)

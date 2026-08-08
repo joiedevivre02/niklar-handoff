@@ -71,6 +71,38 @@ five correctly from this repo alone):
 
 Do not invent or use any other channel for either direction.
 
+## Handoff discovery (compact form, frozen 2026-08-09)
+
+`CURRENT_HANDOFF.txt` is the direct-fetch target for `sync`/`status`,
+by both sides — read it first, not via repository discovery/search. An
+empty or incomplete discovery result is never sufficient evidence the
+handoff is unavailable; only a direct fetch failure of this exact path
+counts.
+
+It is a **compact latest-pointer checkpoint**, not an accumulating
+narrative: `STATUS`, `PROJECT`, `HANDOFF_SEQ`, `CHECKPOINT_ID`,
+`IMPLEMENTATION_COMMIT`, `HANDOFF_COMMIT`, `GOAL`, `MATERIAL_DELTA`,
+`VALIDATION`, `SELF_AUDIT`, `PROTECTED_BOUNDARY_STATUS`, `BLOCKERS`,
+`REVIEW_REQUEST`, `NEXT_ACTION`. `HANDOFF_SEQ` increases by 1 on every
+material checkpoint. Unchanged canon/standing rules are referenced by
+status only (e.g. `CANON/GATE STATUS: PASS; EXCEPTIONS: NONE`), never
+restated in full.
+
+Full narrative detail lives elsewhere, fetched only when the compact
+checkpoint isn't enough: `CHANGELOG.txt` (ongoing dated log) and
+`HANDOFF_HISTORY_ARCHIVE.txt` (one-time snapshot of everything that
+had accumulated in `CURRENT_HANDOFF.txt` before this convention
+started at `HANDOFF_SEQ` 1). `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt`
+are unchanged in form and purpose.
+
+On ChatGPT's side, the Drive `NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT`
+document maintains a compact `LATEST_RESPONSE` block (`RESPONSE_SEQ`,
+`RESPONSE_TO_HANDOFF_SEQ`, `STATUS`, `NEXT_ACTION`) near its top for
+the same reason — Claude reads that block first, not the full
+accumulated history, though the full history remains below it for
+audit. Claude must not infer document freshness from file size alone
+— always a direct content read on any `modifiedTime` change.
+
 ## Stale-canon / handoff gate
 
 Before concluding that Niklar context is missing, outdated, or must be
@@ -119,10 +151,16 @@ Only sanitized coordination information belongs in this repository.
 
 ## Structure
 
-- `CURRENT_HANDOFF.txt` — primary interchange file; current state snapshot
+- `CURRENT_HANDOFF.txt` — primary interchange file; compact
+  latest-pointer checkpoint (not a narrative — see "Handoff discovery"
+  above for the field convention and why)
 - `DECISIONS_CURRENT.txt` — decisions affecting future implementation
 - `TODO_CURRENT.txt` — current execution queue
-- `CHANGELOG.txt` — meaningful changes to the handoff state
+- `CHANGELOG.txt` — meaningful changes to the handoff state, dated log
+- `HANDOFF_HISTORY_ARCHIVE.txt` — one-time snapshot of the full
+  narrative that had accumulated in `CURRENT_HANDOFF.txt` before the
+  compact-form convention started (`HANDOFF_SEQ` 1, 2026-08-09).
+  Historical reference only, not a discovery target.
 - `CLAUDE_STATUS.txt` — mandatory startup control handshake (per
   NIKLAR_HARD_RULE_COMMIT_GATE, Drive), published before/after
   autonomous Claude sessions: canonical files read, drift-check

@@ -456,3 +456,30 @@ NIKLAR — DECISIONS (current)
     Status: Frozen (implemented) — unittest 95/95 (81->95, 14 new),
     mypy 0/13, PWA smoke unaffected, real GitHub Actions run polled and
     confirmed conclusion: "success".
+
+24) Decision: Adopt ChatGPT's Compact Delta Handoff Rule and
+    Deterministic Latest-Handoff Discovery Rule (Drive sync doc,
+    "HANDOFF DISCOVERY + COMPACT DELTA OPTIMIZATION" entry, 2026-08-09).
+    CURRENT_HANDOFF.txt converts from an accumulating narrative to a
+    compact latest-pointer checkpoint (STATUS, PROJECT, HANDOFF_SEQ,
+    CHECKPOINT_ID, IMPLEMENTATION_COMMIT, HANDOFF_COMMIT, GOAL,
+    MATERIAL_DELTA, VALIDATION, SELF_AUDIT, PROTECTED_BOUNDARY_STATUS,
+    BLOCKERS, REVIEW_REQUEST, NEXT_ACTION), with HANDOFF_SEQ
+    incrementing by 1 per material checkpoint starting at 1. Direct
+    fetch of CURRENT_HANDOFF.txt is now the primary sync/status
+    discovery path on both sides — repository discovery/search is not
+    the primary availability check, and an empty discovery result is
+    never sufficient evidence the handoff is unavailable.
+    Date: 2026-08-09
+    Rationale: Explicit instruction, mechanics-only — reduces the
+    per-sync token cost of re-reading an ever-growing narrative (this
+    file had reached 650 lines of nested LATEST/PRIOR DELTA entries)
+    without losing any history. Full prior narrative preserved
+    verbatim, not deleted, in the new HANDOFF_HISTORY_ARCHIVE.txt.
+    CHANGELOG.txt remains the ongoing dated narrative log.
+    Affected component: niklar-handoff CURRENT_HANDOFF.txt (rewritten
+    to compact form), HANDOFF_HISTORY_ARCHIVE.txt (new — full prior
+    narrative snapshot), README.md ("Handoff discovery" section added,
+    "Structure" section updated)
+    Status: Frozen (implemented) — HANDOFF_SEQ 1. No Niklar
+    product/trading logic touched; this is handoff mechanics only.

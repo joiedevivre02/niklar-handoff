@@ -397,3 +397,23 @@ NIKLAR-HANDOFF — CHANGELOG
     Recorded as decisions #22 (adopting the pattern) and #23 (the
     finding + fix). Compact review handoff published to
     CURRENT_HANDOFF.txt for ChatGPT's independent inspection.
+
+2026-08-09 (handoff mechanics refactored to compact latest-pointer form, HANDOFF_SEQ 1)
+  - Drive sync doc's "HANDOFF DISCOVERY + COMPACT DELTA OPTIMIZATION"
+    entry froze a new operational rule: CURRENT_HANDOFF.txt converts
+    from an accumulating narrative to a compact checkpoint (STATUS/
+    PROJECT/HANDOFF_SEQ/CHECKPOINT_ID/IMPLEMENTATION_COMMIT/
+    HANDOFF_COMMIT/GOAL/MATERIAL_DELTA/VALIDATION/SELF_AUDIT/
+    PROTECTED_BOUNDARY_STATUS/BLOCKERS/REVIEW_REQUEST/NEXT_ACTION),
+    HANDOFF_SEQ incrementing by 1 per material checkpoint, and direct
+    fetch of that exact file as the primary sync/status discovery path
+    on both sides -- repository discovery/search is not the primary
+    availability check, and an empty discovery result never proves the
+    handoff is unavailable.
+  - Rewrote CURRENT_HANDOFF.txt in the compact form, HANDOFF_SEQ 1.
+    Preserved the full 650-line prior narrative verbatim in a new file,
+    HANDOFF_HISTORY_ARCHIVE.txt -- nothing deleted, only relocated.
+    Updated README.md with a new "Handoff discovery" section and an
+    updated "Structure" section covering both files.
+  - Mechanics-only: no Niklar product/trading logic touched, no
+    niklar-stocks mutation this cycle. Recorded as decision #24.
