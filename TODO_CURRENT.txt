@@ -1,9 +1,33 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (DONE — pre-live architecture Batch 1
-(contracts/state layer) implemented, niklar-stocks 53d2b3f;
-HANDOFF_SEQ 6. Batches 2-10 not started, awaiting review of Batch 1.)
+Last updated: 2026-08-09 (Section 19 -- PWA<->Slack notification
+controls -- acknowledged and deferred to Batch 4; HANDOFF_SEQ 7. Batch
+1 still awaiting review (crossed in transit); Batch 2 up next.)
 
-DONE — pre-live architecture Batch 1: contracts/state layer (this update)
+ACKNOWLEDGED, DEFERRED — Section 19: PWA<->Slack notification controls (this update)
+---------------------------------------------------------------------------
+  - Drive sync doc RESPONSE_SEQ 9: owner approved an addition to the
+    pre-live architecture doc (Section 19) -- manual single-ticker/
+    consolidated-brief Slack preview+send controls, preview-before-
+    send, stale/caveat gate, deterministic notification_id dedup,
+    delivery-status visibility, and mandatory convergence between
+    automatic and manual sends on one notification service/renderer/
+    idempotency/retry/Change-Ledger-recording path. No Slack
+    credentials ever exposed to the PWA.
+  - Explicit instruction: "Do not derail Batch 1. Continue the
+    already-authorized staged plan. This Slack/PWA delta belongs when
+    the mobile delivery/PWA interaction + notification service layers
+    are implemented" -- read the full text from the primary Drive doc,
+    recorded as decision #31, no implementation now. Applies to Batch 4
+    (and touches Batch 3's discovery/tactical consumer-sync stages).
+  - RESPONSE_SEQ 9 crossed in transit with HANDOFF_SEQ 6 (Batch 1's
+    publish) -- doesn't address Batch 1 review yet. No niklar-stocks
+    mutation this cycle. Next: check for Batch 1 review feedback, then
+    begin Batch 2 (non-blocking normalization exception path +
+    owner-gated LLM policy + deterministic LLM dependency audit
+    tooling) regardless, since overall IMPLEMENTATION AUTHORIZATION
+    remains RELEASED and nothing holds Batch 2 specifically.
+
+DONE — pre-live architecture Batch 1: contracts/state layer (prior update)
 ---------------------------------------------------------------------------
   - Owner approved the full pre-live architecture (Drive
     NIKLAR_PRELIVE_ARCHITECTURE_DECISIONS_CURRENT, RESPONSE_SEQ 8,

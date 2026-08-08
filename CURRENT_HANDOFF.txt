@@ -7,68 +7,50 @@ in form, fetched only when this checkpoint's summary isn't enough.
 
 STATUS: PASS
 PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
-HANDOFF_SEQ: 6
-CHECKPOINT_ID: niklar-handoff-2026-08-09-seq6-prelive-batch1-state-contracts
-IMPLEMENTATION_COMMIT: niklar-stocks main @ 53d2b3f
+HANDOFF_SEQ: 7
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq7-section19-acknowledged
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 53d2b3f (unchanged this cycle)
 HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
 
-GOAL: Implement pre-live architecture Batch 1 only (contracts/state
-layer), per the owner-approved architecture (Drive
-`NIKLAR_PRELIVE_ARCHITECTURE_DECISIONS_CURRENT`, RESPONSE_SEQ 8,
-IMPLEMENTATION AUTHORIZATION: RELEASED) and the explicit staged-batch
-discipline ("Do not attempt one giant refactor... begin Batch 1
-only"). Batches 2-10 are not started.
+GOAL: Acknowledge Drive sync doc RESPONSE_SEQ 9 (a new pre-live
+architecture delta, Section 19: PWA<->Slack notification controls),
+which crossed in transit with HANDOFF_SEQ 6 and doesn't yet address
+Batch 1's review request.
 
-MATERIAL_DELTA: New module `ops/niklar_state_contracts.py` — pure,
-deterministic data shapes and pure builder/classification functions,
-no I/O/credentials/connectivity, matching `ops/`'s existing
-discipline. Implements exactly the 6 pieces the architecture doc names
-for Batch 1: `compute_evidence_status()` (doc §3, EVIDENCE_COMPLETE/
-CONDITIONAL/INSUFFICIENT classification), `new_intraday_observation()`
-(§7, the one contract every intraday adapter must emit, fail-closed on
-an unrecognized source), `new_change_ledger_entry()`/`append_change()`
-(§14, append-only), `new_review_queue_entry()`/`append_review_entry()`
-(§14's 8 named trigger conditions, fail-closed on an unrecognized
-reason), `new_llm_review_request()` (§§2,4 — always starts PENDING, no
-kwarg exists to bypass that), `build_current_state_snapshot()` (§14 —
-pure aggregation, computes its own counts so they can't drift from
-inputs). `market_state` (§14's rankings/watchlist/positions field) is
-a generic optional passthrough marked INTERFACE GAP, not a guessed
-sub-schema — same pattern as `NIKLAR_APP_CONTRACT.md`'s existing
-real-vs-simulated-position gap. Full diff published in
-`review-packages/53d2b3f-prelive-batch1-state-contracts.md` (not
-duplicated here) since ChatGPT's connector can't reach the private
-repo directly.
+MATERIAL_DELTA: Read Section 19 in full from the primary Drive
+document (not the sync-doc response's summary alone). Recorded as
+decision #31 in DECISIONS_CURRENT.txt — deferred per explicit
+instruction ("do not derail Batch 1... belongs when the mobile
+delivery/PWA interaction + notification service layers are
+implemented"), applies to Batch 4 and touches Batch 3's discovery/
+tactical consumer-sync stages. No implementation this cycle.
 
-VALIDATION: unittest 122/122 (95->122, 27 new), mypy 0/14 files, PWA
-smoke unaffected. Real GitHub Actions run 31276045591 polled directly,
-conclusion: "success".
+VALIDATION: Unchanged — niklar-stocks remains at 53d2b3f (unittest
+122/122, mypy 0/14, real GitHub Actions run 31276045591 confirmed
+success).
 
-SELF_AUDIT: Applied the standing 4 criteria (failure envelope,
-unnecessary abstraction/dependency, security/privacy, canonical
-boundary drift) before publishing — clean, no findings. Detail in the
-review package.
+SELF_AUDIT: N/A this cycle (no code touched).
 
 CANON/GATE STATUS: PASS; EXCEPTIONS: NONE.
 
-PROTECTED_BOUNDARY_STATUS: No canonical trading, scoring, tactical,
-invalidation, or Decision Object *logic* implemented — this batch is
-pure state/audit scaffolding (status classification, ledgers, a
-snapshot builder), not decision logic. No public deployment/hosting/
-secret exposure.
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical logic
+touched. Section 19 itself is explicit that Slack "must never own or
+alter trading logic" — consistent with every other boundary in this
+architecture.
 
-BLOCKERS: None.
+BLOCKERS: None for proceeding. Batch 1's independent review (requested
+at HANDOFF_SEQ 6) hasn't been addressed yet — RESPONSE_SEQ 9 is about
+a different topic (Section 19) and crossed in transit before seeing
+Batch 1's publish. This is not treated as a blocker: overall
+IMPLEMENTATION AUTHORIZATION remains RELEASED and RESPONSE_SEQ 9
+itself says "continue the already-authorized staged plan."
 
-REVIEW_REQUEST: Independent inspection of
-`review-packages/53d2b3f-prelive-batch1-state-contracts.md` (full
-diff + self-audit checklist) — first batch of a 10-batch effort, so
-review before Batch 2 builds on top of this shape is worth it even
-though the REVIEW/HANDOFF rule doesn't strictly require review on
-every batch.
+REVIEW_REQUEST: None new this cycle. Batch 1's review request (HANDOFF_
+SEQ 6, review-packages/53d2b3f-prelive-batch1-state-contracts.md)
+remains open/unaddressed.
 
-NEXT_ACTION: Begin Batch 2 (non-blocking normalization exception path
-+ owner-gated LLM policy + deterministic LLM dependency audit tooling)
-once review of this batch is either PASS or addressed. Will not start
-Batch 2 work before checking for a response, per "self-audit each
-batch, don't generate repetitive checkpoints" — next sync will confirm
-whether to proceed or address feedback first.
+NEXT_ACTION: Begin Batch 2 (non-blocking normalization exception path +
+owner-gated LLM policy + deterministic LLM dependency audit tooling) —
+proceeding since nothing holds it specifically, per the reasoning
+above. Will report Batch 1 review status alongside Batch 2's own
+checkpoint once both are known.

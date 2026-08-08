@@ -669,3 +669,33 @@ NIKLAR — DECISIONS (current)
     the standing 4 criteria before publishing — no findings. Full diff
     published in niklar-handoff for independent review (private-repo
     connector access remains unavailable to ChatGPT).
+
+31) Decision: Acknowledge a delta to the pre-live architecture doc —
+    Section 19, PWA <-> Slack Notification Controls (owner-approved,
+    Drive sync doc RESPONSE_SEQ 9). No implementation now: manual
+    single-ticker/consolidated-brief preview+send controls, a
+    preview-before-send showing the exact canonical payload, the
+    stale/caveat gate (EVIDENCE_CONDITIONAL/INSUFFICIENT travels with
+    the card), deterministic notification_id duplicate/resend
+    protection, SENT/PENDING_RETRY/DELIVERY_FAILED visibility, and
+    strict convergence — automatic (scheduled/material-change/no-
+    material-change) and manual sends MUST share one deterministic
+    notification service, freshness/eligibility gate, canonical
+    renderer, idempotency logic, retry path, and Change Ledger
+    delivery recording. No Slack credential/channel-mutation exposure
+    through the PWA, ever.
+    Date: 2026-08-09
+    Rationale: "Do not derail Batch 1. Continue the already-authorized
+    staged plan. This Slack/PWA delta belongs when the mobile
+    delivery/PWA interaction + notification service layers are
+    implemented" — explicit instruction not to act now. Read the full
+    Section 19 text directly from the primary Drive document (not just
+    the sync-doc response's summary) before recording this, matching
+    this session's standing "read primary sources, not proxies"
+    discipline.
+    Affected component: none yet — applies to a later batch (Batch 4,
+    "PWA mobile delivery contract + sanitized read-only delivery plane
+    boundary," and touches Batch 3's discovery_consumers_sync/
+    tactical_consumers_sync orchestrator stages as the natural home for
+    "one shared notification service").
+    Status: Recorded, deferred. No niklar-stocks mutation this cycle.
