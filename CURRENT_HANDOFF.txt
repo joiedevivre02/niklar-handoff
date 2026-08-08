@@ -1,47 +1,37 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-07 (BLOCKED — engineering-authority content not
-found; see below. Was PAUSED before this investigation.)
+Last updated: 2026-08-08 (RESOLVED — engineering authority loaded from
+Drive; resuming on NEXT PHASE architecture-artifact preparation)
 Maintained by: Claude, working in the private niklar-stocks environment
 
-BLOCKED
----------
-User instructed creating ENGINEERING_AUTHORITY_PROMPT.txt from "the
-latest engineering-authority instruction from ChatGPT" and to
-read/reconcile joiedevivre02/niklar-operating-engineering-system first.
-That repo is now accessible (a prior add_repo attempt had failed; a
-retry succeeded) and has been read in full at the orientation-doc
-level. Finding: it is a genuinely different Niklar product — a
-guided-journey/case-record-recovery/property-eligibility/verified-save
-web app with its own separate Founder-Constitution-rooted governance
-stack (NES standards, AI Agent Constitution, ADRs) — with zero
-references to stocks/PSE/options/crypto/trading anywhere in it, and no
-file that is "the latest engineering-authority instruction from
-ChatGPT." Full detail in TODO_CURRENT.txt. ENGINEERING_AUTHORITY_
-PROMPT.txt was NOT created (would require fabricating content or
-misattributing this other product's governance, both forbidden). No
-niklar-stocks implementation resumed, per the user's own instruction
-to hold implementation until the engineering authority is loaded --
-which cannot happen until the user clarifies. This is a reported
-finding, not a guess dressed up as one.
+RESOLVED (was BLOCKED)
+-------------------------
+The engineering-authority instruction was never in GitHub — the user
+pointed out ChatGPT can't write to GitHub directly, so it publishes to
+Google Drive instead. Found the actual document there (a live
+ChatGPT -> Claude outbound sync doc, newest content dated 2026-08-08)
+and reproduced it sanitized in this repo's new
+ENGINEERING_AUTHORITY_PROMPT.txt. It confirms the prior investigation
+of joiedevivre02/niklar-operating-engineering-system was correct in
+substance: that repo is READ-ONLY REFERENCE MATERIAL for Niklar
+Stocks, scoped to project-agnostic engineering practice only (never
+its own product/domain material) — a scope firewall, not a rejection
+of the repo. Compliance audit against niklar-stocks (full working tree
++ all-branch git history) found zero trace of that repo's domain
+material. Full detail in TODO_CURRENT.txt.
+niklar-stocks implementation may resume — see "NEXT PHASE" in
+TODO_CURRENT.txt for what the loaded authority actually authorizes
+next (architecture-artifact preparation, not further PWA build/merge
+yet — a STOP GATE in the same document covers that distinction).
 
-LATEST DELTA (prior to this — unchanged since last sync)
---------------------------------------------------------------
-Second "cont" of the last active cycle. niklar-stocks commit 9549f65:
-added mypy static type-checking to CI (pyproject.toml config + pinned
-mypy 1.13.0 CI step, targeting ops/). Zero code changes — clean
-validation result (0 issues across all 5 ops/ modules) kept as ongoing
-regression protection. Chosen because the remaining PWA views are
-blocked on data/semantics this environment doesn't have (Watchlist
-alerting, Daily Brief, Position/journal — see TODO_CURRENT.txt).
-Gate PASS/PASS.
-Prior delta (niklar-stocks 95cb051): Watchlist roster view — see
-"ops/ + PWA history" below for full detail.
-Nothing new pending beyond the existing PENDING CANONICAL
-RECONCILIATION flag on private-repo code artifacts
-(DECISIONS_CURRENT.txt). Next action when resumed: either another
-"cont" for a technical-debt pass, or the architecture decision
-(orchestrator stage-handlers / live data source) that has been
-consistently held open all session.
+LATEST DELTA
+----------------
+This update: engineering-authority blocker resolved (above). No
+niklar-stocks code changed yet this cycle — next action is preparing
+the 5 NEXT PHASE architecture artifacts (see TODO_CURRENT.txt).
+Prior delta (niklar-stocks 9549f65): mypy static type-checking added
+to CI, 0 issues, ops/ only. Gate PASS/PASS.
+Prior to that (95cb051): Watchlist roster view — see "ops/ + PWA
+history" below for full detail.
 
 STATUS
 ------
@@ -166,9 +156,8 @@ See DECISIONS_CURRENT.txt.
 
 UNRESOLVED / BLOCKERS
 ------------------------
-  - BLOCKED (this update): ENGINEERING_AUTHORITY_PROMPT.txt cannot be
-    created — see "BLOCKED" section above and TODO_CURRENT.txt for
-    full detail. Awaiting user clarification.
+  - None from the engineering-authority item — resolved this update
+    (see "RESOLVED" section above).
   - Architecture/stack decision for stage-handler implementations
     (Drive/Sheets/Slack/market-data integration) is explicitly NOT
     being made autonomously — see TODO_CURRENT.txt
@@ -189,19 +178,22 @@ PENDING CANONICAL RECONCILIATION
     NIKLAR_CHATGPT_CLAUDE_HANDOFF_RECOVERY_RULE.txt in Drive earlier
     this session (adding the 4th authority tier and the 10-step gate
     procedure).
+  - This update: ENGINEERING_AUTHORITY_PROMPT.txt reconciled against
+    the Drive ChatGPT->Claude sync document (see TODO_CURRENT.txt).
+    That Drive document is explicitly NOT canon itself (its own text
+    says so) — it's an outbound operational handoff. Standing rules
+    stay in their owning authorities.
 
 NEXT RECOMMENDED STEPS
 -------------------------
-  - Awaiting user clarification on the engineering-authority blocker
-    above before any niklar-stocks implementation resumes (per the
-    user's own instruction).
-  - Once unblocked (or if the user lifts that hold): continue with
-    further safe, bounded technical-debt/reliability increments per
-    the stated priority order (see TODO_CURRENT.txt) — e.g. the next
-    PWA views (Home/Opportunity Landscape, Watchlist) once there's
-    real portfolio-level data to back them, or further ops/ hardening.
+  - Prepare the 5 NEXT PHASE architecture artifacts named in
+    TODO_CURRENT.txt (NIKLAR_APP_SYSTEM_MAP, NIKLAR_APP_CONTRACT,
+    NIKLAR_MOBILE_ARCHITECTURE, NIKLAR_V0_1_SCOPE, root AGENTS.md) —
+    the loaded engineering authority's explicit next step, gated ahead
+    of further PWA build/merge work.
   - Architecture decision for stage-handler implementations (and, by
-    extension, a live data source for the PWA) remains with the user.
+    extension, a live data source for the PWA) remains with the user
+    — unchanged by this update.
 
 FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
 --------------------------------------------------------------------------

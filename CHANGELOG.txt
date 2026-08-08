@@ -143,3 +143,24 @@ NIKLAR-HANDOFF — CHANGELOG
     switch, did not fabricate or import content: ENGINEERING_AUTHORITY_
     PROMPT.txt was NOT created. Reported to user as BLOCKED, awaiting
     clarification. Still paused; no mutation made to niklar-stocks.
+
+2026-08-08 (RESOLVED — engineering authority found in Drive, not GitHub)
+  - User corrected the search location: ChatGPT can't write to GitHub
+    directly, so its instructions live in Google Drive. Found the
+    actual document there — a live ChatGPT->Claude outbound sync doc,
+    newest entry dated 2026-08-08 — and created
+    ENGINEERING_AUTHORITY_PROMPT.txt in this repo reproducing it
+    sanitized (no Drive IDs/links/emails). It confirms the prior
+    GitHub-based investigation was substantively correct: the
+    niklar-operating-engineering-system repo is read-only reference
+    material for project-agnostic engineering practice only, under an
+    explicit scope firewall against importing its own (different)
+    product/domain material. Ran a compliance audit against
+    niklar-stocks (working tree + full git history, all branches):
+    zero leakage found. Recorded as decisions #12-13 in
+    DECISIONS_CURRENT.txt. Updated TODO_CURRENT.txt and
+    CURRENT_HANDOFF.txt with the resolution and the new "NEXT PHASE"
+    priority (5 architecture artifacts required by the loaded
+    authority before further PWA build/merge work — a STOP GATE in
+    the same document). niklar-stocks implementation is unblocked;
+    no code changed yet this cycle.

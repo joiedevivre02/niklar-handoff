@@ -93,6 +93,12 @@ Only sanitized coordination information belongs in this repository.
   mutations or is paused pending acknowledgement
 - `CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt` — durable record of the
   user's autonomous-operation operating instructions
+- `ENGINEERING_AUTHORITY_PROMPT.txt` — sanitized reproduction of the
+  latest ChatGPT-authored engineering-authority instruction (source:
+  a Drive ChatGPT->Claude sync document, since ChatGPT cannot write to
+  GitHub directly), including the scope firewall for treating
+  joiedevivre02/niklar-operating-engineering-system as read-only
+  project-agnostic-engineering reference only
 - `snapshots/` — older handoff states, kept only when useful for
   recovery/comparison
 
@@ -101,7 +107,12 @@ Only sanitized coordination information belongs in this repository.
 Standing control protocol between the user and Claude/ChatGPT on
 Niklar work:
 - **sync** — refresh this handoff with a concise delta (not a full
-  rewrite) of what materially changed. Does not pause work.
+  rewrite) of what materially changed. Does not pause work. Also read
+  the Drive ChatGPT->Claude sync document for the newest ChatGPT
+  delta (that document is the outbound channel since ChatGPT can't
+  write to GitHub directly — see `ENGINEERING_AUTHORITY_PROMPT.txt`),
+  reconcile against Drive canon and this handoff, and publish a
+  concise sanitized delta back here.
 - **cont** — continue autonomous work immediately on the
   highest-value safe, already-authorized, unblocked next increment;
   don't wait for a scheduled checkpoint. Never overrides the commit

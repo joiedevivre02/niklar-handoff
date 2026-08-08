@@ -1,65 +1,67 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-07 (PAUSED + BLOCKED — see CURRENT_HANDOFF.txt)
+Last updated: 2026-08-08 (RESOLVED — engineering authority loaded;
+resuming on NEXT PHASE architecture-artifact preparation)
 
-BLOCKED — repo accessible now, but no matching content exists
--------------------------------------------------------------------
-  - User instructed: create ENGINEERING_AUTHORITY_PROMPT.txt in this
-    repo "using the latest engineering-authority instruction from
-    ChatGPT," and read/reconcile joiedevivre02/niklar-operating-
-    engineering-system before resuming implementation.
-  - Update: on retry, joiedevivre02/niklar-operating-engineering-system
-    IS now accessible. Cloned and read (README, CLAUDE.md,
-    IMPLEMENTATION_STATUS.md, CONTRIBUTING.md, DECISIONS.md-adjacent
-    files, the prompts/ pack including AI_AGENT_CONSTITUTION.md and
-    CLAUDE_PRIMARY_IMPLEMENTATION.md, runtime/niklar-dwe/CLAUDE.md) and
-    grepped exhaustively for "chatgpt" / "engineering authority" /
-    "stock" / "PSE" / "ticker" / "trading" / "options" / "crypto"
-    across the whole tree.
-  - Finding: this repository is a different Niklar product line —
-    "Niklar Operating and Engineering System RC8.5," a guided-journey /
-    case-record-recovery / property-eligibility / verified-save web app
-    (Journey Control Numbers, Workspace saving, marketplace
-    orchestration, PDF assessment/roadmap outputs) governed by its own
-    separate authority chain: Founder Constitution -> NES standards ->
-    AI Agent Constitution -> approved warehouse/seed artifacts -> ADRs.
-    Zero references anywhere in it to PSE/US stocks, options, crypto,
-    tickers, or trading. No cross-reference to niklar-stocks or
-    niklar-handoff exists in either direction.
-  - "ChatGPT" appears exactly once in the whole repo
-    (runtime/niklar-dwe/CLAUDE.md: "ChatGPT performs architecture and
-    warehouse-conformance review. Founder approves material semantics
-    and scope.") -- a reviewer-role description, not an authored
-    instruction document. "Engineering authority" appears exactly once
-    (CAPABILITY_ROUTING_POLICY.md), as a negative rule: "A model name,
-    vendor, subscription tier, or current benchmark result is never
-    product or engineering authority." Neither is "the latest
-    engineering-authority instruction from ChatGPT."
-  - No file anywhere in this repository is a ChatGPT-authored
-    engineering-authority instruction for the stocks system. The
-    closest candidates (AI_AGENT_CONSTITUTION.md,
-    CLAUDE_PRIMARY_IMPLEMENTATION.md) are Founder-authored governance
-    for the OTHER product, not from ChatGPT, and not applicable to
-    niklar-stocks.
-  - Per the canonical drift kill switch: this is a material
-    contradiction between the user's instruction (implying this repo
-    holds ChatGPT-authored engineering authority for Niklar stocks) and
-    verified repo content (a same-brand but unrelated, separately
-    governed product with no such content). Rather than guess which
-    interpretation is right or import unrelated governance, this is
-    recorded as BLOCKED and reported to the user. ENGINEERING_AUTHORITY_
-    PROMPT.txt was NOT created -- no legitimate source content exists to
-    populate it without fabrication.
-  - Smallest input needed to unblock: user confirmation of what "the
-    latest engineering-authority instruction from ChatGPT" actually is
-    -- e.g. pasted verbatim text, a different repo/path reference, or
-    confirmation that this domain mismatch means the instruction
-    doesn't apply / was intended for a different Niklar workstream.
-  - No implementation resumed. No mutation made to niklar-stocks.
+RESOLVED — engineering-authority instruction located (Drive, not GitHub)
+--------------------------------------------------------------------------
+  - Prior blocker: joiedevivre02/niklar-operating-engineering-system
+    contained no ChatGPT-authored engineering-authority instruction
+    for Niklar stocks (confirmed: it's a different, separately
+    governed Niklar product with zero stocks-domain references).
+  - User corrected the search location: ChatGPT cannot write directly
+    to GitHub, so its instructions land in Google Drive instead. Found
+    it: a Drive document that is a live ChatGPT -> Claude outbound
+    sync channel, dated/modified 2026-08-08 (the newest matching
+    content in Drive).
+  - That document confirms the GitHub repo's role exactly as already
+    concluded: READ-ONLY REFERENCE MATERIAL for Niklar Stocks, subject
+    to a scope firewall (project-agnostic engineering only; its
+    product/domain material must never enter niklar-stocks). Nothing
+    about the prior investigation was wrong — the missing piece was
+    only the *location* of the ChatGPT-authored instruction itself.
+  - ENGINEERING_AUTHORITY_PROMPT.txt created in this repo, reproducing
+    the Drive document's content near-verbatim (sanitized — no Drive
+    IDs/links/emails).
+  - Scope-firewall compliance audit run against niklar-stocks (working
+    tree + full git history, all branches): zero hits for any
+    property-transfer/guided-journey domain vocabulary (journey
+    control number, verified save, workspace saving, property
+    eligibility, case record recovery, marketplace orchestration,
+    founder constitution, knowledge warehouse, etc.). The reconnaissance
+    clone of niklar-operating-engineering-system lives outside the
+    niklar-stocks working tree and is not referenced, committed,
+    submoduled, or depended on anywhere in niklar-stocks.
+    ENGINEERING AUTHORITY CHECK: PASS
+    ENGINEERING SCOPE FIREWALL: PASS
+    PROPERTY-TRANSFER MATERIAL IN NIKLAR-STOCKS: NO
+  - niklar-stocks implementation may now resume, per the user's own
+    "do not continue until loaded" instruction — the authority is
+    loaded. See NEXT PHASE below for what it actually authorizes next.
 
-PAUSED — awaiting "cont" or user input
-------------------------------------------
-  - Session is paused on explicit user instruction. No autonomous
-    mutation should resume until "cont" (or equivalent) is given.
+NEXT PHASE (per the loaded engineering authority — READY TO EXECUTE)
+------------------------------------------------------------------------
+  ChatGPT's sync response explicitly gates further PWA build/merge
+  work behind preparing and reviewing architecture artifacts first
+  (STOP GATE: "Do not build or merge the PWA merely from this
+  handoff"). This is now the priority lane, ahead of further PWA
+  views or ops/ hardening:
+  1. NIKLAR_APP_SYSTEM_MAP
+  2. NIKLAR_APP_CONTRACT
+  3. NIKLAR_MOBILE_ARCHITECTURE
+  4. NIKLAR_V0_1_SCOPE
+  5. root AGENTS.md bootstrap guidance
+  Constraints: preserve authority chain/CURRENT-over-stale; define a
+  stable app/data contract (frontend consumes resolved state, doesn't
+  recompute analytical logic); trace UI fields to authoritative
+  sources with freshness/provenance/Unknown/Conflicting handling;
+  preserve PSE/US Stocks/Options/Crypto separation while reusing
+  shared mechanisms; identify interface gaps rather than inventing
+  behavior; v0.1 stays read-first/mobile-first; no client-side
+  secrets. Must NOT modify Drive canon, synchronized reference docs,
+  analytical rules, databases, scoring, tactical semantics,
+  invalidation logic, preservation rules, or market workflows while
+  preparing these. Next checkpoint goes back through this same handoff
+  repo for ChatGPT to review (per "CROSS-AGENT CONTINUATION").
 
 AWAITING USER DECISION
 ------------------------
@@ -73,31 +75,19 @@ AWAITING USER DECISION
     postflight_verification). These require deciding how/whether this
     environment integrates with Drive/Sheets/Slack and any market-data
     source — a material architectural + credentials decision, held for
-    the user rather than guessed.
+    the user rather than guessed. Unchanged by this update.
   - Same underlying decision blocks a live data source for the PWA
     (currently reads a static synthetic sample-data.json only).
 
-READY TO EXECUTE (safe, unblocked, no user decision required)
-------------------------------------------------------------------
-  - PWA priorities #1, #2, #4-roster implemented + stabilized (commits
-    aae6fea, 3a66e90, 95cb051). Remaining PWA views (Watchlist
-    alerting, Daily Brief, Position/journal) all need data/semantics
-    this environment doesn't have — see prior entries for detail.
-  - mypy CI validation added (9549f65) — 0 issues, ops/ only. Could
-    extend to other Python files if any are added later.
-  - General technical-debt/reliability passes remain fair game per
-    the overnight priority order — this is now the main open lane
-    until the architecture decision below is made.
-  - Continue reviewing other existing Drive Operations/Shared Workflow
-    artifacts for further integration-with-tests candidates, following
-    the same pattern as the ops/ increment (pull verbatim, test against
-    synthetic fixtures, document, no logic changes) — none found beyond
-    what's already integrated as of this update (verified: exactly 3
-    Python files exist anywhere in Drive, all already integrated).
-  - General repo technical-debt/reliability passes as safe opportunities
-    are found (e.g., additional test coverage, error-handling review)
-    — evaluated case by case against the priority order in the
-    overnight operating instructions.
+DEFERRED (superseded by NEXT PHASE above — not dropped, just not next)
+------------------------------------------------------------------------
+  - Further PWA views (Watchlist alerting, Daily Brief, Position/
+    journal) — still also blocked on data/semantics this environment
+    doesn't have, independent of the new STOP GATE.
+  - mypy CI validation already added (9549f65) — 0 issues, ops/ only.
+  - General ops/ technical-debt/reliability passes remain fair game if
+    the architecture-artifact lane above stalls on something
+    genuinely blocked, but are not the priority right now.
 
 BLOCKED
 ----------
@@ -106,15 +96,14 @@ BLOCKED
 VALIDATION REQUIRED
 ----------------------
   - (none currently — see CURRENT_HANDOFF.txt for what was already run
-    and passed on both increments)
+    and passed on prior increments)
 
 COMPLETED, AWAITING CANONICAL SYNCHRONIZATION
 -------------------------------------------------
   - ops/ integration (cac4df1), mobile contract + PWA slice (56dd1d2),
     Opportunity Landscape (aae6fea), cross-section navigation
-    (3a66e90), Watchlist roster (95cb051) — private-repo-only code
-    artifacts; not candidates for Drive canon promotion (code doesn't
-    belong in the Drive canon layer), but flagged per the recovery
-    rule as not yet reconciled anywhere else. No action needed unless
-    the user wants any referenced from Drive. (mypy CI addition,
-    9549f65, is pure tooling — not flagged, nothing to reconcile.)
+    (3a66e90), Watchlist roster (95cb051), mypy CI (9549f65) —
+    private-repo-only code artifacts; not candidates for Drive canon
+    promotion (code doesn't belong in the Drive canon layer), but
+    flagged per the recovery rule as not yet reconciled anywhere else.
+    No action needed unless the user wants any referenced from Drive.

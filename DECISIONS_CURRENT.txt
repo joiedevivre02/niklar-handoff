@@ -151,3 +151,42 @@ NIKLAR — DECISIONS (current)
     (build_watchlist), niklar-stocks/pwa/
     Status: Frozen (implemented) — PENDING CANONICAL RECONCILIATION
     (same flag rationale as decisions 1, 8, 10).
+
+12) Decision: Adopt the scope firewall for
+    joiedevivre02/niklar-operating-engineering-system as-is: treat it
+    as read-only reference material for project-agnostic engineering
+    practice only (architecture discipline, testing/validation,
+    technical-debt prevention, repo hygiene, refactoring,
+    modularity, reusable security/privacy engineering); never import
+    its own product/domain material (it governs a separate,
+    differently-scoped Niklar product) into niklar-stocks; keep the
+    clone outside the niklar-stocks working tree; never commit it,
+    submodule it, or depend on it without explicit authorization;
+    audit for leakage before substantive implementation.
+    Date: 2026-08-08
+    Rationale: Explicit instruction from the loaded engineering
+    authority (Drive ChatGPT->Claude sync document — see
+    ENGINEERING_AUTHORITY_PROMPT.txt). Matches the independent finding
+    from reading that repo directly: it is a genuinely different,
+    separately governed Niklar product with no stocks-domain content.
+    Affected component: session/repo handling discipline for any
+    future reference to that repository.
+    Status: Frozen (implemented) — compliance audit run against
+    niklar-stocks (full working tree + all-branch history): zero
+    matches for that repo's domain vocabulary; clone confirmed outside
+    the working tree; no submodule/dependency reference exists.
+
+13) Decision: Treat the Drive "ChatGPT -> Claude sync" document as the
+    live channel for ChatGPT-authored operational instructions (since
+    ChatGPT cannot write to GitHub directly), read on every "sync" per
+    its own 7-step procedure, reconciled against Drive canon and this
+    handoff — but never treated as canon itself (its own text
+    disclaims that).
+    Date: 2026-08-08
+    Rationale: User-clarified; confirmed by the document's own content
+    and by it directly resolving the engineering-authority blocker
+    that GitHub-only search could not.
+    Affected component: session sync procedure (see README.md
+    "sync / cont / stop keywords", ENGINEERING_AUTHORITY_PROMPT.txt)
+    Status: Frozen (implemented) — operating protocol addendum, not a
+    Niklar trading/canonical rule.

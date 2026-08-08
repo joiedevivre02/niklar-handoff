@@ -1,0 +1,165 @@
+NIKLAR — ENGINEERING AUTHORITY PROMPT
+Source: Google Drive, Niklar canon folder — a live ChatGPT -> Claude
+sync document (ChatGPT cannot write to GitHub directly, so this Drive
+document is the outbound channel; Claude reads it as part of "sync").
+Reproduced here near-verbatim (light reformatting only) for durable,
+sanitized reference. No Drive file IDs/links/emails included below.
+Last confirmed read from Drive: 2026-08-08.
+
+======================================================================
+PART 1 — STANDING SYNC PROTOCOL (from the Drive document's own header)
+======================================================================
+
+ROLE
+Outbound operational handoff from ChatGPT to Claude. This is NOT canon
+and must never duplicate standing Niklar rules. Standing rules remain
+in their owning authorities (Drive canon, NIKLAR_HARD_RULE_COMMIT_GATE,
+PWA/privacy rules, and the engineering system referenced below).
+
+WHEN USER SAYS "sync" TO CLAUDE
+1. Read the Drive sync document for the newest ChatGPT delta only.
+2. Reconcile against the latest applicable Niklar Google Drive canon.
+3. Read the latest sanitized niklar-handoff (this repo).
+4. Read only applicable project-agnostic engineering controls from
+   joiedevivre02/niklar-operating-engineering-system (see scope
+   firewall below — never its domain/product material).
+5. Apply nothing that conflicts with higher authority.
+6. Publish a concise sanitized delta to niklar-handoff and continue if
+   safe. "sync" does not mean stop.
+7. Any hard-rule/canonical conflict triggers the existing drift-stop
+   procedure.
+
+======================================================================
+PART 2 — SCOPE FIREWALL: joiedevivre02/niklar-operating-engineering-system
+======================================================================
+
+That repository may be cloned locally for inspection, but it is
+READ-ONLY REFERENCE MATERIAL for Niklar Stocks — it is a different
+Niklar product (its own separately governed guided-journey / property /
+case-recovery system) with its own release line, and its
+product/domain content does not apply here.
+
+Scope firewall rules:
+- Use ONLY project-agnostic engineering material from it: architecture
+  discipline, clean code, maintainability, testing/validation,
+  technical-debt prevention, repository hygiene, deterministic quality
+  gates, refactoring, dependency/modularity rules, and genuinely
+  reusable security/privacy engineering.
+- EXCLUDE all of that repo's product/domain material: its workflows,
+  business/legal semantics, schemas/entities, UI concepts, terminology,
+  permissions/roles, APIs/services, state machines, deployment
+  assumptions, roadmap decisions, fixtures/tests, or other
+  project-specific content.
+- Classify any material referenced from it as either
+  PROJECT-AGNOSTIC ENGINEERING or PRODUCT/DOMAIN-SPECIFIC. Ambiguous
+  cases = EXCLUDE.
+- Never copy/import/vendor/merge that repo's domain code or domain
+  material into niklar-stocks.
+- Never commit the cloned repo into niklar-stocks, add it as a
+  submodule, or add it as a dependency, unless explicitly authorized.
+- Keep the clone outside the niklar-stocks working tree. If ever
+  cloned inside it, remove/move it or otherwise make it provably
+  untracked before the next Niklar commit.
+- Before substantive Niklar implementation: audit whether any material
+  from that repo's product/domain has already entered the Niklar
+  Stocks working tree or commit history. If yes: STOP, remediate,
+  verify a clean state, then report.
+
+ENGINEERING AUTHORITY USE
+Before substantive Niklar implementation, search existing authority
+first. Use existing engineering gates rather than inventing parallel
+ones. Google Drive Niklar canon controls WHAT Niklar means;
+project-agnostic engineering controls (from the other repo, filtered
+through the firewall above) govern HOW it is engineered.
+
+PER-COMMIT
+Continue applying the existing NIKLAR_HARD_RULE_COMMIT_GATE plus any
+applicable existing engineering gates, deterministic tests/checks,
+pre-commit diff review, and post-commit diff verification. This
+document does not replace or duplicate that gate.
+
+REQUIRED SYNC OUTPUT FIELDS (concise only)
+- latest private repo commit/checkpoint
+- material delta
+- validation/gate result
+- blockers/drift if any
+- ENGINEERING AUTHORITY CHECK: PASS/FAIL
+- ENGINEERING SCOPE FIREWALL: PASS/FAIL
+- PROPERTY-TRANSFER MATERIAL IN NIKLAR-STOCKS: NO/YES — REMEDIATED/UNRESOLVED
+- exact next action
+
+======================================================================
+PART 3 — LATEST CHATGPT SYNC RESPONSE (dated 2026-08-08 in Drive)
+======================================================================
+
+STATUS
+Outbound operational handoff only; does not alter Niklar canon.
+Acknowledges the Claude-side Niklar mobile-preparation checkpoint
+(ops/ integration + mobile contract/PWA vertical slice, this repo's
+prior CURRENT_HANDOFF.txt history).
+
+ACKNOWLEDGMENT
+- The synchronized canonical/governance reference set in niklar-stocks
+  is 10 .txt files; any earlier reference to 9 was a miscount, not a
+  repository defect.
+- Google Drive CURRENT Niklar remains authoritative. GitHub's
+  docs/niklar-reference is a point-in-time development reference and
+  must not override newer Drive canon.
+- Volatile operational state (Master Databases, Decision Objects,
+  journals, dashboards, run receipts, research databases, current
+  market state) should not be mirrored into GitHub merely for
+  convenience — it stays governed by its owning current Niklar
+  artifacts unless an approved interface explicitly exposes it.
+- The lightweight mobile/PWA layer remains a presentation/interaction
+  surface over the existing deterministic Niklar system, not a second
+  analytical engine.
+
+NEXT PHASE
+Proceed with architecture preparation before further application
+implementation. Derive and prepare the durable development layer from
+the synchronized reference set plus selective authoritative Drive
+retrieval where required:
+1. NIKLAR_APP_SYSTEM_MAP
+2. NIKLAR_APP_CONTRACT
+3. NIKLAR_MOBILE_ARCHITECTURE
+4. NIKLAR_V0_1_SCOPE
+5. root AGENTS.md bootstrap guidance
+
+ARCHITECTURE REQUIREMENTS
+- Preserve the authority chain and CURRENT-over-stale rule.
+- Define a stable application/data contract so the frontend consumes
+  resolved Niklar state rather than recomputing analytical logic.
+- Trace UI-consumable fields to authoritative sources and define
+  freshness/provenance/Unknown/Conflicting handling.
+- Preserve separation among PSE, US Stocks, Options, and Crypto while
+  reusing shared canonical mechanisms.
+- Identify interface gaps instead of inventing missing behavior.
+- Keep v0.1 read-first and mobile-first; prioritize Today/current
+  state, opportunities, ticker decision state, tactical/GTC plans,
+  portfolio/journal distinction, research/history, and workflow
+  freshness where supported by canon.
+- Do not expose credentials or secrets client-side.
+
+STOP GATE
+Do not build or merge the PWA merely from this handoff. Architecture
+artifacts should be reviewed first. Do not modify Drive canon,
+synchronized canonical reference documents, analytical rules,
+databases, scoring, tactical semantics, invalidation logic,
+preservation rules, or market workflows as part of architecture
+preparation.
+
+COMMIT GATE
+Any implementation-agent mutation remains subject to
+NIKLAR_HARD_RULE_COMMIT_GATE, including pre-commit self-check and
+verification of the actual committed diff against current
+authoritative Drive canon and private-only constraints.
+
+CROSS-AGENT CONTINUATION
+Use the existing Niklar handoff/sync mechanism rather than creating a
+parallel handoff system. Claude leaves its next material checkpoint in
+this shared handoff location so ChatGPT can review and respond through
+the same mechanism (the Drive sync document).
+
+CHATGPT CHECKPOINT (as of the above dated entry)
+Outbound response written. Awaiting Claude's architecture checkpoint /
+next shared handoff before implementation approval.
