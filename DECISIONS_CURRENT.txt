@@ -785,3 +785,80 @@ NIKLAR — DECISIONS (current)
     independent review. Batch 3 ("Daily acquisition/orchestrator stage
     handlers wired to the canonical engine") NOT authorized yet —
     awaiting review of this batch first, matching Batch 1's pattern.
+
+34) Decision: Adopt Section 21 of the pre-live architecture doc
+    (ASYNCHRONOUS REVIEW QUEUE / OVERNIGHT AUTONOMY, Drive sync doc
+    RESPONSE_SEQ 15, owner-approved): REVIEW_REQUIRED no longer
+    automatically means STOP_REQUIRED. Claude may continue through
+    already-authorized staged work while independent-review handoffs
+    accumulate, provided the next work is independently safe,
+    non-dependent on the unresolved review, reversible, canon-
+    preserving, and fully validated (a 5-question self-check applied
+    before each continuation). Every unaudited material checkpoint
+    must be preserved (never overwritten/lost) and referenced from a
+    new CURRENT_HANDOFF.txt field, PENDING_REVIEW_QUEUE, in
+    chronological order, for ChatGPT to audit in sequence on the
+    user's next `sync`. HARD_GATE/STOP_REQUIRED still applies verbatim
+    when owner judgment is required, a canon/protected-boundary
+    conflict exists, a material security/privacy/credential decision
+    is unresolved, a destructive/hard-to-reverse migration is
+    proposed, downstream work directly depends on an unaudited
+    decision, validation/CI is red, required external credentials/
+    permissions are missing, or an explicit current authorization
+    requires a stop — in which case Claude must stop dependent
+    material work, record the exact blocker + executable NEXT_ACTION,
+    and may still do unrelated safe housekeeping. Production/go-live
+    remains a hard consolidated gate: no unaudited checkpoint may
+    remain pending at final approval.
+    Date: 2026-08-09
+    Rationale: Explicit owner-approved protocol relayed via ChatGPT's
+    Drive sync doc, read in full from the primary architecture
+    document (not just the sync-doc response's summary) per this
+    session's standing "read primary sources, not proxies" discipline.
+    Directly actionable and unambiguous.
+    Affected component: session/agent operating discipline for all
+    remaining batches; niklar-handoff CURRENT_HANDOFF.txt (new
+    PENDING_REVIEW_QUEUE field, from HANDOFF_SEQ 10 onward)
+    Status: Frozen (implemented) — operating protocol, not a Niklar
+    trading/canonical rule. See decision #35 for its first application
+    (the Batch 3 self-check outcome).
+
+35) Decision: Apply Section 21's autonomous-continuation self-check to
+    Batch 3 ("Daily acquisition/orchestrator stage handlers wired to
+    the canonical engine") and classify it HARD_GATE — do not begin
+    implementation.
+    Date: 2026-08-09
+    Rationale: Batch 3 requires wiring the orchestrator's 13 canonical
+    stage handlers (authority_load, research_memory_gate,
+    evidence_acquisition, decision_object_freeze,
+    canonical_serialization, publication_validation,
+    research_database_append, research_indexes_update,
+    master_database_update, opportunity_matrix_rebuild,
+    discovery_consumers_sync, tactical_consumers_sync,
+    postflight_verification) to real Drive/Sheets/Slack/market-data
+    integrations. This is the exact "Architecture/stack for the
+    orchestrator's stage-handler implementations... requires deciding
+    how/whether this environment integrates with Drive/Sheets/Slack
+    and any market-data source" item that has stood as AWAITING USER
+    DECISION since decision #8/#28, unresolved by the pre-live
+    architecture's owner approval (RESPONSE_SEQ 8) or by Section 21
+    itself — confirmed still open by re-reading TODO_CURRENT.txt
+    directly before concluding this, not assumed. Two independent
+    HARD_GATE triggers apply verbatim: "owner judgment is required"
+    and "required external credentials/permissions are missing" (this
+    environment holds no Drive/Sheets/Slack/market-data credentials —
+    only GEMINI_API_KEY exists, for the QA worker). Self-check
+    questions 1 ("already authorized?") and 3 ("independently safe if
+    prior review later changes?") both resolve NO/UNCERTAIN for the
+    real-integration portions of Batch 3, which is sufficient per
+    Section 21's own "if any answer is no or uncertain, classify as
+    HARD_GATE" rule.
+    Affected component: none — no niklar-stocks mutation this cycle.
+    Applies to Batch 3 specifically; does not affect Batch 1/2's
+    already-frozen status or Batch 2's pending review.
+    Status: Recorded. HARD_GATE in effect for Batch 3 until the owner
+    resolves the integration-architecture/credentials decision (or
+    narrows Batch 3's scope explicitly). No other safe, already-
+    authorized, unblocked material increment is currently queued
+    (checked TODO_CURRENT.txt in full before concluding this) — see
+    HANDOFF_SEQ 10 for the executable NEXT_ACTION.

@@ -642,3 +642,43 @@ NIKLAR-HANDOFF — CHANGELOG
     the canonical engine") NOT authorized yet -- explicit "do not jump
     ahead" boundary; next sync checks for review feedback on Batch 2
     before starting Batch 3.
+
+2026-08-09 (Section 21 adopted; Batch 3 HARD_GATE, HANDOFF_SEQ 10)
+  - Drive sync doc RESPONSE_SEQ 15 (owner-approved): adopted Section 21
+    of the pre-live architecture doc, ASYNCHRONOUS REVIEW QUEUE /
+    OVERNIGHT AUTONOMY -- REVIEW_REQUIRED no longer automatically means
+    STOP_REQUIRED. Claude may continue through already-authorized
+    staged work while independent-review handoffs accumulate, subject
+    to a 5-question self-check (already authorized? canon-preserving?
+    independently safe if prior review later changes? reversible? full
+    validation green?) -- if any answer is no/uncertain, HARD_GATE.
+    HARD_GATE still applies verbatim for owner-judgment items, canon/
+    protected-boundary conflicts, unresolved security/privacy/
+    credential decisions, destructive/hard-to-reverse migrations,
+    downstream dependence on an unaudited decision, red CI, missing
+    external credentials, or an explicit stop authorization. Read in
+    full from the primary Drive architecture document, not just the
+    sync-doc response's summary. CURRENT_HANDOFF.txt gains a new
+    PENDING_REVIEW_QUEUE field (chronological list of every unaudited
+    material checkpoint) from this checkpoint onward. Recorded as
+    decision #34.
+  - Applied the self-check to Batch 3 ("Daily acquisition/orchestrator
+    stage handlers wired to the canonical engine"): HARD_GATE. Batch 3
+    requires wiring the orchestrator's 13 canonical stage handlers to
+    real Drive/Sheets/Slack/market-data integrations -- the same
+    "Architecture/stack for the orchestrator's stage-handler
+    implementations... requires deciding how/whether this environment
+    integrates with Drive/Sheets/Slack and any market-data source"
+    item that has stood as AWAITING USER DECISION since decision
+    #8/#28, re-confirmed still open by re-reading TODO_CURRENT.txt
+    directly before concluding. Two HARD_GATE triggers apply verbatim:
+    owner judgment required, and required external credentials/
+    permissions are missing (this environment holds no Drive/Sheets/
+    Slack/market-data credentials -- only GEMINI_API_KEY for the QA
+    worker). Recorded as decision #35.
+  - No niklar-stocks mutation this cycle. Checked for any other safe,
+    already-authorized, unblocked material increment -- none found,
+    reported honestly (matching decision #27's precedent) rather than
+    manufacturing work. Batch 2 (commit 598b2d4) remains queued for
+    independent review, now referenced from CURRENT_HANDOFF.txt's
+    PENDING_REVIEW_QUEUE field. Archived HANDOFF_SEQ 9 first.

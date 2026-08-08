@@ -1,9 +1,46 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (DONE — Batch 2 implemented per RESPONSE_SEQ
-14's release; niklar-stocks 598b2d4; HANDOFF_SEQ 9. Batch 3 NOT
-authorized yet, awaiting review of this batch.)
+Last updated: 2026-08-09 (HARD_GATE — Batch 3 blocked on the
+long-standing orchestrator integration-architecture/credentials
+decision, per Section 21's self-check; HANDOFF_SEQ 10.)
 
-DONE — pre-live architecture Batch 2: normalization exception path + owner-gated LLM policy foundations (this update)
+HARD_GATE — Batch 3 blocked: orchestrator stage-handler integration architecture/credentials (this update)
+---------------------------------------------------------------------------
+  - Drive sync doc RESPONSE_SEQ 15 (owner-approved): adopted Section 21
+    (ASYNCHRONOUS REVIEW QUEUE / OVERNIGHT AUTONOMY) — REVIEW_REQUIRED
+    no longer automatically means STOP_REQUIRED; Claude may continue
+    through already-authorized staged work subject to a 5-question
+    self-check, but HARD_GATE still applies verbatim when owner
+    judgment is required or required external credentials/permissions
+    are missing. Recorded as decision #34.
+  - Applied the self-check to Batch 3 ("Daily acquisition/orchestrator
+    stage handlers wired to the canonical engine"): HARD_GATE. Batch 3
+    requires wiring the orchestrator's 13 canonical stage handlers
+    (authority_load through postflight_verification) to real
+    Drive/Sheets/Slack/market-data integrations -- this is the exact
+    "Architecture/stack for the orchestrator's stage-handler
+    implementations... requires deciding how/whether this environment
+    integrates with Drive/Sheets/Slack and any market-data source"
+    item that has stood as AWAITING USER DECISION since decision
+    #8/#28 (see below), re-confirmed still open by re-reading this
+    file directly before concluding, not assumed. Two HARD_GATE
+    triggers apply: owner judgment required, and required external
+    credentials/permissions are missing (this environment holds no
+    Drive/Sheets/Slack/market-data credentials -- only GEMINI_API_KEY
+    for the QA worker). Recorded as decision #35.
+  - No niklar-stocks mutation this cycle. Checked for any other safe,
+    already-authorized, unblocked material increment before concluding
+    -- none found (matching decision #27's precedent of reporting an
+    empty safe queue honestly rather than manufacturing work). Batch
+    2 (commit 598b2d4) remains queued for independent review -- see
+    CURRENT_HANDOFF.txt's new PENDING_REVIEW_QUEUE field.
+  - NEXT_ACTION: awaiting either the owner's integration-architecture/
+    credentials decision for Batch 3 (which stack for Drive/Sheets/
+    Slack/market-data, and how credentials reach this environment), or
+    an explicit narrowed Batch 3 scope that doesn't require them, or
+    ChatGPT's audit of the queued Batch 2 checkpoint. Not proceeding
+    on a guess.
+
+DONE — pre-live architecture Batch 2: normalization exception path + owner-gated LLM policy foundations (prior update)
 ---------------------------------------------------------------------------
   - Drive sync doc RESPONSE_SEQ 14 released Batch 2 after Batch 1's
     patch (221020b) passed independent re-review: "non-blocking
@@ -460,7 +497,10 @@ AWAITING USER DECISION
     postflight_verification). These require deciding how/whether this
     environment integrates with Drive/Sheets/Slack and any market-data
     source — a material architectural + credentials decision, held for
-    the user rather than guessed. Unchanged by this update.
+    the user rather than guessed. Unchanged by this update. NOW ALSO
+    the recorded HARD_GATE blocking pre-live architecture Batch 3 —
+    see the HARD_GATE section above (decision #35) for the formal
+    self-check that reconfirmed this is still open.
   - Same underlying decision blocks a live data source for the PWA
     (currently reads a static synthetic sample-data.json only).
 

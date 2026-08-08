@@ -1,0 +1,85 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: PASS
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 9
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq9-batch2-normalization-llm-policy
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 598b2d4
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Implement pre-live architecture Batch 2 per Drive sync doc
+RESPONSE_SEQ 14's explicit release ("non-blocking normalization
+exception path, free-LLM/owner-gating policy foundations, and
+deterministic LLM-dependency audit tooling... incorporate the later
+approved Section 20 direction where Batch 2 naturally owns it... do
+not jump ahead"), following Batch 1's patch (221020b) clearing
+independent re-review.
+
+MATERIAL_DELTA: New file `ops/niklar_normalization_policy.py`, three
+pieces exactly matching Batch 2's named scope: (1)
+`attempt_normalization()` — non-blocking wrapper, deliberately broad
+`except Exception`, degrades a normalizer failure to a Batch 1
+`REVIEW_REASON_NORMALIZATION_EXCEPTION` review-queue entry (built via
+Batch 1's own `new_review_queue_entry()`, not a parallel construction)
+instead of raising past itself; (2) `is_eligible_for_external_llm()` /
+`decide_llm_escalation()` — pure, no-I/O owner-gated LLM escalation
+policy: fail-closed privacy allowlist (only PUBLIC_DISCLOSURE/
+PUBLIC_NEWS/PUBLIC_MARKET_DATA eligible), free-tier requires owner
+authorization AND provider availability, paid tier requires its own
+separate authorization, default with no gate satisfied is always
+QUARANTINED_PENDING_OWNER_AUTHORIZATION — incorporates Section 20's
+free-provider/paid-requires-separate-authorization shape with zero
+network call or provider SDK, foundations only; (3)
+`run_llm_dependency_audit()` — replays a caller-supplied corpus
+through `attempt_normalization()`, reports deterministic pass/fail
+counts/rates plus per-failure ticker/field/reason/materiality/
+affected-dimensions, `None` (not fabricated 0.0/1.0) for an empty
+corpus, deliberately declines to classify "genuine semantic reasoning
+need" vs. "parser defect" (documented as out of scope for a
+deterministic function). No existing file modified, no new dependency
+— Minimum Sufficient Code. Full new-file content published in
+`review-packages/598b2d4-batch2-normalization-llm-policy.md`.
+
+VALIDATION: unittest 148/148 (130 -> 148, 18 new), mypy 0/15 (14 -> 15
+source files), PWA smoke unaffected. Real GitHub Actions run
+31278234207 polled directly, conclusion: "success" — not assumed from
+local success alone.
+
+SELF_AUDIT: Applied the standing 4 criteria before publishing —
+failure envelope (broad catch justified + tested against a
+non-obvious exception type), no unnecessary abstraction/dependency
+(plain dicts/string constants, 2 new files, 0 existing files touched),
+security/privacy (fail-closed allowlist, zero network/credential
+code), canonical boundary drift (none — pure policy/state scaffolding,
+same as Batch 1). Clean, no findings.
+
+CANON/GATE STATUS: PASS; EXCEPTIONS: NONE — no canonical trading/
+scoring/tactical/invalidation/Decision Object logic touched.
+
+PROTECTED_BOUNDARY_STATUS: The three Drive-verbatim `ops/` modules
+(schema lock, publication validator, orchestrator) untouched. New
+module is pure/no-I/O, same discipline as `niklar_state_contracts.py`.
+
+BLOCKERS: None from Claude's side. Batch 3 ("Daily acquisition/
+orchestrator stage handlers wired to the canonical engine") is NOT
+authorized yet — explicit "do not jump ahead" boundary in RESPONSE_SEQ
+14 — awaiting independent review of this batch before proceeding,
+matching the pattern established for Batch 1.
+
+REVIEW_REQUEST: Independent inspection of
+`review-packages/598b2d4-batch2-normalization-llm-policy.md` (full new
+file content, commit message, self-audit) — confirm the three pieces
+match Batch 2's named scope and Section 20's incorporated direction
+correctly, or flag if they don't.
+
+NEXT_ACTION: None pending from Claude's side. Awaiting compact review
+via the Drive sync document. Per the standing process correction
+(decision #32): if a response references a prior RESPONSE_SEQ by
+number that isn't fully inline, locate and read that response's own
+archived content before proceeding, not just the current
+LATEST_RESPONSE block.
