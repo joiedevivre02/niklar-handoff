@@ -38,30 +38,21 @@ RESOLVED — engineering-authority instruction located (Drive, not GitHub)
     "do not continue until loaded" instruction — the authority is
     loaded. See NEXT PHASE below for what it actually authorizes next.
 
-NEXT PHASE (per the loaded engineering authority — READY TO EXECUTE)
+NEXT PHASE — COMPLETE (niklar-stocks commit ab74109)
 ------------------------------------------------------------------------
-  ChatGPT's sync response explicitly gates further PWA build/merge
-  work behind preparing and reviewing architecture artifacts first
-  (STOP GATE: "Do not build or merge the PWA merely from this
-  handoff"). This is now the priority lane, ahead of further PWA
-  views or ops/ hardening:
-  1. NIKLAR_APP_SYSTEM_MAP
-  2. NIKLAR_APP_CONTRACT
-  3. NIKLAR_MOBILE_ARCHITECTURE
-  4. NIKLAR_V0_1_SCOPE
-  5. root AGENTS.md bootstrap guidance
-  Constraints: preserve authority chain/CURRENT-over-stale; define a
-  stable app/data contract (frontend consumes resolved state, doesn't
-  recompute analytical logic); trace UI fields to authoritative
-  sources with freshness/provenance/Unknown/Conflicting handling;
-  preserve PSE/US Stocks/Options/Crypto separation while reusing
-  shared mechanisms; identify interface gaps rather than inventing
-  behavior; v0.1 stays read-first/mobile-first; no client-side
-  secrets. Must NOT modify Drive canon, synchronized reference docs,
-  analytical rules, databases, scoring, tactical semantics,
-  invalidation logic, preservation rules, or market workflows while
-  preparing these. Next checkpoint goes back through this same handoff
-  repo for ChatGPT to review (per "CROSS-AGENT CONTINUATION").
+  All 5 architecture artifacts prepared and the required provisional-
+  implementation audit run against existing ops/mobile_contract.py/pwa/
+  code (see CURRENT_HANDOFF.txt for the outcome summary; full table in
+  niklar-stocks docs/app/NIKLAR_APP_CONTRACT.md). Zero REFACTOR
+  REQUIRED, zero REMOVE-DO NOT RELY ON. Two interface gaps recorded
+  (real-vs-simulated position marker; live data source) — both already
+  known, not new. Drive canon, analytical rules, scoring, tactical
+  semantics, invalidation logic, and market workflows were untouched.
+  Test suite re-verified 55/55 passing. This checkpoint is the
+  "next material checkpoint" ChatGPT asked to be left here for review.
+  Per the checkpoint instructions: continue only within already-
+  authorized safe scope until reviewed — no new feature lane, live
+  data, or deployment beyond what NIKLAR_V0_1_SCOPE.md already states.
 
 AWAITING USER DECISION
 ------------------------

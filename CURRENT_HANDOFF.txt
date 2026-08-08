@@ -1,10 +1,51 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-08 (SYNC — ChatGPT independently confirmed the
-frozen communication channel from its side. No niklar-stocks work
-this update.)
+Last updated: 2026-08-08 (NEXT PHASE COMPLETE — architecture package
+prepared and audited; niklar-stocks commit ab74109)
 Maintained by: Claude, working in the private niklar-stocks environment
 
-SYNC — ChatGPT confirmation of frozen channel (this update)
+NEXT PHASE COMPLETE — architecture package + audit (this update)
+------------------------------------------------------------------
+BRANCH/COMMIT STATE: niklar-stocks main @ ab74109 (up from 9549f65).
+niklar-handoff main @ d9f060f before this commit.
+
+FIVE FILES CREATED (niklar-stocks):
+  - docs/app/NIKLAR_APP_SYSTEM_MAP.md
+  - docs/app/NIKLAR_APP_CONTRACT.md
+  - docs/app/NIKLAR_MOBILE_ARCHITECTURE.md
+  - docs/app/NIKLAR_V0_1_SCOPE.md
+  - AGENTS.md (root)
+Also updated niklar-stocks README.md to link the new package.
+
+PROVISIONAL IMPLEMENTATION AUDIT OUTCOME: every existing ops/
+mobile_contract.py/pwa/ component classifies COMPLIANT against the
+derived contract. Zero REFACTOR REQUIRED, zero REMOVE-DO NOT RELY ON.
+Full table in docs/app/NIKLAR_APP_CONTRACT.md. The contract was
+derived by generalizing the discipline that implementation was already
+built under (never-fabricate-freshness, never-sort/rank, trace-every-
+field-to-schema, private-only) — existing code did not get to author
+the contract; it was checked against one stated independently first.
+
+INTERFACE GAPS (both already known, not newly discovered):
+  1. No schema distinction between a real executed position and a
+     simulated/"Shadow Journal" entry — blocks any future Position/
+     Journal view. `Position Entry`/`Position Status` exist in
+     FROZEN_SCHEMA but nothing marks real-vs-simulated.
+  2. No live data source for the PWA or orchestrator stage handlers —
+     same underlying held integration decision as before.
+
+EXPLICIT USER DECISIONS REQUIRED: unchanged — the orchestrator stage-
+handler / live-data-source architecture (Drive/Sheets/Slack/market-
+data + credentials). Not made autonomously; architecture docs
+presented it as a held decision, not a choice.
+
+SAFE TO RESUME: YES, within already-authorized scope only. v0.1 stays
+exactly as documented in NIKLAR_V0_1_SCOPE.md; no new feature lane,
+live data, or deployment work without that scope doc being revised
+first. Test suite re-verified 55/55 passing (docs-only change, no
+regression). Gate PASS/PASS on both the niklar-stocks and niklar-
+handoff commits this cycle.
+
+PRIOR SYNC — ChatGPT confirmation of frozen channel
 ------------------------------------------------------------------
 Re-read the Drive ChatGPT->Claude sync document per the sync
 procedure (step 1) and found a new dated entry not present at the
@@ -230,4 +271,5 @@ FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
     56dd1d2 (mobile contract + PWA vertical slice) ->
     aae6fea (Opportunity Landscape view) ->
     3a66e90 (cross-section navigation) ->
-    95cb051 (Watchlist roster view) -> 9549f65 (mypy CI validation)
+    95cb051 (Watchlist roster view) -> 9549f65 (mypy CI validation) ->
+    ab74109 (NEXT PHASE architecture package: docs/app/ + AGENTS.md)

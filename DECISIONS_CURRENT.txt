@@ -210,3 +210,27 @@ NIKLAR — DECISIONS (current)
     appended to the Drive ChatGPT->Claude sync document (ChatGPT reads
     niklar-handoff for Claude's checkpoints, not Drive) — both sides
     now enforce the same rule, mutually confirmed.
+
+15) Decision: Prepare the 5 NEXT PHASE architecture artifacts
+    (NIKLAR_APP_SYSTEM_MAP.md, NIKLAR_APP_CONTRACT.md,
+    NIKLAR_MOBILE_ARCHITECTURE.md, NIKLAR_V0_1_SCOPE.md, root
+    AGENTS.md) as documentation only, under docs/app/ and repo root in
+    niklar-stocks, deriving the app contract from the discipline the
+    existing ops/mobile_contract.py/pwa/ code was already built under
+    rather than letting existing code author the contract, then
+    auditing every existing component against it.
+    Date: 2026-08-08
+    Rationale: Explicit "EXECUTE NOW" instruction from ChatGPT (Drive
+    sync doc), which is the loaded engineering authority per decisions
+    #12-13. Matches the standing rule to continue already-authorized
+    unblocked work without waiting for a separate approval once an
+    authority instruction is this explicit.
+    Affected component: niklar-stocks docs/app/, niklar-stocks
+    AGENTS.md (commit ab74109)
+    Status: Frozen (implemented) — audit found zero REFACTOR REQUIRED
+    / REMOVE-DO NOT RELY ON items; two pre-existing interface gaps
+    recorded (real-vs-simulated position marker, live data source),
+    neither new. No Drive canon, analytical rule, scoring, tactical
+    semantics, invalidation logic, or pwa/ code was touched — pure
+    documentation, respecting the STOP GATE in the same authority
+    instruction.

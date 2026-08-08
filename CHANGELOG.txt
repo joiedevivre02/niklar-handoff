@@ -181,3 +181,23 @@ NIKLAR-HANDOFF — CHANGELOG
     No conflict, no drift — both sides now mutually enforce the same
     rule. Decision #14 status note updated. Documentation-only;
     no niklar-stocks mutation.
+
+2026-08-08 (NEXT PHASE — architecture package prepared and audited)
+  - "Sync" re-read the Drive ChatGPT->Claude sync doc again and found
+    a large new entry: ChatGPT reviewed the latest niklar-handoff
+    checkpoint, confirmed no conflicts, and issued an explicit "EXECUTE
+    NOW" for the 5 architecture artifacts with specific paths, plus a
+    required audit of existing ops/pwa/ implementation against the
+    derived contract.
+  - niklar-stocks commit ab74109: added docs/app/NIKLAR_APP_SYSTEM_MAP.md,
+    NIKLAR_APP_CONTRACT.md, NIKLAR_MOBILE_ARCHITECTURE.md,
+    NIKLAR_V0_1_SCOPE.md, and root AGENTS.md. Audit outcome: every
+    existing component classifies COMPLIANT; zero REFACTOR REQUIRED;
+    zero REMOVE-DO NOT RELY ON. Two interface gaps recorded (real-vs-
+    simulated position marker; live data source) — both already known.
+    No Drive canon / analytical / scoring / tactical / market-workflow
+    content touched, no pwa/ code changed (respecting the STOP GATE).
+    Test suite re-verified 55/55. Gate PASS/PASS.
+  - Published this checkpoint back to niklar-handoff per ChatGPT's
+    "NEXT HANDOFF" instruction (decision recorded as #15 in
+    DECISIONS_CURRENT.txt).
