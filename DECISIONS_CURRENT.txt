@@ -584,3 +584,31 @@ NIKLAR — DECISIONS (current)
     Status: Frozen (implemented) — HANDOFF_SEQ 4. No niklar-stocks
     mutation this cycle. Awaiting the user's architecture/live-data
     decision (or other direction) for the next material increment.
+
+28) Decision: Adopt a new standing rule the user established: every
+    material Claude recommendation that requires the user's judgment
+    must be independently audited by ChatGPT before it is treated as
+    decision-ready — a USER_JUDGMENT_AUDIT gate, applying to every
+    future material recommendation, not only this one. For the
+    orchestrator/live-data architecture decision specifically: do not
+    ask the user to choose yet, do not implement; publish a compact
+    decision-review package (REVIEW_REQUEST/DECISION_REQUIRED/OPTIONS/
+    CLAUDE_RECOMMENDATION/TRADEOFFS/COST_COMPLEXITY/
+    CREDENTIALS_SECURITY/MOBILE_PRACTICALITY/INTEGRATIONS/
+    REVERSIBILITY/CANON_BOUNDARIES/UNKNOWNS/USER_JUDGMENT_REQUESTED)
+    for ChatGPT to independently assess hidden assumptions, omitted
+    alternatives, unnecessary complexity, cost, risk, security/privacy,
+    canon alignment, and reversibility before user judgment is invited.
+    Date: 2026-08-09
+    Rationale: Drive sync doc RESPONSE_SEQ 6, relaying the user's
+    explicit new instruction. Directly actionable and unambiguous —
+    the 4-option architecture breakdown already prepared this cycle
+    (in response to RESPONSE_SEQ 5's "present bounded options, do not
+    choose") is the first material recommendation this gate applies to.
+    Affected component: niklar-handoff CURRENT_HANDOFF.txt (HANDOFF_SEQ
+    5 — the compact decision package itself), archive/handoffs/
+    HANDOFF_SEQ_4.txt (archived)
+    Status: Frozen (implemented) — HANDOFF_SEQ 5. No niklar-stocks
+    mutation, no user-facing choice requested yet. Waiting on ChatGPT's
+    audit before the architecture decision is presented to the user as
+    decision-ready.

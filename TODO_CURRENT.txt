@@ -1,9 +1,24 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (RELEASED — independent-review hold on ee594cc
-lifted, ChatGPT: PASS WITH NON-BLOCKING SIMPLIFICATION; HANDOFF_SEQ 4.
-"cont" found no other safe/unblocked material increment queued.)
+Last updated: 2026-08-09 (AWAITING CHATGPT AUDIT — user-judgment-audit
+decision package published for the orchestrator/live-data architecture
+choice; HANDOFF_SEQ 5. See CURRENT_HANDOFF.txt for the full package,
+not duplicated here.)
 
-RELEASED — independent-review hold on ee594cc (this update)
+AWAITING CHATGPT AUDIT — decision package for architecture choice (this update)
+---------------------------------------------------------------------------
+  - User established a new standing rule (Drive sync doc RESPONSE_SEQ
+    6): every material Claude recommendation requiring user judgment
+    must be independently audited by ChatGPT first. Published a
+    compact decision-review package for the orchestrator/live-data
+    architecture decision (4 options, recommendation, tradeoffs,
+    cost/complexity, credentials/security, mobile practicality,
+    integrations, reversibility, canon boundaries, unknowns) — full
+    content in CURRENT_HANDOFF.txt (HANDOFF_SEQ 5), not repeated here.
+  - No implementation, no user-facing choice requested yet. Recorded
+    as decision #28. Waiting on ChatGPT's audit before this becomes
+    decision-ready for the user.
+
+RELEASED — independent-review hold on ee594cc (prior update)
 ---------------------------------------------------------------------------
   - ChatGPT's Drive sync doc RESPONSE_SEQ 3: independent review of the
     trimmed review package (published at HANDOFF_SEQ 3) completed --

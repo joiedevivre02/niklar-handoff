@@ -497,3 +497,17 @@ NIKLAR-HANDOFF — CHANGELOG
     review. Reported that state honestly rather than manufacturing
     QA-infra or unrequested cleanup work. No niklar-stocks mutation
     this cycle. Recorded as decision #27.
+
+2026-08-09 (user-judgment-audit gate adopted; decision package published, HANDOFF_SEQ 5)
+  - User established a new standing rule (Drive sync doc RESPONSE_SEQ
+    6): every material Claude recommendation requiring user judgment
+    must be independently audited by ChatGPT before it's treated as
+    decision-ready, not only this one decision.
+  - Published a compact decision-review package for the orchestrator/
+    live-data architecture choice (4 options, recommendation,
+    tradeoffs, cost/complexity, credentials/security, mobile
+    practicality, integrations, reversibility, canon boundaries,
+    unknowns) as HANDOFF_SEQ 5 -- content lives in CURRENT_HANDOFF.txt,
+    not duplicated elsewhere. No implementation, no user-facing choice
+    requested yet. Archived HANDOFF_SEQ 4 first. Recorded as
+    decision #28.
