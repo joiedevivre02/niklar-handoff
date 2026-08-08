@@ -1,8 +1,36 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-08 (DONE — real CI run verified green after a
-fix; niklar-stocks commit 7543b1c)
+Last updated: 2026-08-09 (DONE — Gemini escalation enabled and verified
+end-to-end against the real endpoint; niklar-stocks commits 2be671a ->
+66caa0b -> a937f87)
 
-DONE — verified and fixed the real CI run (this update)
+DONE — Gemini escalation enabled and verified end-to-end (this update)
+------------------------------------------------------------------------
+  - User confirmed directly ("Yes, added it") that GEMINI_API_KEY is
+    present as a niklar-stocks repository secret. Flipped the second
+    gate: AI_QA_ENABLE_GEMINI hardcoded to "1" in
+    .github/workflows/ai-qa.yml (commit 2be671a). Polled the real
+    GitHub Actions run for this enable-only commit -- confirmed
+    conclusion: "success" before proceeding further.
+  - Per ChatGPT's "NEXT CHECKPOINT" instruction: introduced one
+    deliberate, temporary, controlled failure (a mechanical, canon-free
+    mypy type error in scripts/ai_qa/config.py, commit 66caa0b) to
+    force a real CI failure and confirm Gemini is genuinely invoked.
+    Polled the real run's job log directly and confirmed a genuine
+    round-trip against the live endpoint: "Gemini diagnosis:
+    MECHANICAL_FIX (HIGH confidence)" -- a real structured
+    classification, not just clean error handling (which is all the
+    earlier invalid-key check had proven). No canon content, secrets,
+    or repository material appeared in the run log.
+  - Reverted the deliberate failure immediately (commit a937f87,
+    confirmed byte-for-byte identical to 2be671a's config.py). Local
+    re-check: unittest 81/81, mypy 0 issues. Polled the real run for
+    the revert commit -- confirmed conclusion: "success", real CI green
+    again.
+  - Recorded as decision #21. This closes the item below (was AWAITING
+    USER DECISION) and the last open step from ChatGPT's "NEXT
+    CHECKPOINT" instruction.
+
+DONE — verified and fixed the real CI run (prior update)
 ------------------------------------------------------------
   - Checked the actual GitHub Actions run for the new ai-qa.yml
     workflow instead of trusting local testing/the prior report's
@@ -12,7 +40,7 @@ DONE — verified and fixed the real CI run (this update)
     re-validated locally, pushed, polled the real API again -- now
     genuinely conclusion: "success". Gate PASS/PASS.
 
-AWAITING USER DECISION
+RESOLVED (was AWAITING USER DECISION)
 ------------------------------
   - Turning on Gemini escalation in niklar-stocks scripts/ai_qa/ for
     real: add the GEMINI_API_KEY GitHub Actions secret and set
@@ -32,6 +60,10 @@ AWAITING USER DECISION
     AI_QA_ENABLE_GEMINI=1, trigger one controlled CI failure-path
     invocation to confirm real end-to-end escalation, then checkpoint
     per ChatGPT's "NEXT CHECKPOINT" instruction.
+  - RESOLVED 2026-08-09: see "DONE — Gemini escalation enabled and
+    verified end-to-end" above. Both gates are live, real end-to-end
+    verification complete. AGENTS.md's "Held decisions" section moved
+    this to a new "Resolved decisions" section.
 
 DONE — AI QA worker port (this update)
 ---------------------------------------------

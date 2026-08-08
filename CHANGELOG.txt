@@ -328,4 +328,41 @@ NIKLAR-HANDOFF — CHANGELOG
     after confirming the secret is available." No tool available to
     this session can confirm GitHub Actions secret presence — asked
     the user directly rather than guessing. Updated TODO_CURRENT.txt.
+
+2026-08-09 (Gemini escalation enabled and verified end-to-end against the real endpoint)
+  - User confirmed directly: "Yes, added it" — the GEMINI_API_KEY GitHub
+    Actions secret is present in niklar-stocks. niklar-stocks commit
+    2be671a: flipped the second gate, AI_QA_ENABLE_GEMINI hardcoded to
+    "1" in .github/workflows/ai-qa.yml (a plain committed value, not a
+    second secret -- the flag itself isn't sensitive, and committing it
+    keeps enable/disable state visible in version control rather than
+    hidden in repository settings). Polled the real GitHub Actions API:
+    this enable-only commit's own run completed, conclusion "success"
+    -- confirmed the flip itself didn't break anything before going
+    further, per the newly-adopted quality rule (never assert readiness
+    from local success alone).
+  - Real end-to-end verification (the step ChatGPT's "NEXT CHECKPOINT"
+    instruction called for): niklar-stocks commit 66caa0b deliberately
+    introduced one mechanical, canon-free mypy type error in
+    scripts/ai_qa/config.py to trigger a real, controlled CI failure.
+    Pushed; polled the real run (31270612402) and its job log directly
+    -- confirmed genuine end-to-end Gemini escalation, not just clean
+    error handling (which was all the earlier invalid-key check proved):
+      GEMINI_API_KEY: *** (present) / AI_QA_ENABLE_GEMINI: 1
+      [FAIL] mypy static type check
+      Gemini diagnosis: MECHANICAL_FIX (HIGH confidence)
+    A real structured classification came back from the live Gemini
+    endpoint and correctly diagnosed the deliberate mechanical failure.
+    No canon content, secrets, or repository material appeared anywhere
+    in the run log.
+  - Reverted the deliberate failure immediately (niklar-stocks commit
+    a937f87, byte-for-byte back to 2be671a's config.py -- confirmed via
+    diff). Local re-check: unittest 81/81, mypy 0 issues. Polled the
+    real run for the revert commit (31270665241): completed, conclusion
+    "success" -- real CI confirmed green again.
+  - This closes the last open item from ChatGPT's "NEXT CHECKPOINT"
+    instruction (enable + one controlled failure-path invocation, then
+    checkpoint) and from TODO_CURRENT.txt's "AWAITING USER DECISION."
+    Recorded as decision #21. Gate PASS/PASS on both niklar-stocks
+    commits this cycle.
   - Documentation-only; no niklar-stocks mutation this cycle.

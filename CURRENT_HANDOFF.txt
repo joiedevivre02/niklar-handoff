@@ -1,9 +1,64 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-09 (ChatGPT reviewed the CI-fix checkpoint:
-RESULT PASS. Awaiting user confirmation before enabling Gemini.)
+Last updated: 2026-08-09 (Gemini escalation enabled and verified
+end-to-end against the real Gemini endpoint; last open item from
+ChatGPT's "NEXT CHECKPOINT" instruction is now closed.)
 Maintained by: Claude, working in the private niklar-stocks environment
 
 LATEST DELTA (this update)
+------------------------------
+User confirmed directly: "Yes, added it" -- the GEMINI_API_KEY GitHub
+Actions secret is present in niklar-stocks. Flipped the second gate:
+AI_QA_ENABLE_GEMINI hardcoded to "1" in .github/workflows/ai-qa.yml
+(commit 2be671a; a plain committed value, not a second secret -- the
+flag itself isn't sensitive, and committing it keeps enable/disable
+state visible in version control). Polled the real GitHub Actions run
+for this enable-only commit first -- confirmed conclusion: "success"
+before going further, per the standing quality rule (never assert
+readiness from local success alone; verify the real run).
+
+Then completed the real end-to-end verification ChatGPT's "NEXT
+CHECKPOINT" instruction called for: introduced one deliberate,
+temporary, controlled failure -- a mechanical, canon-free mypy type
+error in scripts/ai_qa/config.py (commit 66caa0b), unrelated to ops/ or
+any trading logic. Pushed, then read the real job log directly
+(mcp__github__get_job_logs) rather than trusting the report shape
+alone. It showed a genuine round-trip against the live Gemini endpoint:
+
+  GEMINI_API_KEY: *** (present) / AI_QA_ENABLE_GEMINI: 1
+  [FAIL] mypy static type check
+  Gemini diagnosis: MECHANICAL_FIX (HIGH confidence)
+  Mypy type check failed due to an incompatible type assignment in
+  scripts/ai_qa/config.py.
+
+This is a real structured classification from the real endpoint --
+not just clean error handling, which is all the earlier invalid-key
+check had proven. It correctly diagnosed the deliberate mechanical
+failure as MECHANICAL_FIX. No canon content, secrets, or repository
+material appeared anywhere in the run log.
+
+Reverted the deliberate failure immediately (commit a937f87) --
+confirmed byte-for-byte identical to 2be671a's config.py via diff, not
+assumed. Local re-check: unittest 81/81, mypy 0 issues. Polled the real
+run for the revert commit -- confirmed conclusion: "success", real CI
+green again.
+
+Recorded as decision #21 (resolves #19's AWAITING USER DECISION).
+scripts/ai_qa/README.md and AGENTS.md updated to reflect the resolved
+decision (prior disabled-by-default rationale kept as history, not
+deleted; AGENTS.md gained a "Resolved decisions" section). Updated
+TODO_CURRENT.txt, DECISIONS_CURRENT.txt, CHANGELOG.txt in this repo to
+match. niklar-stocks main: 2be671a -> 66caa0b -> a937f87.
+
+This closes the last open item from ChatGPT's "NEXT CHECKPOINT"
+instruction (enable + one controlled failure-path invocation, then
+checkpoint). The AI QA worker's Gemini escalation path is now proven
+working end-to-end in the real environment, not just locally and not
+just with clean-error-handling on an invalid key.
+
+PRIOR DELTA — Gemini enable authorized pending secret confirmation
+------------------------------------------------------------------------
+
+LATEST DELTA (prior update)
 ------------------------------
 "Sync" -> full read of the Drive sync doc found new content (grew
 8941->10767 bytes). ChatGPT's "CHATGPT SYNC RESPONSE — 2026-08-09
@@ -506,4 +561,7 @@ FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
     4bb9543 (fixed stale niklar-handoff filename references) ->
     3ffd9b0 (repo-local AI QA worker ported, disabled by default,
     64->81 tests) -> 7543b1c (fixed real CI failure -- -m invocation
-    required; real GitHub Actions run verified green)
+    required; real GitHub Actions run verified green) -> 2be671a
+    (Gemini escalation enabled -- AI_QA_ENABLE_GEMINI=1 hardcoded) ->
+    66caa0b (deliberate controlled failure -- real Gemini E2E
+    verification) -> a937f87 (clean revert; real CI confirmed green)

@@ -365,3 +365,38 @@ NIKLAR — DECISIONS (current)
     niklar-handoff CLAUDE_OVERNIGHT_AUTONOMOUS_PROMPT.txt)
     Status: Frozen (implemented) — operating protocol, not a Niklar
     trading/canonical rule.
+
+21) Decision: Resolve the "AWAITING USER DECISION" from #19 — Gemini
+    escalation in scripts/ai_qa/ is now ON for real, verified
+    end-to-end against the live Gemini endpoint (not just an
+    invalid-key error-handling check).
+    Date: 2026-08-09
+    Rationale: User confirmed directly ("Yes, added it") that the
+    GEMINI_API_KEY GitHub Actions secret is present. Per ChatGPT's
+    conditional authorization ("enable it only after confirming the
+    secret is available") and the user's confirmation, both gates were
+    flipped: AI_QA_ENABLE_GEMINI hardcoded to "1" in
+    .github/workflows/ai-qa.yml (niklar-stocks 2be671a; a plain
+    committed value, not a second secret). The enable-only commit's own
+    real CI run was polled and confirmed green before going further.
+    Then, per ChatGPT's explicit "NEXT CHECKPOINT" instruction, a
+    deliberate, temporary, controlled failure (a mechanical, canon-free
+    mypy type error, unrelated to ops/ or trading logic) was introduced
+    (niklar-stocks 66caa0b) to force a real CI failure and confirm
+    Gemini is genuinely invoked, not just gracefully erroring. The real
+    job log showed a genuine round-trip: "Gemini diagnosis:
+    MECHANICAL_FIX (HIGH confidence)" with an accurate, canon-free
+    reasoning line -- a real structured classification from the live
+    endpoint, correctly diagnosing the deliberate failure. No canon
+    content, secrets, or repository material appeared in the run log.
+    The failure was reverted immediately (niklar-stocks a937f87,
+    confirmed byte-for-byte identical to 2be671a's config.py) and the
+    revert commit's own real CI run was polled and confirmed green.
+    Affected component: niklar-stocks .github/workflows/ai-qa.yml
+    (AI_QA_ENABLE_GEMINI hardcoded on), scripts/ai_qa/README.md and
+    AGENTS.md (updated to reflect the resolved decision, prior
+    disabled-by-default rationale kept as history, not deleted)
+    Status: Frozen (implemented) — no longer AWAITING USER DECISION.
+    Both required gates (GEMINI_API_KEY secret, AI_QA_ENABLE_GEMINI=1)
+    are live in niklar-stocks main, and the escalation path is proven
+    working end-to-end in the real environment.
