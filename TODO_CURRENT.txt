@@ -1,9 +1,43 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (DONE — Batch 1 patch applied per RESPONSE_SEQ
-10's "CHANGES REQUIRED before Batch 2"; niklar-stocks 221020b;
-HANDOFF_SEQ 8. Batch 2 remains HOLD pending re-review.)
+Last updated: 2026-08-09 (DONE — Batch 2 implemented per RESPONSE_SEQ
+14's release; niklar-stocks 598b2d4; HANDOFF_SEQ 9. Batch 3 NOT
+authorized yet, awaiting review of this batch.)
 
-HOLD — Batch 2 pending Batch 1 patch re-review (this update)
+DONE — pre-live architecture Batch 2: normalization exception path + owner-gated LLM policy foundations (this update)
+---------------------------------------------------------------------------
+  - Drive sync doc RESPONSE_SEQ 14 released Batch 2 after Batch 1's
+    patch (221020b) passed independent re-review: "non-blocking
+    normalization exception path, free-LLM/owner-gating policy
+    foundations, and deterministic LLM-dependency audit tooling...
+    incorporate the later approved Section 20 direction where Batch 2
+    naturally owns it... do not jump ahead."
+  - New file ops/niklar_normalization_policy.py: attempt_normalization()
+    (non-blocking wrapper, deliberately broad except Exception,
+    degrades to a Batch 1 REVIEW_REASON_NORMALIZATION_EXCEPTION
+    review-queue entry rather than raising); is_eligible_for_external_
+    llm()/decide_llm_escalation() (fail-closed owner-gated LLM
+    escalation policy incorporating Section 20's free-provider/
+    paid-requires-separate-authorization shape, zero network call or
+    provider SDK -- foundations only); run_llm_dependency_audit()
+    (replays a corpus through attempt_normalization(), reports
+    deterministic pass/fail counts/rates and structured per-failure
+    detail). No existing file modified, no new dependency.
+  - 18 new tests (130->148 overall), including one proving
+    attempt_normalization() never raises even for an exception type
+    unrelated to ordinary parsing failures. unittest 148/148, mypy
+    0/15, PWA smoke unaffected, real GitHub Actions run 31278234207
+    confirmed conclusion: "success".
+  - Self-audited against the standing 4 criteria before publishing --
+    no findings. Recorded as decision #33.
+  - Full new-file content published in niklar-handoff
+    review-packages/598b2d4-batch2-normalization-llm-policy.md for
+    independent review, proactively. Archived HANDOFF_SEQ 8 first.
+    Batch 3 ("Daily acquisition/orchestrator stage handlers wired to
+    the canonical engine") is NOT authorized yet -- explicit "do not
+    jump ahead" boundary; next sync checks for review feedback on
+    Batch 2 before starting Batch 3.
+
+DONE — Batch 1 patch re-review response (prior update)
 ---------------------------------------------------------------------------
   - Real, valid review findings were missed for one cycle: RESPONSE_SEQ
     10 ("CHANGES REQUIRED before Batch 2") was superseded by

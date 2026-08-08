@@ -744,3 +744,44 @@ NIKLAR — DECISIONS (current)
     Full patched diff published in niklar-handoff for independent
     re-review, per RESPONSE_SEQ 10's "hand back for compact re-review"
     requirement. Batch 2 remains HOLD pending that re-review.
+
+33) Decision: Implement pre-live architecture Batch 2 (non-blocking
+    normalization exception path, owner-gated LLM policy foundations,
+    deterministic LLM dependency audit tooling) as a new, pure,
+    deterministic module — `ops/niklar_normalization_policy.py`:
+    `attempt_normalization()` (non-blocking wrapper around a
+    caller-supplied normalizer, deliberately broad `except Exception`,
+    degrades to a Batch 1 review-queue entry rather than raising);
+    `is_eligible_for_external_llm()` / `decide_llm_escalation()`
+    (fail-closed owner-gated LLM escalation policy, incorporating
+    Section 20's free-provider-eligible/paid-requires-separate-
+    authorization direction with zero network call or provider SDK —
+    foundations only); `run_llm_dependency_audit()` (replays a corpus
+    through `attempt_normalization()`, reports deterministic pass/fail
+    counts/rates and structured per-failure detail).
+    Date: 2026-08-09
+    Rationale: Released by Drive sync doc RESPONSE_SEQ 14 after Batch
+    1's patch (221020b) passed independent re-review. RESPONSE_SEQ
+    14's explicit scope boundary: "non-blocking normalization
+    exception path, free-LLM/owner-gating policy foundations, and
+    deterministic LLM-dependency audit tooling... incorporate the
+    later approved Section 20 direction where Batch 2 naturally owns
+    it... do not jump ahead into PWA Search UX, Apple Vision,
+    ScreenCaptureKit, Slack/PWA controls, or other later batches
+    except for the minimum contracts/interfaces required to avoid
+    incompatibility" — matched exactly, no PWA Search UX/Apple
+    Vision/ScreenCaptureKit/Slack controls included. Builds on Batch
+    1's own `new_review_queue_entry()`/`REVIEW_REASON_
+    NORMALIZATION_EXCEPTION` rather than a parallel construction, same
+    plain-dict/bare-string-constant style as Batch 1, no new
+    dependency.
+    Affected component: niklar-stocks ops/niklar_normalization_policy.py
+    (new), tests/test_niklar_normalization_policy.py (new, 18 tests)
+    Status: Frozen (implemented) — commit 598b2d4. unittest 148/148
+    (130->148, 18 new), mypy 0/15 (14->15), PWA smoke unaffected, real
+    GitHub Actions run 31278234207 confirmed conclusion: "success".
+    Self-audited against the standing 4 criteria before publishing —
+    no findings. Full new-file content published in niklar-handoff for
+    independent review. Batch 3 ("Daily acquisition/orchestrator stage
+    handlers wired to the canonical engine") NOT authorized yet —
+    awaiting review of this batch first, matching Batch 1's pattern.

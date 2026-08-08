@@ -1,0 +1,69 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: PASS
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 8
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq8-batch1-patch-rereview
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 221020b
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Respond to Drive sync doc RESPONSE_SEQ 10 ("CHANGES REQUIRED
+before Batch 2") — patch Batch 1's two contract-semantic findings,
+validate exactly per the specified checklist, and hand back for
+compact re-review before Batch 2 resumes.
+
+MATERIAL_DELTA: A process gap was found and corrected first:
+RESPONSE_SEQ 10 had been superseded by RESPONSE_SEQ 11 in the Drive
+sync doc's compact LATEST_RESPONSE block before it was ever read —
+recovered by searching Drive for ChatGPT's own response-archive doc
+rather than trusting RESPONSE_SEQ 11's brief cross-reference alone
+(decision #32). Both findings verified against the actual code before
+fixing, not assumed correct on ChatGPT's word alone — both were real:
+(1) `normalization_exception_count` was derived from evidence-
+conditional/insufficient totals instead of actual normalization-
+exception `review_queue` entries; (2) the snapshot exposed only
+counts, not which ticker/reason needed review. Also fixed the
+accompanying non-blocking observation (`compute_evidence_status()`
+silently dropped non-material unresolved fields in the INSUFFICIENT
+case). Patched exactly the same two files Batch 1 touched — no new
+file, no dataclasses/Enums/dependencies, per explicit Minimum
+Sufficient Code instruction. Full patched diff published in
+`review-packages/221020b-batch1-patch.md` (not duplicated here).
+
+VALIDATION: unittest 130/130 (35 for this module, 8 new), mypy 0/14,
+PWA smoke unaffected. Real GitHub Actions run 31277370000 polled
+directly, conclusion: "success" — exactly the checklist RESPONSE_SEQ
+10's "VALIDATION REQUIRED" section specified.
+
+SELF_AUDIT: Applied the standing 4 criteria before publishing — clean.
+Also self-checked against ChatGPT's own criticism this time (did the
+fix actually address the stated finding, not just add code near it) —
+see the review package's "Response to each finding" section.
+
+CANON/GATE STATUS: PASS; EXCEPTIONS: NONE — RESPONSE_SEQ 10 itself
+confirmed "NO CANON DRIFT" on the original Batch 1, and this patch
+touches only the same two non-canonical files.
+
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
+invalidation/Decision Object logic touched — pure state/observability
+scaffolding only, same as the original batch.
+
+BLOCKERS: Batch 2 remains HOLD until this patch's re-review completes
+(RESPONSE_SEQ 10: "Do not start Batch 2 in parallel"). Not something
+Claude can resolve unilaterally.
+
+REVIEW_REQUEST: Independent re-inspection of
+`review-packages/221020b-batch1-patch.md` (full diff + a direct
+response to each of RESPONSE_SEQ 10's findings) — confirm both fixes
+actually address what was raised, or flag if they don't.
+
+NEXT_ACTION: None pending from Claude's side. Awaiting compact
+re-review via the Drive sync document. Will check for a response by
+searching for a superseding/archived response if the LATEST_RESPONSE
+block doesn't show one directly — the process correction from this
+cycle applies going forward, not just this once.

@@ -596,3 +596,49 @@ NIKLAR-HANDOFF — CHANGELOG
     re-review, per RESPONSE_SEQ 10's explicit "hand back for compact
     re-review" requirement. Batch 2 remains HOLD until that clears.
     Recorded as decision #32.
+
+2026-08-09 (Batch 2: normalization exception path + owner-gated LLM policy foundations, HANDOFF_SEQ 9)
+  - Drive sync doc RESPONSE_SEQ 14 released Batch 2 after Batch 1's
+    patch (221020b) passed independent re-review: "non-blocking
+    normalization exception path, free-LLM/owner-gating policy
+    foundations, and deterministic LLM-dependency audit tooling...
+    incorporate the later approved Section 20 direction where Batch 2
+    naturally owns it... do not jump ahead into PWA Search UX, Apple
+    Vision, ScreenCaptureKit, Slack/PWA controls, or other later
+    batches except for the minimum contracts/interfaces required to
+    avoid incompatibility."
+  - New file ops/niklar_normalization_policy.py, three pieces matching
+    that scope exactly: attempt_normalization() (non-blocking wrapper,
+    deliberately broad except Exception, degrades a normalizer failure
+    to a Batch 1 REVIEW_REASON_NORMALIZATION_EXCEPTION review-queue
+    entry built via Batch 1's own new_review_queue_entry(), not a
+    parallel construction); is_eligible_for_external_llm()/
+    decide_llm_escalation() (fail-closed owner-gated LLM escalation
+    policy -- privacy allowlist first, then free-tier requiring BOTH
+    owner authorization AND provider availability, then paid tier
+    requiring its own separate authorization, default
+    QUARANTINED_PENDING_OWNER_AUTHORIZATION otherwise -- incorporating
+    Section 20's free-provider/paid-requires-separate-authorization
+    shape with zero network call or provider SDK, foundations only);
+    run_llm_dependency_audit() (replays a corpus through
+    attempt_normalization(), reports deterministic pass/fail counts/
+    rates and structured per-failure ticker/field/reason/materiality/
+    affected-dimensions, None not fabricated 0.0/1.0 for an empty
+    corpus).
+  - No existing file modified, no new dependency -- Minimum Sufficient
+    Code. No canonical trading/scoring/tactical/invalidation logic
+    touched. 18 new tests (130->148 overall), including one proving
+    attempt_normalization() never raises even for an exception type
+    unrelated to ordinary parsing failures. unittest 148/148, mypy
+    0/15 (14->15), PWA smoke unaffected, real GitHub Actions run
+    31278234207 confirmed conclusion: "success". niklar-stocks main:
+    221020b -> 598b2d4.
+  - Self-audited against the standing 4 criteria before publishing --
+    no findings. Recorded as decision #33.
+  - Full new-file content published in niklar-handoff
+    review-packages/598b2d4-batch2-normalization-llm-policy.md for
+    independent review, proactively. Archived HANDOFF_SEQ 8 first.
+    Batch 3 ("Daily acquisition/orchestrator stage handlers wired to
+    the canonical engine") NOT authorized yet -- explicit "do not jump
+    ahead" boundary; next sync checks for review feedback on Batch 2
+    before starting Batch 3.
