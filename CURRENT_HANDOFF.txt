@@ -1,9 +1,25 @@
 NIKLAR — CURRENT HANDOFF
-Last updated: 2026-08-08 (ChatGPT RESULT: PASS confirmed on the mypy
-delta; process correction recorded — see below)
+Last updated: 2026-08-08 ("cont" — closed 2 real test-coverage gaps;
+niklar-stocks commit ac7e334)
 Maintained by: Claude, working in the private niklar-stocks environment
 
-PROCESS CORRECTION (this update)
+LATEST DELTA (this update)
+------------------------------
+"cont," within ChatGPT's "test hardening" authorization. Transiently
+installed coverage.py (validation-only, same precedent as Playwright)
+and ran it against the 55-test suite: 96%, with two genuine gaps —
+niklar_stocks_ops_v4.py's private _p()/_zone() formatting helpers'
+None/empty and non-numeric-passthrough branches (only ever reached
+through call sites that already guard those values first), and the
+publication validator's documented CLI entrypoint (zero coverage).
+Added 9 targeted tests (55->64) closing both. No ops/*.py source line
+changed — verbatim Drive modules untouched, tests + docs only.
+Post-commit check caught its own shell-backtick commit-message
+corruption; fixed via amend before push (message only, no source
+content affected). Full validation: unittest 64/64, smoke test PASS,
+mypy 0/6 files. Gate PASS/PASS. niklar-stocks main: 4581e59 -> ac7e334.
+
+PRIOR — PROCESS CORRECTION
 ------------------------------------
 User asked "Did you read the last response of ChatGPT as Pass?" —
 caught a real gap: the prior "cont" cycle checked the Drive sync doc's
@@ -303,4 +319,5 @@ FILES / COMMITS / BRANCHES (private niklar-stocks repo, for reference)
     3a66e90 (cross-section navigation) ->
     95cb051 (Watchlist roster view) -> 9549f65 (mypy CI validation) ->
     ab74109 (NEXT PHASE architecture package: docs/app/ + AGENTS.md) ->
-    4581e59 (mypy CI extended to pwa/smoke_test.py)
+    4581e59 (mypy CI extended to pwa/smoke_test.py) ->
+    ac7e334 (closed 2 real test-coverage gaps, 55->64 tests)
