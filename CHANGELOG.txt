@@ -1053,3 +1053,47 @@ NIKLAR-HANDOFF — CHANGELOG
     for independent async review, alongside the two still-pending
     Batch 3 packages -- PENDING_REVIEW_QUEUE now has 3 items. Archived
     HANDOFF_SEQ 18 first.
+
+2026-08-09 (Batch 3 increment 3: discovery_consumers_sync/tactical_consumers_sync, HANDOFF_SEQ 20)
+  - Continued the owner-authorized "batch 3 onwards" work (decision
+    #47), wiring the Section 19 notification-service core (decision
+    #50, commit 577b60b) into the two orchestrator stages it exists
+    to serve.
+  - Added make_consumer_sync_handler() to
+    ops/niklar_orchestrator_stage_handlers.py -- ONE shared factory
+    used for BOTH discovery_consumers_sync and tactical_consumers_sync
+    stage keys, since Section 19 requires automatic and manual sends
+    to share the SAME deterministic notification service/eligibility
+    gates/idempotency rules. Sequences that section's own eligibility
+    -> duplicate/resend -> send -> delivery-status-classify order,
+    using the niklar_notification_service functions built in the
+    prior increment directly (no reimplementation). send_adapter (the
+    actual Slack HTTP call, caller-injected -- this environment has no
+    credentials for that) failure is caught and classified as a
+    failed delivery attempt, never propagated -- "Slack outage/failure
+    is non-blocking to... canonical engine completion" (Section 19),
+    mirroring evidence_acquisition's non-blocking degradation pattern.
+  - MEDIUM confidence, explicitly flagged for review: treating both
+    stage names as routing through this one shared mechanism (scope-
+    differentiated only, e.g. a per-ticker notification_id vs. a
+    brief-scoped one) is a genuine interpretive judgment call -- this
+    repo has no further specification distinguishing what "discovery"
+    vs. "tactical" sync concretely differ in beyond scope.
+  - 9 of 13 canonical stages now have a real handler in this module
+    (was 7). 9 new tests: eligibility blocking without ever calling the
+    send adapter, no-adapter dry-run reporting, successful send,
+    retry-budget classification (pending-retry vs. delivery-failed),
+    send_adapter exception non-propagation, duplicate-send skip,
+    explicit-resend override, conditional-evidence caveat signaling.
+    The 9-real-handler end-to-end run_pipeline() integration test now
+    uses both real handlers instead of stubs.
+  - unittest 211/211 (202->211), mypy 0/17, PWA smoke PASS, real GitHub
+    Actions run 31298520688 confirmed conclusion: "success".
+    niklar-stocks main: 577b60b -> 05657ef. No new dependency, no new
+    file. The 3 Drive-verbatim ops/ modules remain untouched.
+    Recorded as decision #51.
+  - Full diff published in
+    review-packages/05657ef-batch3-increment3-consumer-sync.md for
+    independent async review, alongside the three still-pending
+    packages -- PENDING_REVIEW_QUEUE now has 4 items. Archived
+    HANDOFF_SEQ 19 first.

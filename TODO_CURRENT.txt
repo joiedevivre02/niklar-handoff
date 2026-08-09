@@ -1,9 +1,42 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (Section 19 deterministic notification-service
-core implemented and CI-verified, extending "batch 3 onwards" into the
-credential-free part of Section 19 -- HANDOFF_SEQ 19.)
+Last updated: 2026-08-09 (Batch 3 increment 3 -- discovery_consumers_
+sync/tactical_consumers_sync wired via a shared factory to the Section
+19 core; 9 of 13 orchestrator stages now real -- HANDOFF_SEQ 20.)
 
-DONE — Section 19 deterministic notification-service core (this update)
+DONE — Batch 3 increment 3: discovery_consumers_sync/tactical_consumers_sync (this update)
+---------------------------------------------------------------------------
+  - Continued the owner-authorized "batch 3 onwards" work (decision
+    #47), wiring the Section 19 notification-service core (decision
+    #50, commit 577b60b) into the two orchestrator stages it exists
+    to serve.
+  - Added make_consumer_sync_handler() to
+    ops/niklar_orchestrator_stage_handlers.py -- ONE shared factory
+    used for BOTH discovery_consumers_sync and tactical_consumers_sync,
+    since Section 19 requires automatic and manual sends to share the
+    SAME deterministic notification service. Sequences eligibility ->
+    duplicate/resend -> send -> delivery-status-classify using the
+    prior increment's functions directly. send_adapter (the actual
+    Slack HTTP call, injected) failure is caught and classified as a
+    failed delivery attempt, never propagated -- "Slack outage/failure
+    is non-blocking to... canonical engine completion" (Section 19).
+  - MEDIUM confidence, explicitly flagged: treating both stage names
+    as routing through one shared mechanism (scope-differentiated
+    only) is a real interpretive judgment call -- this repo has no
+    further specification distinguishing "discovery" vs. "tactical"
+    sync beyond scope.
+  - 9 of 13 canonical stages now have a real handler in this module
+    (was 7). 9 new tests. unittest 211/211 (202->211), mypy 0/17, PWA
+    smoke PASS, real GitHub Actions run 31298520688 confirmed
+    conclusion: "success". niklar-stocks main: 577b60b -> 05657ef. No
+    new dependency, no new file. The 3 Drive-verbatim ops/ modules
+    remain untouched. Recorded as decision #51.
+  - Full diff published in
+    review-packages/05657ef-batch3-increment3-consumer-sync.md for
+    independent async review, alongside the three still-pending
+    packages -- PENDING_REVIEW_QUEUE now has 4 items. Archived
+    HANDOFF_SEQ 19 first.
+
+DONE — Section 19 deterministic notification-service core (prior update)
 ---------------------------------------------------------------------------
   - Continued the owner-authorized "batch 3 onwards" work (decision
     #47) into Section 19 (PWA<->Slack notification controls) --

@@ -5,72 +5,63 @@ repository discovery/search. Full history: `archive/handoffs/` and
 `CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
 in form, fetched only when this checkpoint's summary isn't enough.
 
-STATUS: OWNER_AUTHORIZED_CONTINUATION (3 review packages pending, extending into Section 19/Batch 4 territory)
+STATUS: OWNER_AUTHORIZED_CONTINUATION (4 review packages pending; 9 of 13 orchestrator stages now real)
 PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
-HANDOFF_SEQ: 19
-CHECKPOINT_ID: niklar-handoff-2026-08-09-seq19-section19-notification-service-core
-IMPLEMENTATION_COMMIT: niklar-stocks main @ 577b60b
+HANDOFF_SEQ: 20
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq20-batch3-increment3-consumer-sync
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 05657ef
 HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
 
-GOAL: Continue the owner-authorized "batch 3 onwards" work (decision
-#47) into Section 19 (PWA↔Slack notification controls) — the one part
-of it that's genuinely groundable without Slack credentials or PWA UI
-work.
+GOAL: Continue Batch 3 (decision #47) — wire the Section 19
+notification-service core (decision #50) into the two orchestrator
+stages it exists to serve: `discovery_consumers_sync` and
+`tactical_consumers_sync`.
 
-MATERIAL_DELTA: Section 19 was previously scoped to Batch 4 (decision
-#31: "belongs when the mobile delivery/PWA interaction + notification
-service layers are implemented"), but its own text requires:
-"Automatic and manual Slack sends must share the SAME deterministic
-notification service, freshness/eligibility gates, canonical
-renderer, idempotency rules, retry behavior." That shared
-**deterministic core** needs neither Slack credentials nor a PWA to
-exist first — unlike the actual delivery/UI work, which genuinely does
-belong to a later batch. The owner's "Continue working on batch 3
-**onwards**" was read to authorize exactly this kind of later-batch-
-adjacent, fully groundable, credential-free work.
+MATERIAL_DELTA: Added `make_consumer_sync_handler()` to
+`ops/niklar_orchestrator_stage_handlers.py` — **ONE shared factory**
+used for both stage keys, since Section 19 requires automatic and
+manual sends to share the SAME deterministic notification service.
+Sequences that section's own eligibility → duplicate/resend → send →
+delivery-status-classify order, calling the prior increment's
+`niklar_notification_service` functions directly (no
+reimplementation). `send_adapter` (the actual Slack HTTP call,
+caller-injected — this environment has no credentials for that)
+failure is caught and classified as a failed delivery attempt, never
+propagated — "Slack outage/failure is non-blocking to... canonical
+engine completion" (Section 19), mirroring `evidence_acquisition`'s
+non-blocking degradation pattern from increment 2.
 
-New file `ops/niklar_notification_service.py`, four pieces, each a
-**direct implementation of Section 19's own text**:
-- `derive_notification_id()` — deterministic id from exactly the
-  stable fields Section 19 names (run/checkpoint/channel/scope/
-  Decision Object version), via sha256, same determinism convention as
-  `niklar_stocks_ops_v4.schema_hash()`.
-- `check_duplicate_send()` — the DUPLICATE/RESEND gate: a prior
-  successful send for the same id requires an explicit resend action;
-  a prior failed attempt does not block a fresh one.
-- `decide_notification_eligibility()` — the STALE/CAVEAT GATE: reuses
-  Batch 1's `EVIDENCE_COMPLETE`/`CONDITIONAL`/`INSUFFICIENT` contract
-  directly rather than inventing a parallel evidence-quality concept;
-  `execution_sensitive` and staleness thresholds are caller-supplied,
-  not guessed at (this repo has no synced definition of which
-  conclusions count as execution-sensitive).
-- `classify_delivery_attempt()` — the DELIVERY STATUS classification
-  against a real retry budget.
+**MEDIUM confidence, explicitly flagged for review**: treating both
+stage names as routing through this one shared mechanism (scope-
+differentiated only) is a genuine interpretive judgment call — this
+repo has no further specification distinguishing what "discovery" vs.
+"tactical" sync concretely differ in beyond scope. If that distinction
+should route through materially different logic, please flag it.
 
-**Preview content deliberately NOT reimplemented** — Section 19's
-"show exactly what Slack will receive" is already satisfied by the
-existing `render_preopen`/`render_intraday`/`render_near_close`
-renderers; wrapping them would duplicate, not implement, anything.
-The actual Slack HTTP delivery, PWA UI wiring, and consolidated-brief
-ticker-eligibility selection remain separate, explicitly out of scope.
-Recorded as decision #50.
+**9 of 13 canonical stages now have a real handler** in this module
+(was 7 after increment 2). Remaining 4 genuinely deferred:
+`canonical_serialization`, `research_database_append`,
+`research_indexes_update`, `opportunity_matrix_rebuild`. Recorded as
+decision #51.
 
-VALIDATION: unittest 202/202 (178 → 202, 24 new: determinism/
-collision-avoidance for the id derivation, every gate-ordering case
-for both gates, retry-budget classification), mypy 0/17 (16 → 17
-source files), PWA smoke PASS. Real GitHub Actions run 31298249918
-(commit 577b60b) polled directly, conclusion: "success".
+VALIDATION: unittest 211/211 (202 → 211, 9 new: eligibility blocking
+without calling the send adapter, no-adapter dry-run, successful send,
+retry-budget classification both ways, send_adapter exception
+non-propagation, duplicate-send skip, explicit-resend override,
+conditional-evidence caveat signaling), mypy 0/17 (unchanged file
+count), PWA smoke PASS. Real GitHub Actions run 31298520688 (commit
+05657ef) polled directly, conclusion: "success".
 
-SELF_AUDIT: Applied the standing 4 criteria — clean. No I/O, no Slack
-SDK, no credentials, no new dependency. No proprietary Slack-channel-
-mapping or ticker-eligibility logic fabricated — both remain
-explicitly deferred. The 3 Drive-verbatim `ops/` modules remain
-untouched.
+SELF_AUDIT: Applied the standing 4 criteria — clean. Eligibility/
+duplicate gates short-circuit cleanly (tested); `send_adapter` failure
+deliberately caught, not propagated, per Section 19's explicit
+requirement (tested with a raised `ConnectionError`). No new
+dependency, no new file. No I/O/Slack SDK/credentials anywhere. The 3
+Drive-verbatim `ops/` modules remain untouched.
 
 CANON/GATE STATUS: Batch 1 PASS/CLOSED. Batch 2 PASS/CLOSED/FROZEN.
-`BATCH3-STAGE-MAPPING-01` RESOLVED (OPTION B). Batch 3: 7 of 13 stages
-now real. Section 19 core: implemented, explicitly scoped to the
-credential-free portion only.
+`BATCH3-STAGE-MAPPING-01` RESOLVED (OPTION B). Batch 3: 9 of 13 stages
+now real. Section 19 core: fully wired into both stages it serves.
 
 PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
 invalidation/Decision Object logic touched or fabricated. The 3
@@ -85,23 +76,27 @@ PENDING_REVIEW_QUEUE (Section 21 — chronological, oldest first):
      — published HANDOFF_SEQ 18, not yet audited.
   3. niklar-stocks commit 577b60b (Section 19 core) — package:
      review-packages/577b60b-section19-notification-service-core.md —
+     published HANDOFF_SEQ 19, not yet audited.
+  4. niklar-stocks commit 05657ef (Batch 3 increment 3) — package:
+     review-packages/05657ef-batch3-increment3-consumer-sync.md —
      published this checkpoint, not yet audited. Includes the explicit
-     "why this is in scope now, not just Batch 4" reasoning for
-     ChatGPT to confirm or correct.
+     MEDIUM-confidence discovery-vs-tactical scope flag for ChatGPT to
+     confirm or correct.
 
-BLOCKERS: None new. Batch 3's 6 remaining deferred stages and Section
-19's actual Slack delivery/PWA UI both stay genuinely blocked on
-credentials/specification — not something Claude can resolve
-unilaterally.
+BLOCKERS: None new. The 4 remaining deferred stages and the actual
+Slack/PWA delivery layer stay genuinely blocked on credentials/
+specification — not something Claude can resolve unilaterally.
 
-REVIEW_REQUEST: Independent async review of all 3 queued packages —
-in particular, confirm or correct the judgment that Section 19's
-deterministic core is legitimately in scope under "batch 3 onwards"
-despite being originally scoped to Batch 4 (decision #31).
+REVIEW_REQUEST: Independent async review of all 4 queued packages,
+ideally in order — increment 3 builds directly on increment 2's
+Section 19 core, so a correction to that core would cascade.
 
 NEXT_ACTION: Continuing to look for further groundable increments
 without waiting for review to land first, per the owner's explicit
-instruction. Will incorporate any correction ChatGPT surfaces —
-including if it judges the Section 19 scope expansion was too far —
-on the next `sync`. Will report honestly if no further genuinely
-groundable increment exists, rather than force one.
+instruction. Only 4 stages remain deferred in the orchestrator itself,
+each requiring either real credentials or proprietary canon this repo
+has never had synced — will report honestly if no further genuinely
+groundable increment exists among them, rather than force one, and
+will look at whether other Batch-3-onwards-adjacent areas (manual
+intraday entry validation, PWA delivery contract) have similarly
+groundable slices next.

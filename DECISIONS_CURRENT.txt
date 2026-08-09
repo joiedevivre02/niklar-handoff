@@ -1404,3 +1404,41 @@ NIKLAR — DECISIONS (current)
     (178->202, 24 new), mypy 0/17, PWA smoke PASS. No I/O, no Slack
     SDK, no credentials, no new dependency. The 3 Drive-verbatim ops/
     modules remain untouched.
+
+51) Decision: Implement Batch 3 increment 3 —
+    `discovery_consumers_sync` and `tactical_consumers_sync`, wired to
+    the Section 19 notification-service core (decision #50) via ONE
+    shared factory, `make_consumer_sync_handler()`, added to
+    `ops/niklar_orchestrator_stage_handlers.py`. Sequences Section 19's
+    own eligibility -> duplicate/resend -> send -> delivery-status-
+    classify order using `niklar_notification_service`'s functions
+    directly. The actual Slack HTTP call is a caller-injected
+    `send_adapter`; its failure is caught and classified as a failed
+    delivery attempt, never propagated — "Slack outage/failure is
+    non-blocking to... canonical engine completion" (Section 19), the
+    same non-blocking-degradation pattern as
+    `evidence_acquisition`/Batch 2, applied here for the same reason.
+    Date: 2026-08-09
+    Rationale: Direct continuation of decision #50's notification-
+    service core into the two orchestrator stages it exists to serve —
+    both stages sit immediately after `opportunity_matrix_rebuild` in
+    the canonical order and Section 19 requires exactly one shared
+    mechanism for both automatic and manual sends. **Explicitly
+    flagged, MEDIUM confidence**: treating both stage names as routing
+    through this one shared mechanism (scope-differentiated only, e.g.
+    per-ticker `notification_id` vs. brief-scoped) is a real
+    interpretive judgment call — this repo has no further
+    specification distinguishing what "discovery" vs. "tactical" sync
+    concretely differ in beyond scope. Continuing without waiting for
+    prior increments' reviews to land, per decision #47's explicit
+    "handoffs given as you work" instruction.
+    Affected component: niklar-stocks
+    ops/niklar_orchestrator_stage_handlers.py,
+    tests/test_niklar_orchestrator_stage_handlers.py (same two files
+    increments 1-2 touched, patched only, plus the new import from
+    decision #50's module)
+    Status: Frozen (implemented) — commit 05657ef. unittest 211/211
+    (202->211, 9 new), mypy 0/17, PWA smoke PASS. 9 of 13 canonical
+    stages now have a real handler in this module (was 7). No new
+    dependency, no new file. The 3 Drive-verbatim ops/ modules remain
+    untouched.
