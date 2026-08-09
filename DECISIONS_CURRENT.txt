@@ -1192,3 +1192,43 @@ NIKLAR — DECISIONS (current)
     started again autonomously — requires the owner's go-ahead when
     product development reaches the end-of-development stage the owner
     has in mind.
+
+46) Decision: Record ChatGPT's Drive sync doc RESPONSE_SEQ 20 — a
+    correction to its own RESPONSE_SEQ 19, crossed in transit with
+    HANDOFF_SEQ 15 (RESPONSE_SEQ 20 answers HANDOFF_SEQ 14, written
+    before HANDOFF_SEQ 15 existed) — which independently confirms
+    exactly what the owner told Claude directly (decision #45): the
+    governance checklist is canonical pre-live/end-of-development
+    acceptance infrastructure, not something to execute during active
+    development. Adopted the structured PRELIVE CHECKLIST EXECUTION
+    RULE (7 steps) for future reference: (1) preserve the checklist in
+    Drive as the canonical final cumulative acceptance checklist; (2)
+    do not execute it now; (3) do not spend tokens pre-auditing rows or
+    generating findings from it during ordinary development; (4)
+    continue the normal per-batch gates already in force (deterministic
+    tests, failure-envelope, security/privacy, Minimum Sufficient Code,
+    protected-boundary verification, CI, self-audit, independent
+    review); (5) trigger the full checklist only when product
+    development is substantially/feature-complete enough for pre-live
+    hardening, or on explicit early release by ChatGPT/owner; (6) at
+    that time, execute read-only against the then-current final state,
+    publish only the compact findings package, no remediation before
+    ChatGPT reconciles; (7) after reconciliation, patch as authorized,
+    rerun failed sections, require final release clearance before
+    go-live. Also reconfirms: "the owner has instructed Claude to
+    continue while away" remains the standing authorization under the
+    existing delegated-decision protocol and existing batch/owner hard
+    gates — this correction narrows only the governance-audit timing,
+    nothing else.
+    Date: 2026-08-09
+    Rationale: Direct confirmation from the loaded engineering
+    authority, matching the owner's own live instruction exactly — no
+    conflict to reconcile, only additional structure worth preserving
+    for when the audit is eventually released.
+    Affected component: none — no niklar-stocks mutation. Governance
+    audit remains deferred, unchanged in substance from decision #45.
+    Status: Recorded. PRELIVE GOVERNANCE AUDIT STATUS: PRESERVED / NOT
+    YET RELEASED FOR EXECUTION (ChatGPT's own wording). Batch/gate
+    status otherwise unchanged: Batch 1 PASS/CLOSED, Batch 2 PASS/
+    CLOSED/FROZEN, BATCH3-STAGE-MAPPING-01 RESOLVED (OPTION B), Batch 3
+    full scope OWNER_ONLY HARD_GATE, Batches 4-10 not released.
