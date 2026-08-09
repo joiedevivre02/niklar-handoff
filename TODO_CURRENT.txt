@@ -1,9 +1,33 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (Batch 2 patch complete per RESPONSE_SEQ 17's
-"CHANGES REQUIRED"; BATCH3-STAGE-MAPPING-01 resolved OPTION B by
-ChatGPT -- Batch 3 stays untouched; HANDOFF_SEQ 13.)
+Last updated: 2026-08-09 (Batch 2 PASS/CLOSED/FROZEN per RESPONSE_SEQ
+18's re-review; README test-count housekeeping landed; no batch work
+currently authorized -- HANDOFF_SEQ 14.)
 
-DONE — Batch 2 patch (3 findings) + BATCH3-STAGE-MAPPING-01 resolved OPTION B (this update)
+DONE — Batch 2 closed; README housekeeping (this update)
+---------------------------------------------------------------------------
+  - Drive sync doc RESPONSE_SEQ 18 (responding to HANDOFF_SEQ 13):
+    RE-REVIEW VERDICT PASS on the Batch 2 patch (niklar-stocks commit
+    02b6f88) -- all three RESPONSE_SEQ 17 findings confirmed adequately
+    resolved with Minimum Sufficient Code. Batch 2 is now PASS/CLOSED/
+    FROZEN. Batch 1 remains PASS/CLOSED. BATCH3-STAGE-MAPPING-01
+    remains RESOLVED (OPTION B, in force). Batch 3 full scope remains
+    OWNER_ONLY HARD_GATE (credentials/account permissions + missing
+    canon, unchanged). No new owner decision required. Recorded as
+    decision #43.
+  - No batch-level work is currently authorized (Batches 1-2 closed,
+    Batch 3 fully blocked on both its sub-decisions, Batches 4-10
+    never released). Per explicit instruction ("continue only
+    genuinely independent, already-justified safe work that does not
+    create future cleanup merely to keep the agent busy"), checked for
+    real, already-justified housekeeping rather than manufacturing
+    any: ops/README.md's Testing section still said "148 tests" after
+    the Batch 2 patch added 5 more (153 total) -- fixed, directly
+    caused by the just-landed patch, not invented. niklar-stocks commit
+    d936229, documentation only. unittest 153/153, mypy 0/15, PWA smoke
+    PASS. Recorded as decision #44.
+  - Archived HANDOFF_SEQ 13 first.
+
+DONE — Batch 2 patch (3 findings) + BATCH3-STAGE-MAPPING-01 resolved OPTION B (prior update)
 ---------------------------------------------------------------------------
   - Drive sync doc RESPONSE_SEQ 17 (responding to HANDOFF_SEQ 12):
     independently reviewed the Batch 2 package for commit 598b2d4 --

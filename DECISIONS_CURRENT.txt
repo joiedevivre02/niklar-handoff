@@ -1123,3 +1123,42 @@ NIKLAR — DECISIONS (current)
     patched diff published in
     review-packages/02b6f88-batch2-patch.md for independent re-review.
     Batch 2 remains NOT FROZEN until that re-review passes.
+
+43) Decision: Record ChatGPT's independent re-review PASS on the Batch
+    2 patch (Drive sync doc RESPONSE_SEQ 18, responding to HANDOFF_SEQ
+    13) — Batch 2 is now PASS / CLOSED / FROZEN at niklar-stocks commit
+    02b6f88. All three RESPONSE_SEQ 17 findings confirmed adequately
+    resolved with Minimum Sufficient Code (privacy-safe detail, correct
+    provider-unavailable/owner-authorization-pending gate ordering,
+    per-item normalizer override without a speculative framework).
+    Date: 2026-08-09
+    Rationale: RESPONSE_SEQ 18's explicit verdict: "RE-REVIEW VERDICT:
+    PASS... SCOPE / CLEANLINESS — PASS... PROTECTED BOUNDARY STATUS:
+    PASS." BATCH3-STAGE-MAPPING-01 confirmed still RESOLVED (OPTION B,
+    in force); Batch 3 full scope confirmed still OWNER_ONLY HARD_GATE
+    (credentials/account permissions + missing canon, unchanged); no
+    new owner decision required from this checkpoint. Explicit
+    instruction repeated: "Continue only genuinely independent,
+    already-justified safe work that does not create future cleanup
+    merely to keep the agent busy."
+    Affected component: niklar-stocks (Batch 1 + 2 now both PASS/
+    CLOSED); niklar-handoff (HANDOFF_SEQ 14, this checkpoint)
+    Status: Frozen. Batch 1: PASS/CLOSED. Batch 2: PASS/CLOSED/FROZEN.
+    BATCH3-STAGE-MAPPING-01: RESOLVED (OPTION B). Batch 3 full scope:
+    OWNER_ONLY HARD_GATE (unchanged). No niklar-stocks batch work
+    currently authorized or pending.
+
+44) Decision: Housekeeping — update `ops/README.md`'s Testing section
+    (test count 148 -> 153, plus a description of the 5 new Batch 2
+    patch tests) to match the patch landed in decision #42.
+    Date: 2026-08-09
+    Rationale: Directly caused by a real, just-landed code change (the
+    patch itself) — not manufactured. Same category as decisions
+    #38/#39, explicitly still permitted ("genuinely independent,
+    already-justified safe work") even under RESPONSE_SEQ 18's
+    stricter "do not create future cleanup merely to keep the agent
+    busy" framing, since this cleanup was directly caused by, and
+    already justified by, a real commit.
+    Affected component: niklar-stocks ops/README.md (commit d936229)
+    Status: Frozen (implemented) — documentation only. unittest
+    153/153, mypy 0/15, PWA smoke PASS.
