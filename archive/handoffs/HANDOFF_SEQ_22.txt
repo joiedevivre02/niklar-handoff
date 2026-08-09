@@ -1,0 +1,119 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: SECTION_12_BACKUP_RECOVERY_CORE_LANDED (5 review packages now pending)
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 22
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq22-section12-backup-recovery
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 31d7c95
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Per the owner's explicit instruction, continue with backup/
+recovery (architecture doc Section 12) as the next candidate increment,
+applying the Minimum Sufficient Context rule (read only Section 12 +
+directly relevant implementation/tests/config, not the full canon or
+archived handoffs) — first determine whether it already exists in
+current HEAD, reuse existing mechanisms rather than compete with them,
+and either implement it as a bounded batch or document the exact
+missing decision and stop.
+
+MATERIAL_DELTA: New file `ops/niklar_backup_policy.py` — a deterministic
+decision core for Section 12, same "core + caller-injected mechanism"
+pattern already used for Section 19
+(`ops/niklar_notification_service.py`). Confirmed first (grep across
+`ops/`, `tests/`, config, docs) that no backup/recovery mechanism exists
+anywhere in this repo yet — the only existing reference is
+`niklar_state_contracts.build_current_state_snapshot()`'s inert
+`backup_status` passthrough parameter, untouched by this module, not
+competed with.
+
+Four functions, each a direct implementation of one Section 12
+sentence, nothing invented from the section name alone:
+- `is_eligible_for_backup()` — fail-closed allowlist over the 6 named
+  scopes (canonical Drive state, master database exports, research/
+  index state, config/decisions, git refs, retained artifacts); Actions
+  cache deliberately never included ("do not back up disposable Actions
+  cache").
+- `decide_catchup_backup_due()` — freshness gate for "Local job may run
+  when Mac is awake and catch up after missed schedules"; `max_age_
+  seconds` caller-supplied, no cadence invented.
+- `verify_backup_success()` — "Backup success requires verification,
+  not merely copy completion"; `copy_completed=True` alone is
+  deliberately insufficient — checks item-count then optional checksum.
+- `decide_retention()` — "Preserve versioned retention appropriate to
+  recovery needs"; a fail-safe floor of the newest N versions is always
+  kept regardless of age, age-based pruning beyond that floor only
+  applies when the caller supplies an age policy. No specific retention
+  count or age window invented — Section 12 names none.
+
+The actual copy/verify/prune I/O remains the caller's (a real local
+job's) injected responsibility — same credentialed-I/O boundary as
+every other gap this session. Not wired into
+`ops/niklar_orchestrator_stage_handlers.py`: backup/recovery is not one
+of the orchestrator's 13 canonical stages, so there's no stage slot for
+it.
+
+**No genuine specification gap was found this cycle.** Unlike the two
+already-blocked candidates (manual intraday-entry validation, PWA
+delivery-contract work), Section 12's text mapped directly onto four
+concrete, cleanly-boundaried functions without requiring any invented
+specifics.
+
+VALIDATION: unittest 245/245 (211→245, 34 new), mypy 0/18, PWA smoke
+PASS. Real GitHub Actions run 31300333824 (commit 31d7c95) polled
+directly, conclusion: "success".
+
+SELF_AUDIT: Confirmed via grep before writing that no competing
+mechanism exists. Every function traces to one literal Section 12
+sentence, no fabrication. Caught and disclosed a minor commit-message
+inaccuracy during review-package publication (message says "37 new
+tests," actual recount is 34, matching the unittest delta exactly) —
+flagged rather than silently left unreconciled, no code/test content
+affected. No canonical trading/scoring/tactical/invalidation/Decision
+Object logic touched.
+
+CANON/GATE STATUS: unchanged — Batch 1 PASS/CLOSED, Batch 2 PASS/
+CLOSED/FROZEN, `BATCH3-STAGE-MAPPING-01` RESOLVED (OPTION B), Batch 3
+at 9 of 13 real stages, Section 19 core fully wired into both stages it
+serves, Section 12 core now standalone-implemented (not an orchestrator
+stage, no wiring needed).
+
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
+invalidation/Decision Object logic touched. `niklar_state_contracts.py`
+(Batch 1) not modified — `backup_status` remains the same inert
+passthrough it already was. The 3 Drive-verbatim `ops/` modules remain
+untouched.
+
+PENDING_REVIEW_QUEUE (Section 21 — chronological, oldest first):
+  1. niklar-stocks commit 521f5a9 — review-packages/521f5a9-batch3-increment1-stage-handlers.md
+  2. niklar-stocks commit aca2a86 — review-packages/aca2a86-batch3-increment2-evidence-acquisition.md
+  3. niklar-stocks commit 577b60b — review-packages/577b60b-section19-notification-service-core.md
+  4. niklar-stocks commit 05657ef — review-packages/05657ef-batch3-increment3-consumer-sync.md
+  5. niklar-stocks commit 31d7c95 — review-packages/31d7c95-section12-backup-recovery-core.md
+  (all published, none yet audited — no new RESPONSE_SEQ has arrived
+  from ChatGPT since RESPONSE_SEQ 20)
+
+BLOCKERS: None new. The 4 remaining deferred orchestrator stages, the
+actual Slack/PWA delivery layer, manual-entry field typing, PWA
+hosting/auth, and the real backup/recovery I/O mechanism (local,
+credentialed — copying real Drive state/database exports/git refs to a
+real destination) all stay genuinely blocked on credentials/
+specification this repo doesn't have.
+
+REVIEW_REQUEST: Independent async review of the 5 queued packages, in
+order (increment 3 depends on increment 2's notification core; the
+Section 12 package is independent of all 4 others).
+
+NEXT_ACTION: Continuing per decision #47/the owner's "continue
+automatically on PASS" instruction — validation passed, so this
+checkpoint publishes without waiting for permission. Next candidate
+increment not yet chosen; will re-apply the same evidence-bar check
+(confirm no competing mechanism exists, ground every function in cited
+text, decline to invent) before selecting one, and will not re-attempt
+manual intraday-entry validation or PWA delivery-contract work absent
+new specification. The governance-compliance audit remains deferred
+per the owner's standing instruction — not to be self-triggered.

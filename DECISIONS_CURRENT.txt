@@ -1518,3 +1518,114 @@ NIKLAR — DECISIONS (current)
     an actual recount gives 34, matching the unittest delta exactly —
     flagged during review-package publication, not silently left
     unreconciled.
+    SUPERSEDED IN PART: ChatGPT's independent review (RESPONSE_SEQ 21,
+    responding to HANDOFF_SEQ 22) found this decision's
+    verify_backup_success() fail-open on a requested-but-missing
+    checksum (finding F1). Fixed under decision #54 below — this
+    decision's Status stays "Frozen (implemented)" for the historical
+    record of what was built and why; #54 is the correction.
+
+54) Decision: Corrective fix F1 — ChatGPT review finding (RESPONSE_SEQ
+    21, responding to HANDOFF_SEQ 22): ops/niklar_backup_policy.py's
+    verify_backup_success() compared checksums only when both
+    expected_checksum and actual_checksum were non-None, so a caller
+    requesting checksum verification (supplying expected_checksum)
+    while the backup produced no actual checksum still got VERIFIED
+    back after item-count equality — fail-open, contradicting Section
+    12's "Backup success requires verification, not merely copy
+    completion." Fixed: once expected_checksum is supplied, a missing
+    actual_checksum is now itself a verification failure (new
+    BACKUP_VERIFICATION_FAILED_CHECKSUM_MISSING outcome), checked
+    before the mismatch comparison. The symmetric case
+    (expected_checksum=None, never requested) is unchanged — skipped
+    entirely per the review's own "preserve caller-optional checksum
+    behavior only when no expected checksum was requested."
+    Date: 2026-08-09
+    Rationale: A real fail-open defect the independent review caught
+    that this session's own self-audit missed at the time of decision
+    #53 — corrected exactly as instructed, no broader scope taken.
+    Affected component: niklar-stocks ops/niklar_backup_policy.py,
+    tests/test_niklar_backup_policy.py (commit 68c5153)
+    Status: Frozen (implemented) — 3 net new tests (34->37 in this
+    file). unittest 243/243 cumulative (see decision #56 for the full
+    cumulative validation after all 3 corrective commits), mypy 0/18,
+    PWA smoke PASS.
+
+55) Decision: Corrective fix F2 — ChatGPT review finding (RESPONSE_SEQ
+    21, responding to HANDOFF_SEQ 22): ops/niklar_notification_service.py's
+    decide_notification_eligibility() only special-cased
+    EVIDENCE_INSUFFICIENT/EVIDENCE_CONDITIONAL, then fell through to
+    NOTIFICATION_ELIGIBLE for any other evidence_status string —
+    including unknown/empty/malformed values. "Unknown/malformed
+    evidence states must not silently become eligible." Fixed:
+    validates evidence_status against the canonical Batch 1 set
+    (EVIDENCE_COMPLETE/CONDITIONAL/INSUFFICIENT) before any other
+    branch and raises ValueError on anything outside it — fires before
+    the staleness/caveat logic even evaluates.
+    Date: 2026-08-09
+    Rationale: Same category as #54 — a real fail-open the independent
+    review caught in decision #50's original implementation. Corrected
+    exactly as instructed.
+    Affected component: niklar-stocks ops/niklar_notification_service.py,
+    tests/test_niklar_notification_service.py (commit b81f79a)
+    Status: Frozen (implemented) — 4 new tests (24->28 in this file).
+    unittest 243/243 cumulative, mypy 0/18, PWA smoke PASS.
+
+56) Decision: Corrective fix F3 — ChatGPT review finding (RESPONSE_SEQ
+    21, responding to HANDOFF_SEQ 22), disposition BLOCKING
+    ARCHITECTURAL DRIFT: decision #51/commit 05657ef promoted
+    discovery_consumers_sync/tactical_consumers_sync to real
+    orchestrator stage handlers via a shared make_consumer_sync_handler()
+    factory, despite that package's own disclosure of MEDIUM confidence
+    and "no specification defining how discovery_consumers_sync
+    differs from tactical_consumers_sync beyond scope." The review's
+    finding: Section 19 proves automatic/manual Slack sends share one
+    notification service; it does not by itself prove these two named
+    orchestrator stages ARE semantically equivalent to Slack
+    notification delivery. Per "Never invent missing behavior," reverted
+    (Option B — no canonical specification exists to satisfy Option A):
+    make_consumer_sync_handler() removed entirely from
+    ops/niklar_orchestrator_stage_handlers.py; both stage keys revert to
+    deferred (caller-injected adapter) — 7 of 13 real (was 9), 6
+    deferred (was 4). The underlying Section 19 core
+    (ops/niklar_notification_service.py) is explicitly retained per the
+    review's own instruction — only the claim that it maps onto these
+    two specific orchestrator stage keys was withdrawn. ConsumerSyncHandlerTests
+    (9 tests) removed with the reverted factory; the end-to-end
+    run_pipeline() test reverts to stub adapters for both stage keys.
+    ops/README.md and AGENTS.md: every "9 of 13"/"4 deferred"
+    stage-count reference corrected to "7 of 13"/"6 deferred"; while
+    already in those files for this, also fixed pre-existing staleness
+    from decision #53/commit 31d7c95 that never touched them (missing
+    Modules entry for niklar_backup_policy.py, stale 211/17 test/mypy
+    counts corrected to the current cumulative 243/18).
+    Date: 2026-08-09
+    Rationale: The review correctly identified that a MEDIUM-confidence,
+    self-disclosed judgment call had been promoted to "real" status
+    without the canonical grounding this session's own evidence bar
+    requires elsewhere (the opportunity_matrix_rebuild precedent,
+    decision #10/#40) — Option B (revert) was the only available
+    resolution since no canonical specification exists in this repo to
+    satisfy Option A. Net simplification: 141 lines removed from
+    ops/niklar_orchestrator_stage_handlers.py, 165 from its test file.
+    Affected component: niklar-stocks
+    ops/niklar_orchestrator_stage_handlers.py,
+    tests/test_niklar_orchestrator_stage_handlers.py, ops/README.md,
+    AGENTS.md (commit 5163e7b)
+    Status: Frozen (implemented) — 9 tests removed. Cumulative
+    validation across all 3 corrective commits (68c5153, b81f79a,
+    5163e7b), HEAD 5163e7b: unittest 243/243 (245 after 31d7c95, +3 F1
+    +4 F2 -9 F3 = 243), mypy 0/18, PWA smoke PASS. Real GitHub Actions
+    run 31314674703 (the single run triggered for this push — GitHub
+    Actions fires once per push on the tip commit, not once per
+    individual commit) confirmed conclusion: "success". This run
+    supersedes the pre-correction CI runs on 577b60b/05657ef/31d7c95,
+    which are now stale evidence per the review's explicit instruction
+    not to rely on them. Full corrective-checkpoint review package:
+    review-packages/5163e7b-corrective-f1-f2-f3.md, mapping each fix to
+    F1/F2/F3 individually as required. No canonical trading/scoring/
+    tactical/invalidation/Decision Object logic touched in any of the 3
+    corrective commits. Per the review's explicit "Stop after
+    publishing that corrective checkpoint" instruction, no new
+    increment follows this one — implementation holds again pending the
+    next ChatGPT review.

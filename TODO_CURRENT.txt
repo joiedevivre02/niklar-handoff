@@ -1,8 +1,61 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (Section 12 backup/recovery deterministic
-decision core landed -- HANDOFF_SEQ 22.)
+Last updated: 2026-08-09 (Corrective checkpoint F1/F2/F3 landed in
+response to ChatGPT's RESPONSE_SEQ 21 FAIL/FIX_REQUIRED review --
+HANDOFF_SEQ 23. Implementation HELD again pending next review.)
 
-DONE — Section 12 backup/recovery deterministic decision core (this update)
+DONE — Corrective checkpoint: F1/F2/F3 per RESPONSE_SEQ 21 (this update)
+---------------------------------------------------------------------------
+  - ChatGPT's independent review of the 5 packages queued at HEAD
+    31d7c95 (RESPONSE_SEQ 21, responding to HANDOFF_SEQ 22) returned
+    FAIL / FIX_REQUIRED with 3 blocking findings. Applied exactly the
+    AUTHORIZED CORRECTIVE SCOPE, nothing broader, in 3 atomic commits:
+  - F1 (commit 68c5153): ops/niklar_backup_policy.py's
+    verify_backup_success() fell through to VERIFIED when a caller
+    requested checksum verification (expected_checksum supplied) but
+    the backup produced no actual checksum -- fail-open. Fixed: missing
+    actual_checksum with expected_checksum requested is now its own
+    failure outcome (BACKUP_VERIFICATION_FAILED_CHECKSUM_MISSING),
+    checked before the mismatch comparison. 3 net new tests (34->37).
+  - F2 (commit b81f79a): ops/niklar_notification_service.py's
+    decide_notification_eligibility() fell through to ELIGIBLE for any
+    evidence_status outside EVIDENCE_INSUFFICIENT/CONDITIONAL --
+    including unknown/malformed values -- fail-open. Fixed: validates
+    against the canonical Batch 1 evidence-status set first, raises
+    ValueError on anything unrecognized, before any other branch
+    evaluates. 4 new tests (24->28).
+  - F3 (commit 5163e7b), disposition BLOCKING ARCHITECTURAL DRIFT:
+    decision #51's discovery_consumers_sync/tactical_consumers_sync
+    stage mapping (via a shared make_consumer_sync_handler() factory)
+    was promoted to "real" despite the package's own disclosure that
+    no canonical specification distinguishes the two stages beyond
+    scope -- Section 19 proves Slack sends share one notification
+    service, not that these two orchestrator stages ARE that
+    mechanism. Reverted (Option B -- no canonical evidence exists to
+    satisfy Option A): make_consumer_sync_handler() removed entirely;
+    both stages revert to deferred. 7 of 13 real (was 9), 6 deferred
+    (was 4). The underlying Section 19 core
+    (niklar_notification_service.py) is unaffected and retained.
+    ops/README.md and AGENTS.md stage-count text corrected throughout;
+    also fixed pre-existing staleness from decision #53 that never
+    touched those files (missing niklar_backup_policy.py Modules
+    entry, stale 211/17 counts corrected to 243/18).
+  - Cumulative validation across all 3 corrective commits, HEAD
+    5163e7b: unittest 243/243 (245 after 31d7c95, +3 F1 +4 F2 -9 F3 =
+    243), mypy 0/18, PWA smoke PASS. Real GitHub Actions run
+    31314674703 confirmed conclusion: "success" -- this run supersedes
+    the pre-correction CI runs on 577b60b/05657ef/31d7c95, per the
+    review's explicit instruction not to rely on stale CI evidence.
+  - Full corrective-checkpoint review package published:
+    review-packages/5163e7b-corrective-f1-f2-f3.md, mapping each fix to
+    F1/F2/F3 individually. Recorded as decisions #54/#55/#56. Archived
+    HANDOFF_SEQ 22 first.
+  - Per the review's explicit "Stop after publishing that corrective
+    checkpoint. No unrelated next increment is authorized by this
+    response" instruction: no new feature work follows this checkpoint.
+    Implementation HOLDS again pending ChatGPT's next review of this
+    corrective checkpoint.
+
+DONE — Section 12 backup/recovery deterministic decision core (prior update)
 ---------------------------------------------------------------------------
   - Per the owner's explicit instruction to continue with backup/
     recovery as the next candidate increment (Minimum Sufficient
