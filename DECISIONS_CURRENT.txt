@@ -1320,3 +1320,40 @@ NIKLAR — DECISIONS (current)
     and commit message for ChatGPT's async review, not asserted as
     certain — consistent with "handoffs given as you work, reviewed
     later," not a bypass of independent review.
+
+49) Decision: Implement Batch 3 increment 2 — `evidence_acquisition`,
+    the 7th of 13 canonical stages to get a real, grounded handler.
+    `make_evidence_acquisition_handler()` acquires one evidence field
+    via a caller-injected fetch adapter (the actual Drive/news/market-
+    data call this environment has no credentials for — honestly
+    deferred, not fabricated), then normalizes the fetched value
+    through Batch 2's already-tested, already-independently-reviewed
+    `attempt_normalization()`. HIGH confidence on the normalization
+    half; the acquisition half stays an injected adapter. Two failure
+    modes handled per the architecture doc's own distinction: a
+    fetch-adapter failure propagates and stops the pipeline (a genuine
+    stage failure, matching `run_pipeline()`'s existing fail-closed
+    design); a normalization failure degrades non-blockingly (returns
+    successfully with a "degraded" detail) per architecture doc
+    section 3's "must degrade confidence, not stop Niklar" — mirroring
+    `attempt_normalization()`'s own non-blocking contract rather than
+    overriding it with `run_pipeline()`'s stricter default.
+    Date: 2026-08-09
+    Rationale: Realized while reviewing what remained deferred in
+    increment 1 that `evidence_acquisition`'s normalization half is
+    exactly Batch 2's existing, already-reviewed logic — architecture
+    doc section 1 ("Research evidence must be normalized before
+    consumption") plus the absence of any separate named
+    "normalization" stage among the 13 confirms this stage owns both
+    acquire-and-normalize, not acquisition alone. Continuing without
+    waiting for increment 1's review to land first, per the owner's
+    explicit "handoffs given as you work, reviewed later" instruction
+    (decision #47) and Section 21's async-review model.
+    Affected component: niklar-stocks
+    ops/niklar_orchestrator_stage_handlers.py,
+    tests/test_niklar_orchestrator_stage_handlers.py (same two files
+    increment 1 touched, patched only)
+    Status: Frozen (implemented) — commit aca2a86. unittest 178/178
+    (175->178, 3 new), mypy 0/16, PWA smoke PASS. 7 of 13 canonical
+    stages now have a real handler in this module (was 6). The 3
+    Drive-verbatim ops/ modules remain untouched.

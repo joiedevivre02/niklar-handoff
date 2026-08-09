@@ -957,3 +957,45 @@ NIKLAR-HANDOFF — CHANGELOG
     stage mappings (research_memory_gate, postflight_verification)
     explicitly flagged for correction if wrong -- both fully isolated,
     nothing else depends on them yet. Archived HANDOFF_SEQ 16 first.
+
+2026-08-09 (Batch 3 increment 2: evidence_acquisition stage-handler factory, HANDOFF_SEQ 18)
+  - Continued Batch 3 work per the owner's explicit "handoffs given as
+    you work, ChatGPT reviews later" instruction (decision #47) --
+    proceeding without waiting for increment 1's review to land first,
+    per Section 21's async-review model.
+  - Added make_evidence_acquisition_handler() to
+    ops/niklar_orchestrator_stage_handlers.py -- the 7th of 13
+    canonical stages to get a real, grounded handler (was 6 after
+    increment 1). Acquires one evidence field via a caller-injected
+    fetch adapter (the actual Drive/news/market-data call this
+    environment has no credentials for -- honestly deferred, not
+    fabricated), then normalizes the fetched value through Batch 2's
+    already-tested, already-independently-reviewed
+    attempt_normalization() (commit 02b6f88). Grounded in architecture
+    doc section 1 ("Research evidence must be normalized before
+    consumption") and the absence of any separate named
+    "normalization" stage among the 13 -- evidence_acquisition owns
+    both acquire and normalize, only the acquisition mechanism itself
+    is genuinely unavailable here.
+  - Two failure modes handled per the architecture doc's own
+    distinction: a fetch-adapter failure propagates and stops the
+    pipeline (a genuine stage failure, matching run_pipeline()'s
+    existing fail-closed design); a normalization failure degrades
+    non-blockingly (returns successfully with a "degraded" detail) per
+    architecture doc section 3's "must degrade confidence, not stop
+    Niklar" -- mirrors attempt_normalization()'s own non-blocking
+    contract rather than overriding it with run_pipeline()'s stricter
+    default.
+  - 3 new tests (successful fetch+normalize; non-blocking
+    normalization-failure degradation, proving the handler never
+    raises on that path; fetch-failure propagation, proving it DOES
+    raise on that path). The 7-real-handler end-to-end run_pipeline()
+    integration test now uses the real handler instead of a stub.
+    unittest 178/178 (175->178), mypy 0/16, PWA smoke PASS, real
+    GitHub Actions run 31297477786 confirmed conclusion: "success".
+    niklar-stocks main: 521f5a9 -> aca2a86. The 3 Drive-verbatim ops/
+    modules remain untouched. Recorded as decision #49.
+  - Full diff published in
+    review-packages/aca2a86-batch3-increment2-evidence-acquisition.md
+    for independent async review, alongside increment 1's still-
+    pending package. Archived HANDOFF_SEQ 17 first.

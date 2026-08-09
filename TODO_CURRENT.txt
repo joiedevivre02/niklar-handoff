@@ -1,9 +1,42 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (Owner directly authorized continuing Batch 3
-with async ChatGPT review; increment 1 (6 of 13 stage handlers)
-implemented and CI-verified -- HANDOFF_SEQ 17.)
+Last updated: 2026-08-09 (Batch 3 increment 2 (evidence_acquisition)
+implemented and CI-verified, continuing without waiting for increment
+1's review per explicit owner instruction -- HANDOFF_SEQ 18.)
 
-DONE — Batch 3 increment 1: 6 real orchestrator stage-handler factories (this update)
+DONE — Batch 3 increment 2: evidence_acquisition stage-handler factory (this update)
+---------------------------------------------------------------------------
+  - Continued Batch 3 work per the owner's explicit "handoffs given as
+    you work, ChatGPT reviews later" instruction (decision #47) --
+    proceeding without waiting for increment 1's review to land first.
+  - Added make_evidence_acquisition_handler() to
+    ops/niklar_orchestrator_stage_handlers.py -- the 7th of 13
+    canonical stages to get a real, grounded handler (was 6). Acquires
+    one evidence field via a caller-injected fetch adapter (the actual
+    Drive/news/market-data call this environment has no credentials
+    for -- honestly deferred, not fabricated), then normalizes the
+    fetched value through Batch 2's already-tested, already-
+    independently-reviewed attempt_normalization(). Two failure modes
+    handled per the architecture doc's own distinction: a fetch-
+    adapter failure propagates and stops the pipeline (a genuine stage
+    failure); a normalization failure degrades non-blockingly (returns
+    successfully with a "degraded" detail) per architecture doc
+    section 3 -- mirrors attempt_normalization()'s own non-blocking
+    contract rather than overriding it.
+  - 3 new tests (successful fetch+normalize, non-blocking
+    normalization-failure degradation proving the handler never
+    raises on that path, fetch-failure propagation proving it DOES
+    raise on that path). The 7-real-handler end-to-end run_pipeline()
+    integration test now uses the real handler instead of a stub.
+    unittest 178/178 (175->178), mypy 0/16, PWA smoke PASS, real
+    GitHub Actions run 31297477786 confirmed conclusion: "success".
+    niklar-stocks main: 521f5a9 -> aca2a86. The 3 Drive-verbatim ops/
+    modules remain untouched. Recorded as decision #49.
+  - Full diff published in
+    review-packages/aca2a86-batch3-increment2-evidence-acquisition.md
+    for independent async review, alongside increment 1's still-
+    pending package. Archived HANDOFF_SEQ 17 first.
+
+DONE — Batch 3 increment 1: 6 real orchestrator stage-handler factories (prior update)
 ---------------------------------------------------------------------------
   - Owner gave a direct, explicit instruction superseding the prior
     HARD_GATE/OPTION B holding pattern for standalone Batch 3 work:

@@ -5,122 +5,87 @@ repository discovery/search. Full history: `archive/handoffs/` and
 `CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
 in form, fetched only when this checkpoint's summary isn't enough.
 
-STATUS: OWNER_AUTHORIZED_BATCH3_CONTINUATION (increment 1 landed, async review requested)
+STATUS: OWNER_AUTHORIZED_BATCH3_CONTINUATION (increment 2 landed, async review requested, 2 packages pending)
 PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
-HANDOFF_SEQ: 17
-CHECKPOINT_ID: niklar-handoff-2026-08-09-seq17-batch3-increment1-stage-handlers
-IMPLEMENTATION_COMMIT: niklar-stocks main @ 521f5a9
+HANDOFF_SEQ: 18
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq18-batch3-increment2-evidence-acquisition
+IMPLEMENTATION_COMMIT: niklar-stocks main @ aca2a86
 HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
 
-GOAL: Implement the first bounded increment of pre-live architecture
-Batch 3, per the owner's direct instruction to continue Batch 3 with
-asynchronous ChatGPT review rather than pre-approval gating.
+GOAL: Continue Batch 3 implementation per the owner's explicit
+"handoffs given as you work, ChatGPT reviews later" instruction
+(decision #47) — increment 2, without waiting for increment 1's
+review to land first (Section 21's async-review model).
 
-MATERIAL_DELTA: **The owner gave a direct, explicit instruction**,
-superseding the prior HARD_GATE/OPTION B holding pattern for
-standalone Batch 3 work (decision #35/#37/#41): "Continue working on
-batch 3 onwards. Handoffs can be given as you work. Chatgpt will take
-them for review later." This is LEVEL 3 owner authority resolving the
-"owner judgment required" component of Batch 3's HARD_GATE — it does
-**not** create the actual Drive/Sheets/Slack/market-data credentials
-this environment still doesn't have, and does **not** manufacture the
-proprietary canon (real Decision Object computation, 31-section report
-prose) this repo has never had synced (decision #1's scope). "Never
-invent missing behavior" (`AGENTS.md`) still governs what gets built.
-Recorded as decision #47.
+MATERIAL_DELTA: Added `make_evidence_acquisition_handler()` to
+`ops/niklar_orchestrator_stage_handlers.py` — the **7th of 13**
+canonical stages to get a real, grounded handler (was 6 after
+increment 1). Acquires one evidence field via a caller-injected fetch
+adapter (the actual Drive/news/market-data call this environment has
+no credentials for — honestly deferred, not fabricated), then
+normalizes the fetched value through Batch 2's already-tested,
+already-independently-reviewed `attempt_normalization()` (commit
+02b6f88). Grounded in architecture doc section 1 ("Research evidence
+must be normalized before consumption") and the absence of any
+separate named "normalization" stage among the 13 — this stage owns
+both acquire and normalize; only the acquisition mechanism is
+genuinely unavailable here.
 
-Implemented Batch 3 increment 1: new file
-`ops/niklar_orchestrator_stage_handlers.py` — factory functions
-producing real `Callable[[], str]` handlers matching the existing,
-unmodified `run_pipeline()`'s contract, for **6 of the orchestrator's
-13 canonical stages**, each grounded in already-existing, already-
-tested repo modules:
-- `authority_load` — validates an already-resolved canon version
-  pointer is non-empty. Thin by design.
-- `research_memory_gate` — deterministic freshness/reuse gate from an
-  already-known last-research timestamp, grounded in architecture doc
-  Section 6. **MEDIUM confidence** — narrower than the mapping
-  `BATCH3-STAGE-MAPPING-01` already declined for this same stage name.
-- `master_database_update` — wired directly to `niklar_stocks_ops_v4`'s
-  `apply_strategic_update()`/`apply_tactical_update()`. HIGH confidence.
-- `publication_validation` — wired directly to the existing validator.
-  HIGH confidence.
-- `decision_object_freeze` — validates a non-empty decision object +
-  records a freeze timestamp; asserts no invented required-field
-  schema.
-- `postflight_verification` — wired directly to
-  `build_current_state_snapshot()`, named by architecture doc Section
-  14 for exactly this purpose. **MEDIUM confidence**.
+Two failure modes handled per the architecture doc's own distinction:
+a fetch-adapter failure propagates and stops the pipeline (a genuine
+stage failure, matching `run_pipeline()`'s existing fail-closed
+design); a normalization failure degrades non-blockingly (returns
+successfully with a "degraded" detail) per architecture doc section 3
+— mirroring `attempt_normalization()`'s own non-blocking contract
+rather than overriding it with `run_pipeline()`'s stricter default.
 
-The remaining **7 stages** (`evidence_acquisition`,
-`canonical_serialization`, `research_database_append`,
-`research_indexes_update`, `opportunity_matrix_rebuild`,
-`discovery_consumers_sync`, `tactical_consumers_sync`) are
-**deliberately NOT built** — genuine external I/O this environment has
-no credentials for, or proprietary content not synced into this repo.
-A caller must inject their own adapter for those stage keys directly
-into `run_pipeline()`'s handlers dict; building a fake handler would
-misrepresent unavailable canonical logic as implemented — the exact
-mistake this session already caught once (`opportunity_matrix_rebuild`
-does not map to `mobile_contract.py`'s `build_opportunity_landscape()`,
-decision #10).
+VALIDATION: unittest 178/178 (175 → 178, 3 new: successful fetch+
+normalize, non-blocking degradation on a normalization failure,
+propagation on a fetch failure), mypy 0/16 (unchanged file count), PWA
+smoke PASS. Real GitHub Actions run 31297477786 (commit aca2a86)
+polled directly, conclusion: "success".
 
-No wrapper/assembler function added — `run_pipeline()` already accepts
-a plain dict (Minimum Sufficient Code). The 3 Drive-verbatim `ops/`
-modules remain untouched, confirmed via `git diff` before committing.
-Recorded as decision #48.
-
-VALIDATION: unittest 175/175 (153 → 175, 22 new: each handler's happy
-path + fail-closed behavior, plus an end-to-end `run_pipeline()`
-invocation combining all 6 real handlers with stub adapters for the
-other 7), mypy 0/16 (15 → 16 source files), PWA smoke PASS. Real
-GitHub Actions run 31289182037 (commit 521f5a9) polled directly,
-conclusion: "success".
-
-SELF_AUDIT: Applied the standing 4 criteria — clean. Failure envelope:
-every handler raises clearly (ValueError/SchemaViolation) on invalid
-input, matching `run_pipeline()`'s own stop-at-first-failure design.
-No unnecessary abstraction (no assembler wrapper). No I/O/credentials/
-secrets anywhere. No canonical boundary drift — protected modules
-untouched, no fabricated proprietary logic.
+SELF_AUDIT: Applied the standing 4 criteria — clean. Two distinct
+failure modes tested explicitly (propagate vs. degrade), not picked
+uniformly. No new dependency/file. No I/O/credentials/secrets. The 3
+Drive-verbatim `ops/` modules remain untouched (confirmed via `git
+diff`).
 
 CANON/GATE STATUS: Batch 1 PASS/CLOSED. Batch 2 PASS/CLOSED/FROZEN.
-`BATCH3-STAGE-MAPPING-01` RESOLVED (OPTION B, unchanged in substance).
-Batch 3 full-scope HARD_GATE **downgraded** by direct owner
-authorization from "no work" to "implement what's genuinely
-groundable; defer what genuinely isn't, honestly" — the underlying
-credential/canon gaps remain real constraints on *what* can be built,
-not on *whether* Claude may proceed. Increment 1: implemented,
-awaiting async review.
+`BATCH3-STAGE-MAPPING-01` RESOLVED (OPTION B, unchanged). Batch 3
+full-scope HARD_GATE remains downgraded (by direct owner authorization,
+decision #47) to "implement what's genuinely groundable; defer what
+genuinely isn't." 7 of 13 stages now real; 6 remain genuinely deferred
+(`canonical_serialization`, `research_database_append`,
+`research_indexes_update`, `opportunity_matrix_rebuild`,
+`discovery_consumers_sync`, `tactical_consumers_sync`).
 
 PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
 invalidation/Decision Object logic touched or fabricated. The 3
-Drive-verbatim `ops/` modules remain untouched (confirmed via `git
-diff`, not just asserted).
+Drive-verbatim `ops/` modules remain untouched.
 
 PENDING_REVIEW_QUEUE (Section 21 — chronological, oldest first):
   1. niklar-stocks commit 521f5a9 (Batch 3 increment 1) — package:
      review-packages/521f5a9-batch3-increment1-stage-handlers.md —
-     published this checkpoint, not yet audited. Two MEDIUM-confidence
-     stage mappings explicitly flagged within it
-     (`research_memory_gate`, `postflight_verification`) — both fully
-     isolated, correcting or removing either costs nothing else.
+     published HANDOFF_SEQ 17, not yet audited.
+  2. niklar-stocks commit aca2a86 (Batch 3 increment 2) — package:
+     review-packages/aca2a86-batch3-increment2-evidence-acquisition.md
+     — published this checkpoint, not yet audited.
 
-BLOCKERS: None new. Batch 3's remaining 7 stages stay genuinely
+BLOCKERS: None new. The 6 remaining deferred stages stay genuinely
 blocked on credentials/proprietary canon — not something Claude can
 resolve unilaterally regardless of authorization to proceed on the
 groundable subset.
 
-REVIEW_REQUEST: Independent async review of
-`review-packages/521f5a9-batch3-increment1-stage-handlers.md` —
-confirm or correct the two MEDIUM-confidence stage mappings, and
-confirm the 7 deferred stages are correctly left for injected
-adapters rather than under-scoped.
+REVIEW_REQUEST: Independent async review of both queued packages —
+confirm or correct the stage mappings (2 MEDIUM-confidence from
+increment 1: `research_memory_gate`, `postflight_verification`; the
+new `evidence_acquisition` mapping from increment 2), and confirm the
+6 still-deferred stages remain correctly left for injected adapters.
 
-NEXT_ACTION: Per the owner's explicit "handoffs given as you work,
-reviewed later" instruction, continuing further Batch 3 work without
-waiting for this review to land first — will incorporate any
-correction ChatGPT surfaces on `sync`. Continuing to identify further
-groundable increments (real logic only; injected adapters for genuine
-I/O/canon gaps; explicit interface gaps otherwise) rather than
-fabricating coverage for the 7 deferred stages.
+NEXT_ACTION: Continuing to look for further groundable increments
+without waiting for review to land first, per the owner's explicit
+instruction — will incorporate any correction ChatGPT surfaces on the
+next `sync`. Will report honestly if no further genuinely groundable
+increment exists among the remaining 6 deferred stages, rather than
+force one.
