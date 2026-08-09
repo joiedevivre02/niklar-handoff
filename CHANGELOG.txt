@@ -895,3 +895,65 @@ NIKLAR-HANDOFF — CHANGELOG
     released). Checked for genuinely independent, already-justified
     safe work -- none currently identified; reported honestly rather
     than manufactured. Archived HANDOFF_SEQ 15 first.
+
+2026-08-09 (Batch 3 increment 1: 6 real orchestrator stage-handler factories, HANDOFF_SEQ 17)
+  - Owner gave a direct, explicit instruction superseding the prior
+    HARD_GATE/OPTION B holding pattern for standalone Batch 3 work:
+    "Continue working on batch 3 onwards. Handoffs can be given as you
+    work. Chatgpt will take them for review later." Resolves the
+    "owner judgment required" component of Batch 3's HARD_GATE but
+    does NOT create actual Drive/Sheets/Slack/market-data credentials
+    (still don't exist in this environment) or manufacture the missing
+    proprietary canon (Decision Object computation, 31-section report
+    prose) this repo doesn't have synced -- "never invent missing
+    behavior" still governs. Recorded as decision #47.
+  - Implemented ops/niklar_orchestrator_stage_handlers.py: factory
+    functions producing real Callable[[], str] handlers matching
+    run_pipeline()'s existing, unmodified contract, for 6 of the
+    orchestrator's 13 canonical stages, each grounded in existing,
+    already-tested repo modules:
+    authority_load (validates an already-resolved canon version
+    pointer, thin by design); research_memory_gate (deterministic
+    freshness/reuse gate from an already-known last-research
+    timestamp, grounded in architecture doc Section 6 -- MEDIUM
+    confidence, narrower than the mapping BATCH3-STAGE-MAPPING-01
+    already declined for this same stage name); master_database_update
+    (wired directly to niklar_stocks_ops_v4's apply_strategic_update()/
+    apply_tactical_update() -- HIGH confidence); publication_validation
+    (wired directly to the existing validator -- HIGH confidence);
+    decision_object_freeze (validates a non-empty decision object +
+    records a freeze timestamp, asserts no invented required-field
+    schema); postflight_verification (wired directly to
+    build_current_state_snapshot(), named by architecture doc Section
+    14 for exactly this purpose -- MEDIUM confidence).
+  - The remaining 7 stages (evidence_acquisition,
+    canonical_serialization, research_database_append,
+    research_indexes_update, opportunity_matrix_rebuild,
+    discovery_consumers_sync, tactical_consumers_sync) deliberately
+    NOT built -- genuine external I/O this environment has no
+    credentials for, or proprietary content not synced into this repo;
+    a caller must inject their own adapter for those stage keys
+    directly into run_pipeline()'s handlers dict. Building a fake
+    handler would misrepresent unavailable canonical logic as
+    implemented -- the exact mistake this session already caught once
+    (opportunity_matrix_rebuild does not map to mobile_contract.py's
+    build_opportunity_landscape(), decision #10).
+  - No wrapper/assembler function added -- run_pipeline() already
+    accepts a plain dict, a caller composes this module's 6 factories
+    with their own adapters directly (Minimum Sufficient Code). The 3
+    Drive-verbatim ops/ modules remain untouched, confirmed via git
+    diff before committing. 22 new tests (153->175): each handler's
+    happy path, fail-closed behavior, and an end-to-end run_pipeline()
+    invocation combining all 6 real handlers with stub adapters for
+    the other 7, proving the factories genuinely satisfy the existing
+    orchestrator's contract. unittest 175/175, mypy 0/16, PWA smoke
+    PASS, real GitHub Actions run 31289182037 confirmed conclusion:
+    "success". niklar-stocks main: d936229 -> 521f5a9. Recorded as
+    decision #48.
+  - Full new-file content published in
+    review-packages/521f5a9-batch3-increment1-stage-handlers.md for
+    independent async review, per the owner's explicit "handoffs given
+    as you work, ChatGPT reviews later" model. Two MEDIUM-confidence
+    stage mappings (research_memory_gate, postflight_verification)
+    explicitly flagged for correction if wrong -- both fully isolated,
+    nothing else depends on them yet. Archived HANDOFF_SEQ 16 first.

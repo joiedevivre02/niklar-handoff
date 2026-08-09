@@ -1,10 +1,56 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (RESPONSE_SEQ 20 confirms the governance
-audit deferral, adds the structured PRELIVE CHECKLIST EXECUTION RULE
-for when it's eventually released; no implementation change --
-HANDOFF_SEQ 16.)
+Last updated: 2026-08-09 (Owner directly authorized continuing Batch 3
+with async ChatGPT review; increment 1 (6 of 13 stage handlers)
+implemented and CI-verified -- HANDOFF_SEQ 17.)
 
-DONE — governance audit deferral confirmed by ChatGPT + execution rule adopted (this update)
+DONE — Batch 3 increment 1: 6 real orchestrator stage-handler factories (this update)
+---------------------------------------------------------------------------
+  - Owner gave a direct, explicit instruction superseding the prior
+    HARD_GATE/OPTION B holding pattern for standalone Batch 3 work:
+    "Continue working on batch 3 onwards. Handoffs can be given as you
+    work. Chatgpt will take them for review later." This resolves the
+    "owner judgment required" component of Batch 3's HARD_GATE but
+    does NOT create actual Drive/Sheets/Slack/market-data credentials
+    (still don't exist in this environment) or manufacture the missing
+    proprietary canon (Decision Object computation, 31-section report
+    prose) this repo doesn't have synced. Recorded as decision #47.
+  - Implemented ops/niklar_orchestrator_stage_handlers.py: factory
+    functions producing real Callable[[], str] handlers for 6 of the
+    orchestrator's 13 canonical stages, each grounded in existing,
+    already-tested repo modules -- authority_load (thin validation),
+    research_memory_gate (freshness/reuse gate per architecture doc
+    Section 6, MEDIUM confidence), master_database_update (wired to
+    apply_strategic_update/apply_tactical_update, HIGH confidence),
+    publication_validation (wired to the existing validator, HIGH
+    confidence), decision_object_freeze (generic non-empty+timestamp
+    validation, no invented schema), postflight_verification (wired
+    to build_current_state_snapshot(), named for exactly this purpose
+    by architecture doc Section 14, MEDIUM confidence). The remaining
+    7 stages (evidence_acquisition, canonical_serialization,
+    research_database_append, research_indexes_update,
+    opportunity_matrix_rebuild, discovery_consumers_sync,
+    tactical_consumers_sync) deliberately NOT built -- genuine I/O/
+    credential or proprietary-content gaps; a caller must inject their
+    own adapter for those stage keys.
+  - No wrapper/assembler added (run_pipeline() already accepts a plain
+    dict -- Minimum Sufficient Code). The 3 Drive-verbatim ops/ modules
+    remain untouched, confirmed via git diff before committing. 22 new
+    tests (153->175), including an end-to-end run_pipeline() invocation
+    combining all 6 real handlers with stub adapters for the other 7.
+    unittest 175/175, mypy 0/16, PWA smoke PASS, real GitHub Actions
+    run 31289182037 confirmed conclusion: "success". niklar-stocks
+    main: d936229 -> 521f5a9. Recorded as decision #48.
+  - Full new-file content published in
+    review-packages/521f5a9-batch3-increment1-stage-handlers.md for
+    independent async review, per the owner's explicit "handoffs given
+    as you work, ChatGPT reviews later" model -- proceeding to further
+    Batch 3 work without waiting for that review to complete first,
+    consistent with Section 21. Two MEDIUM-confidence stage mappings
+    (research_memory_gate, postflight_verification) explicitly flagged
+    for correction if wrong -- both fully isolated, nothing else
+    depends on them yet.
+
+DONE — governance audit deferral confirmed by ChatGPT + execution rule adopted (prior update)
 ---------------------------------------------------------------------------
   - Drive sync doc RESPONSE_SEQ 20 (answering HANDOFF_SEQ 14, crossed
     in transit with HANDOFF_SEQ 15): a correction to ChatGPT's own

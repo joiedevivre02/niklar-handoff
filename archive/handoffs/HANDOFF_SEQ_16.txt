@@ -1,0 +1,93 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: DEFERRAL_CONFIRMED (governance audit) + PASS (Batches 1+2 CLOSED/FROZEN, unchanged) + HARD_GATE (Batch 3 full scope, unchanged)
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 16
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq16-governance-audit-execution-rule
+IMPLEMENTATION_COMMIT: niklar-stocks main @ d936229 (unchanged this cycle)
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Reconcile Drive sync doc RESPONSE_SEQ 20 (a correction to
+ChatGPT's own RESPONSE_SEQ 19, crossed in transit with HANDOFF_SEQ 15)
+and record the structured governance-audit execution rule it defines
+for future use.
+
+MATERIAL_DELTA: RESPONSE_SEQ 20 independently confirms exactly what
+the owner told Claude directly (decision #45, HANDOFF_SEQ 15): the
+`NIKLAR_PRELIVE_ENGINEERING_GOVERNANCE_COMPLIANCE_CHECKLIST_CURRENT`
+document is canonical **pre-live/end-of-development acceptance
+infrastructure**, not something to execute during active development.
+No conflict — this response was written answering HANDOFF_SEQ 14,
+before HANDOFF_SEQ 15 (which already recorded the owner's live
+correction) existed.
+
+Adopted the structured **PRELIVE CHECKLIST EXECUTION RULE** (7 steps,
+for whenever the audit is eventually released):
+1. Preserve the checklist in Drive as the canonical final cumulative
+   acceptance checklist.
+2. Do not execute it now.
+3. Do not spend tokens pre-auditing rows or generating findings from
+   it during ordinary development.
+4. Continue the normal per-batch gates already in force (deterministic
+   tests, failure-envelope, security/privacy, Minimum Sufficient Code,
+   protected-boundary verification, CI, self-audit, independent
+   review).
+5. Trigger the full checklist only when product development is
+   substantially/feature-complete enough for pre-live hardening, or on
+   explicit early release by ChatGPT/owner.
+6. At that time, execute read-only against the then-current final
+   state; publish only the compact findings package to
+   `niklar-handoff`; no remediation before ChatGPT reconciles.
+7. After reconciliation, patch failures/partials as authorized, rerun
+   failed sections, require final release clearance before go-live.
+
+Also reconfirms: "the owner has instructed Claude to continue while
+away" remains the standing autonomous-development authorization under
+the existing delegated-decision protocol and existing batch/owner hard
+gates — this correction narrows only the governance-audit timing,
+nothing else. No niklar-stocks mutation this cycle. Recorded as
+decision #46.
+
+No other batch-level work is authorized (Batches 1–2 closed, Batch 3
+fully blocked on both sub-decisions, Batches 4–10 not released).
+Checked for genuinely independent, already-justified safe work — none
+currently identified this cycle; reported honestly rather than
+manufactured.
+
+VALIDATION: No code changed — unchanged from HANDOFF_SEQ 15 (unittest
+153/153, mypy 0/15, PWA smoke PASS).
+
+SELF_AUDIT: N/A — no mutation this cycle, coordination/reconciliation
+only.
+
+CANON/GATE STATUS: Batch 1 PASS/CLOSED. Batch 2 PASS/CLOSED/FROZEN.
+`BATCH3-STAGE-MAPPING-01` RESOLVED (OPTION B). Batch 3 full scope:
+OWNER_ONLY HARD_GATE (unchanged). Governance audit: PRESERVED / NOT
+YET RELEASED FOR EXECUTION (ChatGPT's own wording, matching the
+owner's).
+
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
+invalidation/Decision Object logic touched. No niklar-stocks file
+changed this cycle.
+
+PENDING_REVIEW_QUEUE (Section 21 — chronological, oldest first):
+  (empty — unchanged.)
+
+BLOCKERS: None new. HARD_GATE on Batch 3's full scope unchanged
+(decision #35/#37). Governance audit remains explicitly deferred, not
+a blocker.
+
+REVIEW_REQUEST: None this cycle.
+
+NEXT_ACTION: Continue checking for genuinely independent,
+already-justified safe work (tests, documentation accuracy, cleanup
+directly caused by a real change) on `cont`/`sync`; report the queue
+as empty honestly if nothing qualifies, per standing discipline.
+Governance audit stays dormant until the owner or ChatGPT explicitly
+releases it — will not self-trigger on any judgment of "substantially
+complete."

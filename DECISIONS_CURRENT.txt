@@ -1232,3 +1232,91 @@ NIKLAR — DECISIONS (current)
     status otherwise unchanged: Batch 1 PASS/CLOSED, Batch 2 PASS/
     CLOSED/FROZEN, BATCH3-STAGE-MAPPING-01 RESOLVED (OPTION B), Batch 3
     full scope OWNER_ONLY HARD_GATE, Batches 4-10 not released.
+
+47) Decision: Owner directly authorized continuing Batch 3
+    implementation with asynchronous ChatGPT review, superseding the
+    prior HARD_GATE/OPTION B holding pattern for standalone Batch 3
+    work: "Continue working on batch 3 onwards. Handoffs can be given
+    as you work. Chatgpt will take them for review later."
+    Date: 2026-08-09
+    Rationale: Direct, explicit, unambiguous owner instruction (LEVEL 3
+    authority) resolving the "owner judgment required" component of
+    Batch 3's HARD_GATE (decision #35/#37). This does NOT resolve two
+    separate, still-real constraints: (1) this environment has no
+    actual Drive/Sheets/Slack/market-data credentials -- an
+    authorization to proceed doesn't create credentials that don't
+    exist; (2) several of the 13 canonical stages' exact semantics
+    (the actual Decision Object computation, the 31-section report
+    prose generation) depend on proprietary canon this repo doesn't
+    have synced (decision #1's scope) -- authorization to proceed
+    doesn't manufacture missing specification either. The owner's
+    instruction is read as: proceed with what's genuinely
+    implementable now (real logic grounded in existing, already-tested
+    modules; injected-adapter boundaries for genuine I/O/credential
+    gaps), publish handoffs as work lands, and let ChatGPT's async
+    review (Section 21) catch anything wrong rather than pre-gating
+    every step -- not as instruction to fabricate the credentials or
+    the missing canon, which "never invent missing behavior"
+    (AGENTS.md) still governs regardless of this authorization.
+    BATCH3-STAGE-MAPPING-01's OPTION B reasoning (decision #41) is not
+    overturned in substance -- its objection was to building
+    "unattached" handlers "merely to show partial progress" absent any
+    real driver; the owner's direct instruction is now that driver,
+    materially different from Claude generating its own busywork.
+    Affected component: none directly — authorizes the implementation
+    recorded in decision #48.
+    Status: Recorded. Batch 3 full-scope HARD_GATE (decision #35/#37)
+    is downgraded from "no work" to "implement what's genuinely
+    groundable; defer what genuinely isn't, honestly" — the underlying
+    credential/canon gaps remain real constraints on WHAT can be built,
+    not on WHETHER Claude may proceed.
+
+48) Decision: Implement Batch 3 increment 1 — 6 of the orchestrator's
+    13 canonical stages, as factory functions producing real
+    `Callable[[], str]` handlers matching
+    `niklar_single_stock_orchestrator.run_pipeline()`'s existing,
+    unmodified contract: `authority_load` (validates an already-
+    resolved canon version pointer, thin by design), `research_memory_
+    gate` (deterministic freshness/reuse gate from an already-known
+    last-research timestamp, grounded in architecture doc Section 6 --
+    MEDIUM confidence, narrower than the mapping BATCH3-STAGE-MAPPING-
+    01 already declined for this same stage name), `master_database_
+    update` (wired directly to `niklar_stocks_ops_v4.apply_strategic_
+    update()`/`apply_tactical_update()` -- HIGH confidence),
+    `publication_validation` (wired directly to the existing validator
+    -- HIGH confidence), `decision_object_freeze` (validates a
+    non-empty decision object + records a freeze timestamp, asserts no
+    invented required-field schema), `postflight_verification` (wired
+    directly to `niklar_state_contracts.build_current_state_snapshot()`,
+    which architecture doc Section 14 already names for exactly this
+    purpose -- MEDIUM confidence). The remaining 7 stages
+    (`evidence_acquisition`, `canonical_serialization`,
+    `research_database_append`, `research_indexes_update`,
+    `opportunity_matrix_rebuild`, `discovery_consumers_sync`,
+    `tactical_consumers_sync`) are deliberately NOT built -- genuine
+    external I/O this environment has no credentials for, or
+    proprietary content not synced into this repo; a caller must
+    inject their own adapter for those stage keys directly.
+    Date: 2026-08-09
+    Rationale: Direct implementation of decision #47's authorization,
+    bounded to only the stages with real, verifiable grounding in
+    already-existing, already-tested repo modules -- no fabrication of
+    proprietary trading/decision/report logic, no fake handlers for
+    the 7 genuinely unavailable stages (the exact
+    opportunity_matrix_rebuild mistake this session already caught and
+    corrected, decision #10/#40, deliberately not repeated here for
+    real this time by simply not building it). No wrapper/assembler
+    added -- `run_pipeline()` already accepts a plain dict, a caller
+    composes this module's factories with their own adapters directly
+    (Minimum Sufficient Code). The 3 Drive-verbatim `ops/` modules
+    remain untouched, confirmed via `git diff` before committing.
+    Affected component: niklar-stocks
+    ops/niklar_orchestrator_stage_handlers.py (new),
+    tests/test_niklar_orchestrator_stage_handlers.py (new, 22 tests)
+    Status: Frozen (implemented) — commit 521f5a9. unittest 175/175
+    (153->175, 22 new), mypy 0/16, PWA smoke PASS. Two MEDIUM-confidence
+    stage-mapping judgment calls (research_memory_gate,
+    postflight_verification) explicitly flagged in the module docstring
+    and commit message for ChatGPT's async review, not asserted as
+    certain — consistent with "handoffs given as you work, reviewed
+    later," not a bypass of independent review.
