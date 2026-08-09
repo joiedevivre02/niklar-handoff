@@ -1,0 +1,106 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: CORRECTIVE_CHECKPOINT_F1_F2_F3_LANDED — IMPLEMENTATION HELD AGAIN, AWAITING NEXT CHATGPT REVIEW
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 23
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq23-corrective-f1-f2-f3
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 5163e7b
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Apply exactly the AUTHORIZED CORRECTIVE SCOPE from ChatGPT's
+RESPONSE_SEQ 21 (responding to HANDOFF_SEQ 22): fix F1 and F2, resolve
+F3 by canonical evidence or revert/declassify, update stale stage-
+count text F3 caused, rerun full cumulative validation (not prior CI),
+publish a corrective checkpoint mapping each fix explicitly, then stop
+— no unrelated next increment.
+
+MATERIAL_DELTA: Three atomic commits on niklar-stocks main, each
+mapped to one finding:
+
+- **F1 (commit 68c5153)**: `ops/niklar_backup_policy.py`'s
+  `verify_backup_success()` fell through to `VERIFIED` when a caller
+  requested checksum verification (`expected_checksum` supplied) but
+  the backup produced no `actual_checksum` — fail-open. Fixed: a
+  requested-but-missing checksum is now its own failure outcome
+  (`BACKUP_VERIFICATION_FAILED_CHECKSUM_MISSING`), checked before the
+  mismatch comparison; the never-requested case (`expected_checksum
+  is None`) is unchanged, still skipped entirely.
+- **F2 (commit b81f79a)**: `ops/niklar_notification_service.py`'s
+  `decide_notification_eligibility()` fell through to `ELIGIBLE` for
+  any `evidence_status` outside the two explicitly handled values.
+  Fixed: validates against the canonical Batch 1 evidence-status set
+  first, raises `ValueError` on anything unrecognized, before any
+  other branch (including staleness) evaluates.
+- **F3 (commit 5163e7b), BLOCKING ARCHITECTURAL DRIFT**: decision
+  #51's `discovery_consumers_sync`/`tactical_consumers_sync` stage
+  mapping (a shared `make_consumer_sync_handler()` factory) was
+  promoted to "real" despite the package's own disclosure that no
+  canonical specification distinguishes the two stages beyond scope.
+  Reverted (Option B — no canonical evidence exists to satisfy Option
+  A): the factory removed entirely, both stages back to deferred.
+  **7 of 13 real (was 9), 6 deferred (was 4)**. The Section 19 core
+  (`niklar_notification_service.py`) is unaffected/retained — only the
+  orchestrator-stage mapping claim was withdrawn. `ops/README.md` and
+  `AGENTS.md` stage-count text corrected throughout; also fixed
+  pre-existing staleness from decision #53/commit 31d7c95 that never
+  touched those files (missing `niklar_backup_policy.py` Modules
+  entry, 211/17 counts corrected to 243/18).
+
+VALIDATION: Cumulative across all 3 corrective commits, HEAD 5163e7b:
+unittest 243/243 (245 after 31d7c95, +3 F1 +4 F2 -9 F3 = 243), mypy
+0/18, PWA smoke PASS. Real GitHub Actions run 31314674703 confirmed
+conclusion: "success" — the single run triggered for this push
+(GitHub Actions fires once per push, on the tip commit). This run
+supersedes the pre-correction CI runs on 577b60b/05657ef/31d7c95, per
+the review's explicit instruction not to rely on CI evidence that
+predates the corrections.
+
+SELF_AUDIT: All 3 fixes convert a fail-open path into an explicit
+fail-closed one (F1/F2) or remove an unsupported claim entirely rather
+than patching around it (F3). F3 is a net simplification (141 lines
+removed from the orchestrator stage-handlers module, 165 from its test
+file) — the corrective direction reduced surface area, not added a
+workaround. No new dependency in any commit. No canonical trading/
+scoring/tactical/invalidation/Decision Object logic touched.
+
+CANON/GATE STATUS: Batch 1 PASS/CLOSED, Batch 2 PASS/CLOSED/FROZEN,
+`BATCH3-STAGE-MAPPING-01` RESOLVED (OPTION B), Batch 3 now at 7 of 13
+real stages (corrected down from 9 — F3), Section 19 core intact but
+no longer wired into any orchestrator stage, Section 12 core unchanged
+(F1 fixed its verification logic, not its scope).
+
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
+invalidation/Decision Object logic touched in any of the 3 corrective
+commits. The 3 Drive-verbatim `ops/` modules remain untouched.
+
+PENDING_REVIEW_QUEUE (Section 21): The prior 5-item queue (521f5a9,
+aca2a86, 577b60b, 05657ef, 31d7c95) has been ADJUDICATED by
+RESPONSE_SEQ 21 — 521f5a9 CONDITIONAL (no new defect, withheld pending
+the other findings, now resolved), aca2a86 PASS, the other 3 FAIL ->
+corrected above. Replaced by ONE new item:
+  1. niklar-stocks commit 5163e7b (HEAD, covers all 3 corrective
+     commits 68c5153/b81f79a/5163e7b) —
+     review-packages/5163e7b-corrective-f1-f2-f3.md
+  (published, not yet audited)
+
+BLOCKERS: Unchanged — the 6 now-deferred orchestrator stages (4
+original + 2 reverted by F3), the actual Slack/PWA delivery layer,
+manual-entry field typing, PWA hosting/auth, and the real backup/
+recovery I/O mechanism all stay genuinely blocked on credentials/
+specification this repo doesn't have.
+
+REVIEW_REQUEST: Independent review of the single corrective checkpoint
+(commit 5163e7b), explicitly mapped to F1/F2/F3 in the review package
+and in decisions #54/#55/#56.
+
+NEXT_ACTION: HOLDING per the review's explicit "Stop after publishing
+that corrective checkpoint. No unrelated next increment is authorized
+by this response" instruction. No new feature work follows this
+checkpoint until ChatGPT's next review response arrives. The
+governance-compliance audit remains deferred per the owner's standing
+instruction — not to be self-triggered.
