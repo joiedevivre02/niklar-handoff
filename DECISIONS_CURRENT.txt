@@ -1474,3 +1474,47 @@ NIKLAR — DECISIONS (current)
     (commit ac6856c)
     Status: Frozen (implemented) — documentation only. unittest
     211/211, mypy 0/17, PWA smoke PASS.
+
+53) Decision: Build a deterministic backup/recovery decision core for
+    architecture doc Section 12 (BACKUP / RECOVERY) — new file
+    ops/niklar_backup_policy.py — per the owner's explicit instruction
+    to continue with backup/recovery as the next candidate increment,
+    applying the Minimum Sufficient Context rule. Four functions, each
+    a direct implementation of one Section 12 sentence:
+    is_eligible_for_backup() (fail-closed allowlist over the 6 named
+    scopes, Actions cache never included), decide_catchup_backup_due()
+    (freshness gate, max_age_seconds caller-supplied, no cadence
+    invented), verify_backup_success() (copy completion alone is
+    explicitly insufficient — checks item-count then optional
+    checksum), decide_retention() (fail-safe floor of newest N always
+    kept regardless of age; age-based pruning beyond the floor only
+    when the caller supplies an age policy — no retention count or age
+    window invented, Section 12 names none). The actual copy/verify/
+    prune I/O remains a caller-injected mechanism, same discipline as
+    Section 19's send_adapter. Not wired into
+    ops/niklar_orchestrator_stage_handlers.py — backup/recovery is not
+    one of the orchestrator's 13 canonical stages.
+    Date: 2026-08-09
+    Rationale: Confirmed first (grep across ops/, tests/, config, docs)
+    that no backup/recovery mechanism exists anywhere in this repo yet
+    — the only existing reference is niklar_state_contracts.build_
+    current_state_snapshot()'s inert backup_status passthrough
+    parameter, untouched by this module, not competed with. Section
+    12's text maps directly onto four concrete functions without
+    requiring any invented specifics, unlike the two candidates already
+    found blocked this session (manual intraday-entry validation, PWA
+    delivery-contract work) — a real evidence-bar pass, not manufactured
+    scope. Continuing without waiting for prior increments' reviews to
+    land, per decision #47's explicit "handoffs given as you work"
+    instruction; the 4 already-queued review packages remain outstanding
+    and unaudited, not a reason to hold unrelated safe work.
+    Affected component: niklar-stocks
+    ops/niklar_backup_policy.py (new),
+    tests/test_niklar_backup_policy.py (new)
+    Status: Frozen (implemented) — commit 31d7c95. unittest 245/245
+    (211->245, 34 new), mypy 0/18, PWA smoke PASS. Real GitHub Actions
+    run 31300333824 confirmed conclusion: "success". Correction noted
+    in the review package: the commit message states "37 new tests";
+    an actual recount gives 34, matching the unittest delta exactly —
+    flagged during review-package publication, not silently left
+    unreconciled.

@@ -1,9 +1,49 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (Docs housekeeping landed (real correctness
-fix, not just omission); re-checked the two candidate next-increments
-and both still hit genuine specification gaps -- HANDOFF_SEQ 21.)
+Last updated: 2026-08-09 (Section 12 backup/recovery deterministic
+decision core landed -- HANDOFF_SEQ 22.)
 
-DONE — docs housekeeping; re-checked next-increment candidates, both still gapped (this update)
+DONE — Section 12 backup/recovery deterministic decision core (this update)
+---------------------------------------------------------------------------
+  - Per the owner's explicit instruction to continue with backup/
+    recovery as the next candidate increment (Minimum Sufficient
+    Context rule applied: read only Section 12 + directly relevant
+    implementation/tests/config, not the full canon or archived
+    handoffs), confirmed first (grep across ops/, tests/, config, docs)
+    that no backup/recovery mechanism exists anywhere in this repo yet
+    -- the only existing reference is niklar_state_contracts.build_
+    current_state_snapshot()'s inert backup_status passthrough
+    parameter, not touched or competed with.
+  - Added ops/niklar_backup_policy.py, four functions each a direct
+    implementation of one Section 12 sentence: is_eligible_for_backup()
+    (fail-closed allowlist, 6 named scopes, Actions cache never
+    included), decide_catchup_backup_due() (freshness gate, no cadence
+    invented), verify_backup_success() (copy completion alone
+    explicitly insufficient -- count then optional checksum),
+    decide_retention() (fail-safe floor always kept regardless of age;
+    age-based pruning beyond the floor only when the caller supplies an
+    age policy -- no retention count/age window invented). Same
+    "deterministic core + caller-injected mechanism" pattern as Section
+    19's send_adapter; not wired into
+    ops/niklar_orchestrator_stage_handlers.py since backup/recovery
+    isn't one of the 13 canonical orchestrator stages.
+  - No genuine specification gap found this cycle -- unlike the two
+    already-blocked candidates (manual intraday-entry validation, PWA
+    delivery-contract work), Section 12's text mapped directly onto
+    four concrete functions without inventing anything.
+  - 34 new tests. unittest 245/245 (211->245), mypy 0/18, PWA smoke
+    PASS, real GitHub Actions run 31300333824 confirmed conclusion:
+    "success". niklar-stocks main: ac6856c -> 31d7c95. Recorded as
+    decision #53.
+  - Full diff published in review-packages/31d7c95-section12-backup-
+    recovery-core.md for independent async review, alongside the 4
+    still-pending packages -- PENDING_REVIEW_QUEUE now has 5 items.
+    Review package also flags and corrects a minor commit-message
+    inaccuracy (message says "37 new tests," actual recount is 34,
+    matching the unittest delta) -- caught and disclosed during
+    review-package write, not silently left unreconciled. Archived
+    HANDOFF_SEQ 21 first.
+
+DONE — docs housekeeping; re-checked next-increment candidates, both still gapped (prior update)
 ---------------------------------------------------------------------------
   - ops/README.md's orchestrator description had gone factually false
     ("there is no partial/minimum-sufficient way to wire only some of
