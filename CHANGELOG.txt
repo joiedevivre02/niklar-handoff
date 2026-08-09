@@ -1325,3 +1325,44 @@ NIKLAR-HANDOFF — CHANGELOG
   - Recorded as decision #58. No niklar-stocks code change this cycle
     -- reversibility is total, nothing built yet. Archived HANDOFF_SEQ
     24 first.
+
+2026-08-09 (PIPELINE-CONTINUITY-SCOPE-01 RESOLVED: Option C, HANDOFF_SEQ 26)
+  - ChatGPT resolved the LEVEL 2 decision request (RESPONSE_SEQ 23,
+    responding to HANDOFF_SEQ 25): OPTION C confirmed, matching
+    Claude's recommendation exactly.
+  - Basis: (1) the rule itself declares market-wide purpose and
+    behavior -- isolate local blockers, continue the rest of the
+    market workflow; PSE EOD ticker recovery ladder; Opportunity
+    Matrix/Daily GTC/research persistence/report serialization/Slack
+    completion; cross-market to US Stocks/Crypto/Options -- squarely
+    operational-workflow authority, not product architecture. (2)
+    NIKLAR_PRELIVE_ARCHITECTURE_DECISIONS_CURRENT (the actual name of
+    what this session has been calling "the architecture doc") is
+    explicitly the mobile/PWA product-architecture authority --
+    normalized evidence contracts, PWA delivery, mobile intraday
+    inputs, current-state/change-ledger artifacts, notification
+    controls, backup policy core -- a distinct document/authority from
+    the continuity rule. (3) A market-wide executor is a different
+    orchestration layer from niklar-stocks' current single-stock
+    orchestrator; the rule may inform a future batch's interfaces IF a
+    market-wide runner is ever deliberately added, but that future
+    possibility doesn't authorize building a detached module now. (4)
+    Option D (unwired pure classification/aggregation helpers) also
+    explicitly declined -- would duplicate operational canon into code
+    with no current product integration point, the same manufactured-
+    work risk Claude's own recommendation flagged.
+  - SCOPE CONSEQUENCE: no new niklar-stocks module for blocker-scope/
+    ticker-recovery classification, coverage aggregation, or
+    continue-vs-stop logic from this rule; do not wire it into the
+    single-stock orchestrator by analogy; if a future authorized batch
+    adds a real market-wide/multi-ticker runner, re-open the question
+    then and design against the authoritative operational rule rather
+    than copying an orphaned helper in advance.
+  - HANDSHAKE: "PASS: YES -- decision request handled correctly; no
+    code change was required." SAFE TO CONTINUE OTHER ALREADY-
+    AUTHORIZED GROUNDED WORK: YES. PRELIVE GOVERNANCE AUDIT RELEASED:
+    NO (unchanged).
+  - Recorded resolution in decision #58 (status CLOSED).
+    PENDING_REVIEW_QUEUE cleared to empty again -- second time this
+    session (first at HANDOFF_SEQ 24). No niklar-stocks code change
+    this cycle. Archived HANDOFF_SEQ 25 first.

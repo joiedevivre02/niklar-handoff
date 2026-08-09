@@ -5,126 +5,85 @@ repository discovery/search. Full history: `archive/handoffs/` and
 `CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
 in form, fetched only when this checkpoint's summary isn't enough.
 
-STATUS: LEVEL_2_DECISION_REQUEST_PENDING — PIPELINE-CONTINUITY-SCOPE-01, NO CODE CHANGE THIS CYCLE
+STATUS: PIPELINE_CONTINUITY_SCOPE_01_RESOLVED_OPTION_C — QUEUE CLEARED, NEXT INCREMENT NOT YET CHOSEN
 PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
-HANDOFF_SEQ: 25
-CHECKPOINT_ID: niklar-handoff-2026-08-09-seq25-pipeline-continuity-scope-decision-request
+HANDOFF_SEQ: 26
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq26-pipeline-continuity-scope-resolved
 IMPLEMENTATION_COMMIT: niklar-stocks main @ 5163e7b (unchanged this cycle)
 HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
 
-GOAL: Find the next groundable increment after RESPONSE_SEQ 22's PASS
-cleared the review queue ("Cont"). Re-check the standing blocked
-candidates, check the 4 permanently-deferred orchestrator stages for
-any narrower groundable slice, and — per the owner's explicit
-instruction after being asked how to handle a genuinely ambiguous
-discovery — raise it to ChatGPT as a bounded LEVEL 2 decision rather
-than build from it unilaterally.
+GOAL: Reconcile ChatGPT's RESPONSE_SEQ 23 (resolving LEVEL 2 decision
+`PIPELINE-CONTINUITY-SCOPE-01`) into niklar-handoff's record — no code
+change this cycle.
 
-MATERIAL_DELTA: No niklar-stocks code change this cycle. In
-niklar-handoff: published LEVEL 2 decision request
-`PIPELINE-CONTINUITY-SCOPE-01`.
+MATERIAL_DELTA: No niklar-stocks code change. In niklar-handoff:
+recorded ChatGPT's resolution — **`PIPELINE-CONTINUITY-SCOPE-01`:
+OPTION C**, confirming Claude's own recommendation.
 
-**What was checked**: the 2 standing blocked candidates (manual
-intraday-entry validation, PWA delivery-contract work) — unchanged,
-still blocked. The 4 permanently-deferred orchestrator stages
-(`canonical_serialization`, `research_database_append`,
-`research_indexes_update`, `opportunity_matrix_rebuild`) — checked
-`niklar_single_stock_orchestrator.py` directly for any inline
-specification beyond the bare stage name; none found.
+**Basis** (ChatGPT's reasoning, recorded in full in decision #58):
+(1) the continuity rule's own text declares market-wide purpose and
+behavior — isolate local blockers, continue the rest of the market
+workflow, PSE EOD ticker recovery ladder, cross-market to US Stocks/
+Crypto/Options — squarely operational-workflow authority, not product
+architecture; (2) `NIKLAR_PRELIVE_ARCHITECTURE_DECISIONS_CURRENT`
+(the actual name of what this session has been calling "the
+architecture doc") is explicitly the mobile/PWA product-architecture
+authority — a distinct document from the continuity rule; (3) a
+market-wide executor is a different orchestration layer from
+niklar-stocks' current single-stock orchestrator — the rule may
+inform a *future* batch's interfaces if a market-wide runner is ever
+deliberately added, but that future possibility doesn't authorize
+building a detached module now; (4) Option D (unwired classification
+helpers) also explicitly declined — would duplicate operational canon
+into code with no current integration point, the same
+manufactured-work risk already flagged.
 
-**What was found**: a Drive search for these stage names surfaced
-`NIKLAR PIPELINE CONTINUITY & DETERMINISTIC BLOCKER RECOVERY RULE`
-(effective 2026-08-07, "IMPLEMENTED OPERATIONAL AUTHORITY") — a real,
-well-specified, credential-free, deterministic rule: 6-category
-blocker-scope classification (TICKER_LOCAL/EVIDENCE_CATEGORY_LOCAL/
-CONNECTOR_LOCAL/PUBLICATION_LOCAL/PERSISTENCE_LOCAL/SYSTEMIC), a
-continue-vs-stop decision (only SYSTEMIC may halt the whole run), a
-5-way ticker-recovery outcome classification, and an explicit
-coverage/exception-summary output shape. Superficially resembles the
-Section 12/19 pattern. But it describes the **market-wide, multi-
-ticker PSE EOD run** — a different orchestration layer this repo has
-zero scaffolding for (`niklar_single_stock_orchestrator.py` is
-exclusively single-stock, confirmed via direct source read). Genuine
-doubt whether this rule is even in scope for niklar-stocks (the PWA/
-app-build project) vs. the live operational Niklar workflow run
-directly via ChatGPT/Sheets/Slack — decision #1's boundary ("operational
-state... stays in Drive... only the fixed governance/rulebook files
-are the actual stable reference material").
+**Scope consequence**: no new niklar-stocks module for blocker-scope/
+ticker-recovery classification, coverage aggregation, or
+continue-vs-stop logic from this rule; do not wire it into the
+single-stock orchestrator by analogy; if a future authorized batch
+adds a real market-wide runner, re-open the question then.
 
-Classified as a genuine LEVEL 2 CHATGPT_DELEGATED_DECISION rather than
-something to decide unilaterally. Asked the user directly how to
-proceed (hold / delegate to ChatGPT / redirect); user confirmed:
-delegate to ChatGPT. Full decision request published in
-`DECISIONS_CURRENT.txt` decision #58:
+VALIDATION: N/A — no code touched. Prior state (unittest 243/243,
+mypy 0/18, PWA smoke PASS, HEAD 5163e7b) unchanged.
 
-```
-DECISION_ID: PIPELINE-CONTINUITY-SCOPE-01
-QUESTION: Is the "NIKLAR PIPELINE CONTINUITY & DETERMINISTIC BLOCKER
-  RECOVERY RULE" (Drive, effective 2026-08-07) in scope for
-  niklar-stocks' ops/ package at all, and if so, should Claude build
-  a deterministic decision core for it now under the standing "batch
-  3 onwards" authorization (decision #47)?
-OPTIONS:
-  A. In scope now, groundable under "batch 3 onwards" — proceed to
-     build a standalone module (blocker-scope classification,
-     continue-vs-stop decision, ticker-recovery classification,
-     coverage/exception-summary aggregation).
-  B. In scope, but belongs to a not-yet-authorized future batch (a
-     market-wide/multi-ticker orchestration layer this repo has no
-     scaffolding for). Note for future planning; do not build now.
-  C. Not in scope for niklar-stocks at all — operational-workflow
-     territory (live PSE EOD run via ChatGPT/Sheets/Slack), not the
-     PWA/app-build project. Informational only.
-  D. Partial — pure classification/aggregation functions with zero
-     operational tie-in could be built as a general-purpose reference
-     module now, but never wired into anything or asserted as the
-     live mechanism until a market-wide runner is separately scoped.
-CLAUDE_RECOMMENDATION: Option C, with Option B as fallback.
-APPLICABLE CANON: decision #1; niklar_single_stock_orchestrator.py's
-  exclusively single-stock design; RESPONSE_SEQ 20's "do not
-  manufacture speculative work merely to stay busy."
-REVERSIBILITY/DOWNSTREAM_IMPACT: Total — no code written yet.
-DEADLINE/DEPENDENCY: None hard. Blocks nothing already known.
-```
-
-VALIDATION: N/A — no niklar-stocks code touched this cycle. Prior
-state (unittest 243/243, mypy 0/18, PWA smoke PASS, HEAD 5163e7b)
-unchanged.
-
-SELF_AUDIT: Real canon found, real ambiguity honestly disclosed rather
-than resolved by guessing in either direction (building unilaterally,
-or dismissing without checking). The decision request itself makes no
-implementation claims — total reversibility, zero downstream
-dependency, matches the standing LEVEL 2 protocol exactly (same shape
-as `BATCH3-STAGE-MAPPING-01`, decision #40).
+SELF_AUDIT: Pure reconciliation. The LEVEL 2 protocol worked exactly
+as designed — genuine ambiguity surfaced, raised rather than guessed,
+resolved by the party actually authorized to resolve it, recorded in
+full rather than summarized away.
 
 CANON/GATE STATUS: Unchanged from HANDOFF_SEQ 24 — Batch 1 PASS/
 CLOSED, Batch 2 PASS/CLOSED/FROZEN, `BATCH3-STAGE-MAPPING-01` RESOLVED
-(OPTION B), Batch 3 at 7 of 13 real stages (ChatGPT-confirmed). NEW:
-`PIPELINE-CONTINUITY-SCOPE-01` LEVEL_2_PENDING.
+(OPTION B), Batch 3 at 7 of 13 real stages. `PIPELINE-CONTINUITY-
+SCOPE-01`: RESOLVED (OPTION C) — CLOSED.
 
 PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
 invalidation/Decision Object logic touched. No niklar-stocks code
-change this cycle at all.
+change this cycle.
 
-PENDING_REVIEW_QUEUE (Section 21):
-  1. LEVEL 2 decision request `PIPELINE-CONTINUITY-SCOPE-01` —
-     published this checkpoint, not yet reconciled. Full fields above.
+PENDING_REVIEW_QUEUE (Section 21): **EMPTY.** Second time this session
+(first at HANDOFF_SEQ 24) — the review protocol is working as
+intended, not accumulating unresolved items.
 
-BLOCKERS: The 6 deferred orchestrator stages, the actual Slack/PWA
-delivery layer, manual-entry field typing, PWA hosting/auth, and the
-real backup/recovery I/O mechanism remain genuinely blocked on
-credentials/specification, unaffected by this cycle's decision
-request. `PRELIVE GOVERNANCE AUDIT RELEASED: NO` — still deferred, not
-self-triggered.
+BLOCKERS: Unchanged — the 6 deferred orchestrator stages, the actual
+Slack/PWA delivery layer, manual-entry field typing, PWA hosting/auth,
+and the real backup/recovery I/O mechanism remain genuinely blocked on
+credentials/specification. The market-wide pipeline-continuity rule is
+now explicitly confirmed out of scope for niklar-stocks (not a
+blocker — a closed question). `PRELIVE GOVERNANCE AUDIT RELEASED: NO`
+— still deferred, not self-triggered.
 
-REVIEW_REQUEST: Reconciliation of `PIPELINE-CONTINUITY-SCOPE-01` per
-the standing LEVEL 2 protocol.
+REVIEW_REQUEST: None currently — nothing queued.
 
-NEXT_ACTION: Holding on this specific question until ChatGPT resolves
-`PIPELINE-CONTINUITY-SCOPE-01` — but per Section 21 (REVIEW_REQUIRED ≠
-STOP_REQUIRED), this does not block unrelated already-safe work if a
-genuinely different groundable increment surfaces in the meantime; per
-RESPONSE_SEQ 20's standing instruction, none will be manufactured just
-to stay busy. Governance-compliance audit remains deferred, not
-self-triggered.
+NEXT_ACTION: `SAFE TO CONTINUE OTHER ALREADY-AUTHORIZED GROUNDED
+WORK: YES`, but no next increment has been chosen — this checkpoint is
+reconciliation only. Both standing candidates (manual intraday-entry
+validation, PWA delivery-contract work) remain blocked; the 4
+permanently-deferred stages have no further specification; the
+pipeline-continuity avenue is now closed. No further candidate has
+been identified as of this checkpoint — will not manufacture one per
+the standing "do not manufacture speculative work merely to stay
+busy" instruction (RESPONSE_SEQ 20, reaffirmed RESPONSE_SEQ 23). Next
+increment selection awaits either a new user-specified area or a
+genuinely new finding. Governance-compliance audit remains deferred,
+not self-triggered.

@@ -1765,3 +1765,35 @@ NIKLAR — DECISIONS (current)
     correct instrument, not a unilateral build.
     Affected component: none — no niklar-stocks mutation this cycle.
     Status: Recorded, LEVEL 2, held pending ChatGPT reconciliation.
+    RESOLVED (RESPONSE_SEQ 23, responding to HANDOFF_SEQ 25): OPTION C
+    — confirmed Claude's recommendation. ChatGPT's basis: (1) the rule
+    itself declares market-wide purpose and behavior (isolate local
+    blockers, continue the rest of the market workflow; PSE EOD ticker
+    recovery ladder; Opportunity Matrix/Daily GTC/research persistence/
+    report serialization/Slack completion; cross-market to US Stocks/
+    Crypto/Options) — squarely operational-workflow authority, not
+    product architecture; (2) `NIKLAR_PRELIVE_ARCHITECTURE_DECISIONS_
+    CURRENT` (the actual name of what this session has been calling
+    "the architecture doc") is explicitly the mobile/PWA product-
+    architecture authority — normalized evidence contracts, PWA
+    delivery, mobile intraday inputs, current-state/change-ledger
+    artifacts, notification controls, backup policy core — a distinct
+    document/authority from the continuity rule; (3) a market-wide
+    executor is a different orchestration layer from niklar-stocks'
+    current single-stock orchestrator — the rule may inform a future
+    batch's interfaces IF a market-wide runner is ever deliberately
+    added, but that future possibility doesn't authorize building a
+    detached module now; (4) Option D explicitly declined too — "pure
+    classification/aggregation helpers with no authorized caller would
+    duplicate operational canon into code without a current product
+    integration point," the same manufactured-work risk Claude's own
+    recommendation flagged. SCOPE CONSEQUENCE: no new niklar-stocks
+    module for blocker-scope/ticker-recovery classification, coverage
+    aggregation, or continue-vs-stop logic from this rule; do not wire
+    it into the single-stock orchestrator by analogy; if a future
+    authorized batch adds a real market-wide runner, re-open the
+    question then. HANDSHAKE: "PASS: YES — decision request handled
+    correctly; no code change was required." SAFE TO CONTINUE OTHER
+    ALREADY-AUTHORIZED GROUNDED WORK: YES. PRELIVE GOVERNANCE AUDIT
+    RELEASED: NO (unchanged).
+    Status: CLOSED. PENDING_REVIEW_QUEUE cleared to empty again.

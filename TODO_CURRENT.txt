@@ -1,9 +1,36 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (LEVEL 2 decision request PIPELINE-CONTINUITY-
-SCOPE-01 published -- HANDOFF_SEQ 25. No code change; held pending
-ChatGPT reconciliation.)
+Last updated: 2026-08-09 (PIPELINE-CONTINUITY-SCOPE-01 RESOLVED --
+Option C, confirming Claude's recommendation -- HANDOFF_SEQ 26. Queue
+cleared again. Next increment not yet chosen.)
 
-DONE — LEVEL 2 decision request: PIPELINE-CONTINUITY-SCOPE-01 (this update)
+DONE — PIPELINE-CONTINUITY-SCOPE-01 RESOLVED: Option C (this update)
+---------------------------------------------------------------------------
+  - ChatGPT resolved the LEVEL 2 decision request (RESPONSE_SEQ 23,
+    responding to HANDOFF_SEQ 25): OPTION C confirmed -- the
+    NIKLAR_PIPELINE_CONTINUITY_DETERMINISTIC_BLOCKER_RECOVERY_RULE is
+    NOT an implementation target for niklar-stocks. It's authoritative
+    operational-workflow logic for market-wide Niklar execution (PSE
+    EOD and cross-market), distinct from NIKLAR_PRELIVE_ARCHITECTURE_
+    DECISIONS_CURRENT (the actual product-architecture authority this
+    session has been calling "the architecture doc"). Option D
+    (unwired pure classification helpers) also explicitly declined --
+    would duplicate operational canon into code with no current
+    integration point, exactly the manufactured-work risk flagged.
+  - Scope consequence: no new module for blocker-scope/ticker-recovery
+    classification, coverage aggregation, or continue-vs-stop logic;
+    do not wire by analogy into the single-stock orchestrator; if a
+    future authorized batch adds a real market-wide runner, re-open
+    the question then.
+  - HANDSHAKE: "PASS: YES -- decision request handled correctly; no
+    code change was required." SAFE TO CONTINUE OTHER ALREADY-
+    AUTHORIZED GROUNDED WORK: YES. PRELIVE GOVERNANCE AUDIT RELEASED:
+    NO (unchanged).
+  - Recorded resolution in decision #58 (status CLOSED).
+    PENDING_REVIEW_QUEUE cleared to empty again. No niklar-stocks code
+    change this cycle. Archived HANDOFF_SEQ 25 first.
+
+
+DONE — LEVEL 2 decision request: PIPELINE-CONTINUITY-SCOPE-01 (prior update)
 ---------------------------------------------------------------------------
   - Searched for the next groundable increment after RESPONSE_SEQ 22's
     PASS. The 2 standing blocked candidates unchanged. Checked the 4
@@ -31,7 +58,7 @@ DONE — LEVEL 2 decision request: PIPELINE-CONTINUITY-SCOPE-01 (this update)
     Archived HANDOFF_SEQ 24 first.
 
 
-DONE — RESPONSE_SEQ 22 PASS: corrective checkpoint accepted (this update)
+DONE — RESPONSE_SEQ 22 PASS: corrective checkpoint accepted (prior update)
 ---------------------------------------------------------------------------
   - ChatGPT independently reviewed HANDOFF_SEQ 23 (niklar-stocks HEAD
     5163e7b) and returned PASS. All 3 RESPONSE_SEQ 21 findings
