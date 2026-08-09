@@ -1279,3 +1279,49 @@ NIKLAR-HANDOFF — CHANGELOG
     increment just because continuation is now permitted. Next
     increment selection deferred to the next explicit "Cont".
   - Archived HANDOFF_SEQ 23 first.
+
+2026-08-09 (LEVEL 2 decision request PIPELINE-CONTINUITY-SCOPE-01, HANDOFF_SEQ 25)
+  - Searched for the next groundable increment after RESPONSE_SEQ 22's
+    PASS, per "Cont." The 2 standing blocked candidates (manual
+    intraday-entry validation, PWA delivery-contract work) unchanged.
+    Checked the 4 permanently-deferred orchestrator stages
+    (canonical_serialization, research_database_append,
+    research_indexes_update, opportunity_matrix_rebuild) for inline
+    specification directly in niklar_single_stock_orchestrator.py --
+    none beyond the bare stage name.
+  - A Drive search for these stage names surfaced NIKLAR PIPELINE
+    CONTINUITY & DETERMINISTIC BLOCKER RECOVERY RULE (effective
+    2026-08-07, "IMPLEMENTED OPERATIONAL AUTHORITY") -- a real,
+    well-specified, credential-free, deterministic rule: blocker-scope
+    classification across 6 categories (TICKER_LOCAL/EVIDENCE_
+    CATEGORY_LOCAL/CONNECTOR_LOCAL/PUBLICATION_LOCAL/PERSISTENCE_LOCAL/
+    SYSTEMIC), a continue-vs-stop decision (only SYSTEMIC may halt), a
+    5-way ticker-recovery outcome classification, and an explicit
+    coverage/exception-summary output shape. Superficially resembles
+    the Section 12/19 pattern that worked out well, but it describes
+    the MARKET-WIDE, multi-ticker PSE EOD run -- a different
+    orchestration layer niklar-stocks has zero scaffolding for
+    (niklar_single_stock_orchestrator.py is exclusively single-stock,
+    confirmed via direct source read). Genuine doubt whether this rule
+    is even in scope for niklar-stocks (the PWA/app-build project) vs.
+    the live operational Niklar workflow run directly via ChatGPT/
+    Sheets/Slack (decision #1's boundary: operational state/rules stay
+    in Drive, only the stable governance/rulebook layer is mirrored).
+  - Rather than decide this unilaterally, classified it as a genuine
+    LEVEL 2 CHATGPT_DELEGATED_DECISION and asked the user directly
+    whether to hold, delegate to ChatGPT, or redirect to a
+    user-specified area -- user confirmed: delegate to ChatGPT.
+  - Published DECISION_ID PIPELINE-CONTINUITY-SCOPE-01: 4 options (A.
+    in scope, build now under batch-3-onwards; B. in scope but a
+    future not-yet-authorized batch; C. not in scope for niklar-stocks
+    at all -- operational-workflow territory; D. partial -- pure
+    classification/aggregation functions only, unwired). Claude
+    recommends Option C (with B as fallback), reasoning that a
+    standalone module classifying a market-wide run this repo has no
+    scaffold for risks manufacturing speculative work, and that this
+    rule's own "IMPLEMENTED OPERATIONAL AUTHORITY" header reads like
+    exactly the operational-workflow category decision #1 already
+    excluded from niklar-stocks.
+  - Recorded as decision #58. No niklar-stocks code change this cycle
+    -- reversibility is total, nothing built yet. Archived HANDOFF_SEQ
+    24 first.

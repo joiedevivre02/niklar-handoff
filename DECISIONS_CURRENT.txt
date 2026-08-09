@@ -1665,3 +1665,103 @@ NIKLAR — DECISIONS (current)
     empty. Implementation authorized to resume already-authorized work
     per decision #47's standing scope; no new increment chosen yet as
     of this decision — see CURRENT_HANDOFF.txt NEXT_ACTION.
+
+58) Decision: Searched for the next groundable increment after
+    RESPONSE_SEQ 22's PASS. The 2 standing blocked candidates (manual
+    intraday-entry validation, PWA delivery-contract work) remain
+    unchanged. Checked the 4 permanently-deferred orchestrator stages
+    (canonical_serialization, research_database_append,
+    research_indexes_update, opportunity_matrix_rebuild) for inline
+    specification in niklar_single_stock_orchestrator.py directly —
+    none beyond the bare stage name. A Drive search for these stage
+    names surfaced `NIKLAR PIPELINE CONTINUITY & DETERMINISTIC BLOCKER
+    RECOVERY RULE` (effective 2026-08-07, "IMPLEMENTED OPERATIONAL
+    AUTHORITY") — a well-specified, credential-free, deterministic
+    rule (blocker-scope classification across 6 categories, a
+    continue-vs-stop decision where only SYSTEMIC failures may halt,
+    a 5-way ticker-recovery outcome classification, an explicit
+    coverage/exception-summary output shape). Superficially resembles
+    the Section 12/19 pattern, but describes the MARKET-WIDE,
+    multi-ticker PSE EOD run — a different orchestration layer niklar-
+    stocks has no scaffold for at all (niklar_single_stock_
+    orchestrator.py is exclusively single-stock). Genuine doubt
+    whether this rule is even in scope for niklar-stocks (the PWA/
+    app-build project) vs. the live operational Niklar workflow run
+    directly via ChatGPT/Sheets/Slack (decision #1's boundary).
+    Classified as a genuine LEVEL 2 CHATGPT_DELEGATED_DECISION rather
+    than something to decide unilaterally, given the new-architecture/
+    scope-ambiguity concern. User confirmed: raise it to ChatGPT
+    rather than build from it. Recorded in the pending-review queue,
+    see HANDOFF_SEQ 25:
+    DECISION REQUEST:
+      DECISION_ID: PIPELINE-CONTINUITY-SCOPE-01
+      QUESTION: Is the "NIKLAR PIPELINE CONTINUITY & DETERMINISTIC
+        BLOCKER RECOVERY RULE" (Drive, effective 2026-08-07) in scope
+        for niklar-stocks' ops/ package at all, and if so, should
+        Claude build a deterministic decision core for it now under
+        the standing "batch 3 onwards" authorization (decision #47)?
+      OPTIONS:
+        A. In scope for niklar-stocks now, groundable under "batch 3
+           onwards" — the rule's deterministic pieces (blocker-scope
+           classification, continue-vs-stop decision, ticker-recovery
+           outcome classification, coverage/exception-summary
+           aggregation) require no credentials and no I/O, same
+           pattern as Section 12/19. Proceed to build a standalone
+           module.
+        B. In scope for niklar-stocks, but belongs to a not-yet-
+           authorized future batch (a market-wide/multi-ticker
+           orchestration layer this repo has no scaffolding for at
+           all). Note for future planning; do not build now.
+        C. Not in scope for niklar-stocks at all — this rule governs
+           the live operational Niklar workflow (the actual PSE EOD
+           run executed via ChatGPT/Sheets/Slack/manual process), not
+           the PWA/app-build project niklar-stocks implements. Treat
+           as informational only; niklar-stocks should never
+           implement it.
+        D. Partial — the pure classification/aggregation functions
+           with zero operational tie-in (e.g.
+           decide_pipeline_continuation(),
+           build_coverage_exception_summary()) could be built as a
+           general-purpose reference module now, but never wired into
+           anything or asserted as the live mechanism until a
+           market-wide runner is separately scoped.
+      CLAUDE_RECOMMENDATION: Option C, with Option B as a fallback if
+        ChatGPT's view is that niklar-stocks eventually needs this.
+        niklar_single_stock_orchestrator.py's own design is
+        exclusively single-stock — there's no multi-ticker runner
+        anywhere in ops/, so this rule's actual subject (a market-wide
+        EOD run across many tickers) has no existing scaffold to
+        attach a "deterministic core" to; a standalone classification
+        module with nothing in this repo to classify risks being
+        exactly the "manufacture speculative work merely to stay busy"
+        RESPONSE_SEQ 20 warned against. Decision #1 already
+        established operational workflow state/rules stay in Drive/
+        live-workflow territory — only the stable governance/rulebook
+        layer is mirrored into niklar-stocks — and this rule's own
+        header ("IMPLEMENTED OPERATIONAL AUTHORITY", dated, describing
+        an actively-run PSE EOD process) reads like exactly that
+        operational-workflow category, not the stable pre-live
+        architecture doc Section 12/19 came from.
+      APPLICABLE CANON: decision #1 (operational state stays in Drive,
+        only the stable governance/rulebook layer is mirrored into
+        niklar-stocks); niklar_single_stock_orchestrator.py's
+        exclusively single-stock design (confirmed via direct source
+        read); RESPONSE_SEQ 20's "do not manufacture speculative work
+        merely to stay busy."
+      REVERSIBILITY/DOWNSTREAM_IMPACT: Total — no code written yet;
+        this is a scope question before any implementation begins.
+      DEADLINE/DEPENDENCY: None hard. Doesn't block any already-known
+        blocker — the 6 deferred single-stock stages remain deferred
+        regardless of this decision's outcome, since this rule
+        describes a different orchestration layer entirely.
+    Date: 2026-08-09
+    Rationale: Given real, well-grounded canon was found but its
+    applicability to this specific repo is genuinely ambiguous (a
+    different orchestration layer, possibly a different operational
+    track entirely), building from it unilaterally would risk the
+    exact category of mistake this session has repeatedly guarded
+    against (inventing scope/behavior from adjacent-but-not-confirmed
+    material) — raising it as a bounded LEVEL 2 question is the
+    correct instrument, not a unilateral build.
+    Affected component: none — no niklar-stocks mutation this cycle.
+    Status: Recorded, LEVEL 2, held pending ChatGPT reconciliation.

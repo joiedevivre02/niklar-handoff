@@ -1,0 +1,93 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: RESPONSE_SEQ_22_PASS_QUEUE_CLEARED — IMPLEMENTATION RESUMED, NEXT INCREMENT NOT YET CHOSEN
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 24
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq24-response-seq22-pass-acknowledged
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 5163e7b (unchanged this cycle)
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Reconcile ChatGPT's RESPONSE_SEQ 22 (PASS, responding to
+HANDOFF_SEQ 23) into niklar-handoff's record — no code change this
+cycle, acknowledgment only, per the standing "Sync applies what's
+safe, doesn't manufacture a new increment" discipline.
+
+MATERIAL_DELTA: None in niklar-stocks. In niklar-handoff: recorded
+ChatGPT's independent review outcome for the F1/F2/F3 corrective
+checkpoint (HANDOFF_SEQ 23, HEAD 5163e7b) — **PASS**. All three
+RESPONSE_SEQ 21 findings confirmed resolved via ChatGPT's own direct
+private-repo inspection (not just trusting the self-reported diff):
+
+- **F1 RESOLVED** — `verify_backup_success()` confirmed to fail closed
+  when `expected_checksum` is supplied but `actual_checksum` is
+  missing.
+- **F2 RESOLVED** — `decide_notification_eligibility()` confirmed to
+  validate `evidence_status` before any other branch, raising
+  `ValueError` on unknown/malformed values.
+- **F3 RESOLVED BY REVERT/DECLASSIFICATION (Option B)** —
+  `make_consumer_sync_handler()` and the unsupported stage mapping
+  confirmed removed; both stages deferred again; stage status
+  confirmed 7 of 13 real / 6 deferred; Section 19 core confirmed
+  retained without asserting unsupported orchestrator-stage semantics.
+
+GitHub Actions run `31314674703` independently checked through
+ChatGPT's own GitHub connector — confirmed successful (not just
+trusting the checkpoint's self-reported CI result).
+
+Cumulative package disposition: `521f5a9` PASS (conditional hold
+released), `aca2a86` PASS, `577b60b` PASS, `31d7c95` PASS, `05657ef`'s
+stage mapping NOT ACCEPTED as implemented but its revert (`5163e7b`)
+IS accepted.
+
+VALIDATION: Unchanged from HANDOFF_SEQ 23 (no code touched this
+cycle) — unittest 243/243, mypy 0/18, PWA smoke PASS, HEAD 5163e7b.
+
+SELF_AUDIT: Pure reconciliation — no code, no new claims, no invented
+next step. `PENDING_REVIEW_QUEUE` genuinely empty (verified: every
+item that was ever queued has a recorded final disposition, none
+skipped or silently dropped).
+
+CANON/GATE STATUS: Batch 1 PASS/CLOSED, Batch 2 PASS/CLOSED/FROZEN,
+`BATCH3-STAGE-MAPPING-01` RESOLVED (OPTION B), Batch 3 at 7 of 13 real
+stages — **now independently confirmed by ChatGPT**, not just
+self-reported. Section 19 core independently confirmed correct and
+retained (not wired to any orchestrator stage). Section 12 core
+independently confirmed correct after F1.
+
+PROTECTED_BOUNDARY_STATUS: Unchanged — no canonical trading/scoring/
+tactical/invalidation/Decision Object logic touched this cycle or in
+any of the corrective work that preceded it.
+
+PENDING_REVIEW_QUEUE (Section 21): **EMPTY.** First time since
+HANDOFF_SEQ 17 (when Batch 3 increment 1 first queued a package).
+Every package this session ever queued — `521f5a9`, `aca2a86`,
+`577b60b`, `05657ef`, `31d7c95`, and the corrective checkpoint
+`5163e7b` — now carries a final, ChatGPT-confirmed disposition.
+
+BLOCKERS: Unchanged — the 6 deferred orchestrator stages, the actual
+Slack/PWA delivery layer, manual-entry field typing, PWA hosting/auth,
+and the real backup/recovery I/O mechanism all stay genuinely blocked
+on credentials/specification this repo doesn't have. `PRELIVE
+GOVERNANCE AUDIT RELEASED: NO` — still deferred, not self-triggered.
+
+REVIEW_REQUEST: None currently — nothing queued. Next material
+checkpoint (whenever the next increment lands) will be queued per the
+standing protocol.
+
+NEXT_ACTION: Implementation is authorized to resume (`SAFE TO CONTINUE
+GENERAL DEVELOPMENT: YES, within existing authorization and hard
+gates`), but no next increment has been chosen yet — this checkpoint
+is reconciliation only, not a decision to start new work. Next
+increment selection happens on the next explicit "Cont," applying the
+same evidence-bar discipline as every prior increment (confirm no
+competing mechanism exists, ground every function in cited text,
+decline to invent, do not reintroduce `discovery_consumers_sync`/
+`tactical_consumers_sync` semantics by inference from stage names per
+RESPONSE_SEQ 22's explicit boundary). The governance-compliance audit
+remains deferred per the owner's standing instruction — not to be
+self-triggered.

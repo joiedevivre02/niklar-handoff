@@ -1,8 +1,35 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (ChatGPT PASSed the F1/F2/F3 corrective
-checkpoint -- RESPONSE_SEQ 22, HANDOFF_SEQ 24. Review queue cleared to
-empty for the first time since HANDOFF_SEQ 17. Implementation
-resumed, next increment not yet chosen.)
+Last updated: 2026-08-09 (LEVEL 2 decision request PIPELINE-CONTINUITY-
+SCOPE-01 published -- HANDOFF_SEQ 25. No code change; held pending
+ChatGPT reconciliation.)
+
+DONE — LEVEL 2 decision request: PIPELINE-CONTINUITY-SCOPE-01 (this update)
+---------------------------------------------------------------------------
+  - Searched for the next groundable increment after RESPONSE_SEQ 22's
+    PASS. The 2 standing blocked candidates unchanged. Checked the 4
+    permanently-deferred orchestrator stages for inline specification
+    directly in niklar_single_stock_orchestrator.py -- none beyond the
+    bare stage name.
+  - A Drive search surfaced NIKLAR PIPELINE CONTINUITY & DETERMINISTIC
+    BLOCKER RECOVERY RULE (effective 2026-08-07) -- well-specified,
+    credential-free, deterministic (blocker-scope classification,
+    continue-vs-stop decision, ticker-recovery classification,
+    coverage/exception-summary shape). Superficially resembles the
+    Section 12/19 pattern but describes the MARKET-WIDE multi-ticker
+    PSE EOD run, a different orchestration layer this repo has zero
+    scaffolding for (niklar_single_stock_orchestrator.py is
+    exclusively single-stock). Genuine doubt whether this rule is even
+    in scope for niklar-stocks vs. the live operational workflow
+    (decision #1's boundary).
+  - Rather than build from it unilaterally, classified as a genuine
+    LEVEL 2 CHATGPT_DELEGATED_DECISION and asked the user how to
+    proceed; user confirmed: raise it to ChatGPT. Published DECISION_ID
+    PIPELINE-CONTINUITY-SCOPE-01 (4 options, Claude recommends Option C
+    -- not in scope for niklar-stocks -- with Option B as fallback) to
+    the pending-review queue.
+  - Recorded as decision #58. No niklar-stocks code change this cycle.
+    Archived HANDOFF_SEQ 24 first.
+
 
 DONE — RESPONSE_SEQ 22 PASS: corrective checkpoint accepted (this update)
 ---------------------------------------------------------------------------
