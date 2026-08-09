@@ -1,9 +1,44 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (Batch 3 increment 2 (evidence_acquisition)
-implemented and CI-verified, continuing without waiting for increment
-1's review per explicit owner instruction -- HANDOFF_SEQ 18.)
+Last updated: 2026-08-09 (Section 19 deterministic notification-service
+core implemented and CI-verified, extending "batch 3 onwards" into the
+credential-free part of Section 19 -- HANDOFF_SEQ 19.)
 
-DONE — Batch 3 increment 2: evidence_acquisition stage-handler factory (this update)
+DONE — Section 19 deterministic notification-service core (this update)
+---------------------------------------------------------------------------
+  - Continued the owner-authorized "batch 3 onwards" work (decision
+    #47) into Section 19 (PWA<->Slack notification controls) --
+    previously scoped to Batch 4 (decision #31), but Section 19's own
+    text requires automatic and manual Slack sends to share the SAME
+    deterministic notification service/eligibility gates/idempotency
+    rules, and that shared core needs neither Slack credentials nor a
+    PWA to exist first. The owner's "onwards" wording was read to
+    authorize exactly this kind of later-batch-adjacent, fully
+    groundable, credential-free work.
+  - New file ops/niklar_notification_service.py, four pieces, each a
+    direct implementation of Section 19's own text:
+    derive_notification_id() (deterministic id from the exact stable
+    fields Section 19 names, via sha256); check_duplicate_send() (the
+    DUPLICATE/RESEND gate); decide_notification_eligibility() (the
+    STALE/CAVEAT GATE, reusing Batch 1's EVIDENCE_COMPLETE/CONDITIONAL/
+    INSUFFICIENT contract directly); classify_delivery_attempt() (the
+    DELIVERY STATUS classification against a real retry budget).
+    Preview content deliberately NOT reimplemented -- already satisfied
+    by the existing render_preopen/render_intraday/render_near_close
+    renderers.
+  - 24 new tests (178->202): determinism/collision-avoidance for the
+    id derivation, every gate-ordering case for both gates, retry-
+    budget classification. No I/O, no Slack SDK, no credentials, no
+    new dependency. unittest 202/202, mypy 0/17, PWA smoke PASS, real
+    GitHub Actions run 31298249918 confirmed conclusion: "success".
+    niklar-stocks main: aca2a86 -> 577b60b. The 3 Drive-verbatim ops/
+    modules remain untouched. Recorded as decision #50.
+  - Full new-file content published in
+    review-packages/577b60b-section19-notification-service-core.md
+    for independent async review, alongside the two still-pending
+    Batch 3 packages -- PENDING_REVIEW_QUEUE now has 3 items. Archived
+    HANDOFF_SEQ 18 first.
+
+DONE — Batch 3 increment 2: evidence_acquisition stage-handler factory (prior update)
 ---------------------------------------------------------------------------
   - Continued Batch 3 work per the owner's explicit "handoffs given as
     you work, ChatGPT reviews later" instruction (decision #47) --

@@ -999,3 +999,57 @@ NIKLAR-HANDOFF — CHANGELOG
     review-packages/aca2a86-batch3-increment2-evidence-acquisition.md
     for independent async review, alongside increment 1's still-
     pending package. Archived HANDOFF_SEQ 17 first.
+
+2026-08-09 (Section 19 deterministic notification-service core, HANDOFF_SEQ 19)
+  - Continued the owner-authorized "batch 3 onwards" work (decision
+    #47) into Section 19 (PWA<->Slack notification controls) --
+    previously scoped to Batch 4 (decision #31: "belongs when the
+    mobile delivery/PWA interaction + notification service layers are
+    implemented"), but Section 19's own text requires automatic and
+    manual Slack sends to share the SAME deterministic notification
+    service, freshness/eligibility gates, canonical renderer,
+    idempotency rules, retry behavior -- that shared core needs
+    neither Slack credentials nor a PWA to exist first, unlike the
+    actual delivery/UI work. The owner's "onwards" instruction was
+    read to authorize exactly this kind of later-batch-adjacent, fully
+    groundable, credential-free work; the actual Slack HTTP delivery,
+    PWA UI wiring, and consolidated-brief ticker-eligibility selection
+    remain separate, explicitly out of scope.
+  - New file ops/niklar_notification_service.py, four pieces, each a
+    direct implementation of Section 19's own text (not invented from
+    the section name alone):
+    derive_notification_id() (deterministic id from exactly the stable
+    fields Section 19 names -- run/checkpoint/channel/scope/Decision
+    Object version -- via sha256, same determinism convention as
+    niklar_stocks_ops_v4.schema_hash()); check_duplicate_send() (the
+    DUPLICATE/RESEND gate -- a prior successful send for the same id
+    requires an explicit resend action; a prior failed attempt does
+    not block a fresh one); decide_notification_eligibility() (the
+    STALE/CAVEAT GATE -- reuses Batch 1's EVIDENCE_COMPLETE/
+    CONDITIONAL/INSUFFICIENT contract directly rather than inventing a
+    parallel evidence-quality concept; execution_sensitive and
+    staleness thresholds are caller-supplied, not guessed at);
+    classify_delivery_attempt() (the DELIVERY STATUS classification
+    against a real retry budget: succeeded -> SENT; failed with
+    retries remaining -> PENDING_RETRY; failed with none -> DELIVERY_
+    FAILED).
+  - Preview content deliberately NOT reimplemented -- Section 19's
+    "show exactly what Slack will receive" is already satisfied by the
+    existing render_preopen/render_intraday/render_near_close
+    renderers; wrapping them here would duplicate them, not implement
+    anything new.
+  - 24 new tests (178->202): determinism/collision-avoidance for the
+    id derivation across all 5 stable fields, every gate-ordering case
+    for both the duplicate-send and eligibility gates (including
+    execution-sensitive-stale-but-conditional-evidence blocking rather
+    than merely caveating), and the retry-budget classification. No
+    I/O, no Slack SDK, no credentials, no new dependency. unittest
+    202/202, mypy 0/17, PWA smoke PASS, real GitHub Actions run
+    31298249918 confirmed conclusion: "success". niklar-stocks main:
+    aca2a86 -> 577b60b. The 3 Drive-verbatim ops/ modules remain
+    untouched. Recorded as decision #50.
+  - Full new-file content published in
+    review-packages/577b60b-section19-notification-service-core.md
+    for independent async review, alongside the two still-pending
+    Batch 3 packages -- PENDING_REVIEW_QUEUE now has 3 items. Archived
+    HANDOFF_SEQ 18 first.

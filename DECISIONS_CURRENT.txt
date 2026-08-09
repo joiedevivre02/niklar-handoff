@@ -1357,3 +1357,50 @@ NIKLAR — DECISIONS (current)
     (175->178, 3 new), mypy 0/16, PWA smoke PASS. 7 of 13 canonical
     stages now have a real handler in this module (was 6). The 3
     Drive-verbatim ops/ modules remain untouched.
+
+50) Decision: Implement Section 19's (PWA<->Slack notification
+    controls) shared deterministic notification-service core as a new
+    module, `ops/niklar_notification_service.py` — four pieces, each a
+    direct implementation of Section 19's own text:
+    `derive_notification_id()` (deterministic id from exactly the
+    stable fields Section 19 names — run/checkpoint/channel/scope/
+    Decision Object version, via sha256, same determinism convention
+    as `niklar_stocks_ops_v4.schema_hash()`); `check_duplicate_send()`
+    (the DUPLICATE/RESEND gate — a prior successful send for the same
+    id requires an explicit resend action; a prior failed attempt does
+    not block a fresh one); `decide_notification_eligibility()` (the
+    STALE/CAVEAT GATE — reuses Batch 1's `EVIDENCE_COMPLETE`/
+    `CONDITIONAL`/`INSUFFICIENT` contract directly rather than
+    inventing a parallel evidence-quality concept; `execution_
+    sensitive` and staleness thresholds are caller-supplied, not
+    guessed at — this repo has no synced definition of which
+    conclusions count as execution-sensitive); `classify_delivery_
+    attempt()` (the DELIVERY STATUS classification against a real
+    retry budget). Preview content deliberately NOT reimplemented —
+    Section 19's "show exactly what Slack will receive" is already
+    satisfied by the existing `render_preopen`/`render_intraday`/
+    `render_near_close` renderers; wrapping them would duplicate, not
+    implement, anything.
+    Date: 2026-08-09
+    Rationale: Section 19 was previously scoped to Batch 4 (decision
+    #31: "belongs when the mobile delivery/PWA interaction +
+    notification service layers are implemented"), but its own text
+    requires automatic and manual Slack sends to share the SAME
+    deterministic notification service/eligibility gates/idempotency
+    rules — that shared core needs neither Slack credentials nor a PWA
+    to exist first, unlike the actual delivery/UI work. The owner's
+    "Continue working on batch 3 **onwards**" (decision #47) explicitly
+    widens scope past Batch 3 alone; this module is exactly the kind of
+    later-batch-adjacent, fully groundable, credential-free core that
+    instruction was read to authorize (decision #47's own rationale:
+    "proceed with what's genuinely implementable now... publish
+    handoffs as work lands"). The actual Slack HTTP delivery, PWA UI
+    wiring, and consolidated-brief ticker-eligibility selection remain
+    separate, explicitly out of scope for this module.
+    Affected component: niklar-stocks
+    ops/niklar_notification_service.py (new),
+    tests/test_niklar_notification_service.py (new, 24 tests)
+    Status: Frozen (implemented) — commit 577b60b. unittest 202/202
+    (178->202, 24 new), mypy 0/17, PWA smoke PASS. No I/O, no Slack
+    SDK, no credentials, no new dependency. The 3 Drive-verbatim ops/
+    modules remain untouched.
