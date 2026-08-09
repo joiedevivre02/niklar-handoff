@@ -1162,3 +1162,33 @@ NIKLAR — DECISIONS (current)
     Affected component: niklar-stocks ops/README.md (commit d936229)
     Status: Frozen (implemented) — documentation only. unittest
     153/153, mypy 0/15, PWA smoke PASS.
+
+45) Decision: Defer the whole-repository engineering-governance
+    compliance audit (Drive sync doc RESPONSE_SEQ 19 — owner-authorized
+    via ChatGPT, checklist document
+    `NIKLAR_PRELIVE_ENGINEERING_GOVERNANCE_COMPLIANCE_CHECKLIST_CURRENT`)
+    to end-of-product-development rather than executing it now.
+    Date: 2026-08-09
+    Rationale: Direct explicit instruction from the owner, given live
+    mid-session, overriding the Drive-relayed authorization: "Governance
+    audit is for the end of product development not now." Read-only
+    evidence-gathering had begun (baseline branch/HEAD/status, secret
+    scan of current tree + full git history, CI workflow inspection,
+    dependency/pinning check, protected-module git-history verification
+    confirming the 3 Drive-verbatim modules have never been touched
+    since their original integration commit, FROZEN_SCHEMA_HASH
+    self-consistency check, gemini_client.py malformed-response
+    handling review, PWA secret/fetch-target scan) — stopped
+    immediately on the owner's word, before any conclusion was drawn or
+    published. No niklar-stocks mutation occurred (audit was read-only
+    throughout, consistent with its own authorization rules). This is
+    the owner directly narrowing a ChatGPT-relayed authorization, not a
+    disagreement between Claude and ChatGPT — no dispute to reconcile.
+    Affected component: none — no niklar-stocks mutation. The Drive
+    checklist document and RESPONSE_SEQ 19's authorization remain valid
+    for whenever the owner does want the audit run; nothing about them
+    is being revoked or contested, only deferred.
+    Status: Recorded. Governance audit NOT executed. Will not be
+    started again autonomously — requires the owner's go-ahead when
+    product development reaches the end-of-development stage the owner
+    has in mind.

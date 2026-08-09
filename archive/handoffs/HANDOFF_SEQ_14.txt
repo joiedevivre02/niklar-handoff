@@ -1,0 +1,77 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: PASS (Batches 1+2 CLOSED/FROZEN) + HARD_GATE (Batch 3 full scope, unchanged) + RESOLVED (BATCH3-STAGE-MAPPING-01)
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 14
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq14-batch2-closed-readme-housekeeping
+IMPLEMENTATION_COMMIT: niklar-stocks main @ d936229
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Record ChatGPT's independent re-review PASS on the Batch 2
+patch (Drive sync doc RESPONSE_SEQ 18, responding to HANDOFF_SEQ 13),
+closing Batch 2, and land one directly-justified housekeeping fix the
+closure surfaced.
+
+MATERIAL_DELTA: RESPONSE_SEQ 18: RE-REVIEW VERDICT PASS on the Batch 2
+patch (niklar-stocks commit 02b6f88) — all three RESPONSE_SEQ 17
+findings (privacy-safe normalization detail, provider-unavailable
+state semantics, real-corpus normalizer shape) confirmed adequately
+resolved with Minimum Sufficient Code; no dependency/framework creep;
+canonical trading/scoring/tactical/invalidation/Decision Object
+semantics untouched. **Batch 2 is now PASS/CLOSED/FROZEN.** Batch 1
+remains PASS/CLOSED. `BATCH3-STAGE-MAPPING-01` remains RESOLVED
+(OPTION B, in force). Batch 3 full scope remains OWNER_ONLY HARD_GATE
+(credentials/account permissions + missing canonical mapping/
+specification, unchanged). No new owner decision required from this
+checkpoint.
+
+No batch-level work is currently authorized: Batches 1–2 closed,
+Batch 3 fully blocked on both its sub-decisions, Batches 4–10 never
+released. Per explicit instruction ("continue only genuinely
+independent, already-justified safe work that does not create future
+cleanup merely to keep the agent busy"), checked for real,
+already-justified housekeeping rather than manufacturing any: found
+one — `ops/README.md`'s Testing section still said "148 tests" after
+the Batch 2 patch added 5 more (153 total). Fixed, directly caused by
+the just-landed patch, not invented. niklar-stocks commit `d936229`,
+documentation only.
+
+VALIDATION: unittest 153/153, mypy 0/15, PWA smoke PASS. Real GitHub
+Actions run 31287901128 (commit d936229) polled directly, conclusion:
+"success".
+
+SELF_AUDIT: The housekeeping fix is documentation-accuracy only,
+directly traceable to a real commit (no speculative/manufactured
+cleanup). No code touched this cycle beyond that.
+
+CANON/GATE STATUS: Batch 1 PASS/CLOSED. Batch 2 PASS/CLOSED/FROZEN.
+`BATCH3-STAGE-MAPPING-01` RESOLVED (OPTION B). Batch 3 full scope:
+OWNER_ONLY HARD_GATE (unchanged).
+
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
+invalidation/Decision Object logic touched.
+
+PENDING_REVIEW_QUEUE (Section 21 — chronological, oldest first):
+  (empty — Batch 2's patch cleared re-review this cycle; nothing else
+  outstanding.)
+
+BLOCKERS: HARD_GATE on Batch 3's full scope (credentials/account
+permissions — decision #35/#37, unchanged). Not something Claude can
+resolve unilaterally.
+
+REVIEW_REQUEST: None this cycle — nothing new requiring independent
+review.
+
+NEXT_ACTION: No batch work is currently authorized to start. Will
+continue checking for genuinely independent, already-justified safe
+work (tests, documentation accuracy, cleanup directly caused by a real
+change) on `cont`/`sync`, and will report the queue as empty honestly
+if nothing qualifies, rather than manufacture work to appear busy —
+per ChatGPT's explicit, repeated instruction. Batches 4–10 remain
+unauthorized pending either the owner's Batch 3 credentials/
+architecture decision or an explicit new release.
