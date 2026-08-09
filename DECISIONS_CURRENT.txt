@@ -1852,3 +1852,75 @@ NIKLAR — DECISIONS (current)
     limitations. Per the response's own "then stop for ChatGPT review
     before any broader next increment" instruction, no further
     increment follows this one.
+
+60) Decision: Fix corrective finding F1 from ChatGPT's independent
+    review of commit `12bb227` (Drive sync doc RESPONSE_SEQ 25,
+    responding to HANDOFF_SEQ 27) — disposition `FAIL / FIX_REQUIRED
+    before real private-data use`. `mobile_contract.to_tactical_card()`
+    derives `no_chase_flag` via Python truthiness
+    (`bool(row.get("No-Chase Flag"))`), but
+    `ops/mobile_snapshot_export.py`'s CSV path preserves every cell as
+    a string with no type coercion — a CSV cell of `FALSE`/`False`/`0`
+    is a non-empty string, so `bool(...)` evaluates it to `True`, the
+    opposite of the source value; a real safety-relevant tactical flag
+    could display inverted.
+    Date: 2026-08-09
+    Rationale: Confirmed via grep that no authoritative typed-
+    serialization contract for Master Database fields exists anywhere
+    in this repo, so Option 1 of the review's ordered corrective
+    options (reuse an authoritative contract) was unavailable. Per the
+    review's explicit "Do NOT guess boolean/numeric mappings from
+    common conventions," fixed with Option 2 instead: fail closed,
+    scoped to exactly the field affected. New `AmbiguousFieldTypeError`
+    + `_check_truthiness_interpreted_fields()` in
+    `ops/mobile_snapshot_export.py` reject any non-empty **string**
+    value for `"No-Chase Flag"` (uniformly — both falsey-looking and
+    truthy-looking strings, not a hand-picked blocklist), for CSV or a
+    hand-authored JSON string alike, with an error identifying the
+    exact row/ticker/value; a genuine JSON boolean or `null` is
+    unaffected. Checked once per row, before any row is transformed.
+    `mobile_contract.py`'s one other `bool(...)` call
+    (`to_opportunity_card()`'s `invalidation_known`) was examined and
+    deliberately left untouched — it is a **presence** check
+    (`bool(non_empty_string)` is always correctly `True` regardless of
+    content), not the value-truthiness defect class F1 describes; a
+    new regression test proves a `"0"`-string `Strategic Invalidation`
+    still correctly reports `invalidation_known=True`. Also applied,
+    as non-blocking hardening from the same response: new
+    `_verify_output_path_safe_to_write()` (CLI-only), confirming via
+    `git check-ignore` that a repo-internal `--output` path is actually
+    ignored before writing. A real bug in that check was found and
+    fixed within this same pass: `git check-ignore` requires a trailing
+    slash to match a directory-only `.gitignore` pattern
+    (`pwa/private-data/`) against a path that doesn't exist on disk yet
+    — the normal case for a fresh export — caught by running the real
+    CLI against the real `pwa/private-data` path, not just unit tests.
+    Affected component: niklar-stocks ops/mobile_snapshot_export.py
+    (patched, same file this batch's own new module),
+    tests/test_mobile_snapshot_export.py (18 new tests:
+    `TruthinessFieldSafetyTests`, `OutputPathSafetyTests`) (commit
+    e84bce9)
+    Status: Frozen (implemented) — commit
+    `e84bce90b6421b818c2fe46a817ad1e77f4ffe0f`. unittest 303/303
+    (285->303, 18 new), mypy 0/19 (unchanged), PWA smoke PASS, node
+    --check clean (unaffected — no JS touched). Real GitHub Actions run
+    `31341827199` confirmed conclusion: "success". Real-browser
+    re-verification (Playwright/Chromium, transient): all 3 original
+    scenarios re-run, unaffected. Manual CLI end-to-end verification:
+    a valid synthetic snapshot still exports to the real documented
+    `pwa/private-data` path; a snapshot with `No-Chase Flag=FALSE` is
+    now correctly rejected with a specific row/ticker/value error
+    instead of silently producing an inverted flag. Explicit statement:
+    CSV is supported for real/private snapshots with one narrow
+    restriction (`No-Chase Flag` must be blank; any non-empty value
+    fails the whole export closed); JSON is supported with full
+    fidelity including a genuine boolean for that field; no field is
+    silently type-decoded under any assumed convention. No real ticker/
+    trading data anywhere in the commit (diff scanned — only synthetic
+    TEST1-3/TRUE/FALSE/FATAL markers, the latter two as string literals
+    in tests/error messages, not real data). `mobile_contract.py`/
+    `niklar_stocks_ops_v4.py` (both Drive-verbatim) unmodified — zero
+    changes to either file in this diff. Full review package:
+    review-packages/e84bce9-f1-csv-type-semantics-fix.md. Per the
+    review's own "Stop after publishing" instruction, no further
+    increment follows this one.
