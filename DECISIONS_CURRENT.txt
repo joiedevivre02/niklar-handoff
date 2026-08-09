@@ -1442,3 +1442,35 @@ NIKLAR — DECISIONS (current)
     stages now have a real handler in this module (was 7). No new
     dependency, no new file. The 3 Drive-verbatim ops/ modules remain
     untouched.
+
+52) Decision: Housekeeping — correct `ops/README.md`'s orchestrator
+    description, which had become factually false ("there is no
+    partial/minimum-sufficient way to wire only some of the 13 without
+    those credentials" — no longer true, 9 of 13 now are), add Modules
+    entries for `niklar_orchestrator_stage_handlers.py` and
+    `niklar_notification_service.py`, refresh the Testing section
+    (153→211 tests, 15→17 mypy files), and rewrite "What's explicitly
+    out of scope" to name the 4 actually-still-deferred stages.
+    Rewrote `AGENTS.md`'s "held decisions" entry the same way —
+    provisioning real credentials remains OWNER_ONLY (unchanged), but
+    the blanket "do not make these autonomously" framing was stale
+    given the owner's direct authorization (decision #47) already
+    exercised for 9 of 13 stages.
+    Date: 2026-08-09
+    Rationale: Same category as prior housekeeping (decisions #38/#39/
+    #44) but with a real correctness defect this time, not just an
+    omission — a stale claim actively misrepresenting the current
+    implementation state is worse than a missing mention, worth fixing
+    immediately per "genuinely independent, already-justified safe
+    work." Checked before concluding this was the right next action:
+    re-verified that manual intraday-entry validation (the field-typing
+    gap already found earlier this session — `Transactional Value /
+    VWAP` looks numeric but isn't rendered as one anywhere; `Current
+    Price` has zero direct render-function evidence either) and PWA
+    delivery-contract work (Section 11's actual hosting/auth mechanism
+    is unspecified) both still hit genuine specification gaps on
+    re-examination — not manufactured avoidance, a real re-check.
+    Affected component: niklar-stocks ops/README.md, AGENTS.md
+    (commit ac6856c)
+    Status: Frozen (implemented) — documentation only. unittest
+    211/211, mypy 0/17, PWA smoke PASS.

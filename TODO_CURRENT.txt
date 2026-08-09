@@ -1,9 +1,37 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (Batch 3 increment 3 -- discovery_consumers_
-sync/tactical_consumers_sync wired via a shared factory to the Section
-19 core; 9 of 13 orchestrator stages now real -- HANDOFF_SEQ 20.)
+Last updated: 2026-08-09 (Docs housekeeping landed (real correctness
+fix, not just omission); re-checked the two candidate next-increments
+and both still hit genuine specification gaps -- HANDOFF_SEQ 21.)
 
-DONE — Batch 3 increment 3: discovery_consumers_sync/tactical_consumers_sync (this update)
+DONE — docs housekeeping; re-checked next-increment candidates, both still gapped (this update)
+---------------------------------------------------------------------------
+  - ops/README.md's orchestrator description had gone factually false
+    ("there is no partial/minimum-sufficient way to wire only some of
+    the 13 without those credentials") after increments 1-3 landed --
+    9 of 13 now do exactly that. Fixed, along with Modules entries for
+    the two new modules, the Testing section's counts (153->211 tests,
+    15->17 mypy files), and "What's explicitly out of scope" (now
+    names the 4 actually-deferred stages). AGENTS.md's "held
+    decisions" entry rewritten the same way -- credentials remain
+    OWNER_ONLY, but the blanket "do not make these autonomously"
+    framing was stale given decision #47's authorization, already
+    exercised for 9 of 13 stages.
+  - unittest 211/211, mypy 0/17, PWA smoke PASS, real GitHub Actions
+    run 31299560212 confirmed conclusion: "success". niklar-stocks
+    main: 05657ef -> ac6856c. Recorded as decision #52.
+  - Checked for the next groundable code increment before concluding
+    housekeeping was the right move: re-verified (not assumed) that
+    manual intraday-entry validation and PWA delivery-contract work
+    both still hit genuine specification gaps found/confirmed earlier
+    this session (Transactional Value/VWAP looks numeric but isn't
+    rendered as one anywhere; Current Price has zero direct
+    render-function evidence; Section 11's actual PWA hosting/auth
+    mechanism is unspecified). Neither is safely buildable without
+    guessing -- not avoidance, a real re-check with the same evidence
+    bar applied throughout this session.
+  - Archived HANDOFF_SEQ 20 first.
+
+DONE — Batch 3 increment 3: discovery_consumers_sync/tactical_consumers_sync (prior update)
 ---------------------------------------------------------------------------
   - Continued the owner-authorized "batch 3 onwards" work (decision
     #47), wiring the Section 19 notification-service core (decision

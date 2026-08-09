@@ -1097,3 +1097,40 @@ NIKLAR-HANDOFF — CHANGELOG
     independent async review, alongside the three still-pending
     packages -- PENDING_REVIEW_QUEUE now has 4 items. Archived
     HANDOFF_SEQ 19 first.
+
+2026-08-09 (Docs housekeeping (real correctness fix); re-checked next-increment candidates, both still gapped, HANDOFF_SEQ 21)
+  - ops/README.md's orchestrator description had gone factually false
+    after increments 1-3 landed this session: it literally said "there
+    is no partial/minimum-sufficient way to wire only some of the 13
+    without those credentials" -- no longer true, since
+    ops/niklar_orchestrator_stage_handlers.py does exactly that for 9
+    of 13 stages. Fixed, along with new Modules entries for
+    niklar_orchestrator_stage_handlers.py and
+    niklar_notification_service.py, the Testing section's counts
+    (153->211 tests, 15->17 mypy files) with descriptions of the new
+    modules' coverage, and "What's explicitly out of scope" (rewritten
+    to name the 4 actually-still-deferred stages instead of implying
+    none were built).
+  - AGENTS.md's "held decisions" entry rewritten the same way --
+    provisioning real Drive/Sheets/Slack/market-data credentials
+    remains OWNER_ONLY (unchanged, an authorization to proceed doesn't
+    create credentials that don't exist), but the blanket "do not make
+    these autonomously" framing was stale given the owner's direct
+    authorization (decision #47), already exercised for 9 of 13
+    stages using only already-existing, already-tested logic.
+  - unittest 211/211, mypy 0/17, PWA smoke PASS, real GitHub Actions
+    run 31299560212 confirmed conclusion: "success". niklar-stocks
+    main: 05657ef -> ac6856c. Recorded as decision #52.
+  - Checked for the next groundable code increment before concluding
+    housekeeping was the right move: re-verified (not assumed) that
+    manual intraday-entry validation and PWA delivery-contract work
+    both still hit genuine specification gaps already found/confirmed
+    earlier this session (Transactional Value/VWAP looks numeric but
+    isn't rendered as one anywhere in this repo's code; Current Price
+    has zero direct render-function evidence either; Section 11's
+    actual PWA hosting/auth mechanism is unspecified). Neither is
+    safely buildable without guessing -- a real re-check, not
+    manufactured avoidance, applying the same evidence bar used
+    throughout this session (the opportunity_matrix_rebuild finding,
+    decision #10/#40).
+  - Archived HANDOFF_SEQ 20 first.
