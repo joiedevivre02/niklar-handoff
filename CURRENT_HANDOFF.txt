@@ -5,132 +5,100 @@ repository discovery/search. Full history: `archive/handoffs/` and
 `CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
 in form, fetched only when this checkpoint's summary isn't enough.
 
-STATUS: LEVEL_2_PENDING (Batch 3 partial-mapping question) + HARD_GATE (Batch 3 full scope, unchanged)
+STATUS: PATCH_COMPLETE_AWAITING_REREVIEW (Batch 2) + RESOLVED (BATCH3-STAGE-MAPPING-01) + HARD_GATE (Batch 3 full scope, unchanged)
 PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
-HANDOFF_SEQ: 12
-CHECKPOINT_ID: niklar-handoff-2026-08-09-seq12-batch3-stage-mapping-delegated-decision
-IMPLEMENTATION_COMMIT: niklar-stocks main @ fbfef73
+HANDOFF_SEQ: 13
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq13-batch2-patch2-batch3-mapping-resolved
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 02b6f88
 HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
 
-GOAL: Per the user's direct instruction ("continue autonomously under
-the delegated-decision protocol until a true OWNER_ONLY hard gate"),
-investigate whether any bounded slice of Batch 3 is implementable
-despite the credential blocker, using the new three-level protocol
-rather than treating the whole batch as one undifferentiated stop.
+GOAL: Respond to Drive sync doc RESPONSE_SEQ 17 (responding to
+HANDOFF_SEQ 12) — patch Batch 2's three independent-review findings,
+and record ChatGPT's resolution of delegated decision
+BATCH3-STAGE-MAPPING-01.
 
-MATERIAL_DELTA: Investigated mapping 5 of the orchestrator's 13
-canonical stages (`master_database_update`, `publication_validation`,
-`opportunity_matrix_rebuild`, `postflight_verification`,
-`research_memory_gate`) to existing, already-tested deterministic
-functions, to see if a credential-free partial slice could be built.
-Found a concrete falsification before acting on it: the most tempting
-mapping (`opportunity_matrix_rebuild` → `mobile_contract.py`'s
-`build_opportunity_landscape()`) is wrong — that function is
-explicitly, deliberately a non-ranking display pass-through (decision
-#10: "Ranking is canonical decision output owned by the upstream
-Opportunity Matrix, not available in this environment"); treating it
-as the ranking-*rebuild* stage would have silently misrepresented
-unavailable canonical decision logic as already implemented.
-`research_memory_gate` has a similar mismatch (Section 6's freshness/
-reuse-gating concept vs. `compute_evidence_status()`'s completeness
-classification, which is a different thing). Only 2 of 5 candidate
-mappings (`master_database_update`, `publication_validation`) survive
-scrutiny with reasonable confidence, and even those assume values
-supplied pre-computed by an upstream step this repo doesn't have.
-`run_pipeline()` requires all 13 handlers before it executes at all
-(fails closed on any missing one), so a partial wiring can't be
-demonstrated end-to-end regardless — the only real deliverable would
-be standalone functions whose correctness hinges on an interpretive
-mapping decision.
+MATERIAL_DELTA: Patched all three Batch 2 findings, each verified
+against the actual code before fixing (not assumed correct on
+ChatGPT's word alone — all three were real):
+(A) `attempt_normalization()`'s review-entry `detail` was
+`f"{field}: {exc}"`, which could leak raw/sensitive normalizer-
+exception text into a review entry `build_current_state_snapshot()`
+surfaces downstream. Fixed to `f"{field}: {type(exc).__name__}"` —
+field name + exception type name only, never message/args. New
+regression test embeds a fake secret in a normalizer's exception
+message and proves it never reaches the review entry.
+(B) `decide_llm_escalation()` returned
+`QUARANTINED_PENDING_OWNER_AUTHORIZATION` when free LLM was
+owner-authorized but the free provider was merely unavailable —
+factually wrong, since authorization already exists. Added a distinct
+`LLM_ESCALATION_QUARANTINED_PROVIDER_UNAVAILABLE` state, checked after
+the paid-authorized gate (so an owner-approved paid path is never
+masked by the free provider being down) and before the generic
+no-authorization-at-all default. 3 new gate-ordering tests matching
+ChatGPT's exact requested cases.
+(C) `run_llm_dependency_audit()`'s single corpus-wide normalizer was
+insufficient for a real heterogeneous disclosure/research corpus. Per
+ChatGPT's explicit "do not over-engineer... Minimum Sufficient Code"
+instruction, added a minimal per-item normalizer override
+(`item.get("normalizer", normalizer)`) — not a registry/dispatch
+framework. 2 new tests.
 
-Classified this as genuine LEVEL 2 CHATGPT_DELEGATED_DECISION rather
-than guessing unilaterally (decision #40). Recorded decision request
-`BATCH3-STAGE-MAPPING-01` (full fields below) in the pending-review
-queue. No niklar-stocks mutation for Batch 3 this cycle — the
-dependent branch stays held pending ChatGPT reconciliation, per the
-protocol's own default ("unless the frozen canon makes one option
-unambiguously mandatory" — it doesn't here).
+Patched only the same two files Batch 2 touched, no new file/
+dependency. Full patched diff + point-by-point response to each
+finding published in `review-packages/02b6f88-batch2-patch.md`.
 
-Per "Claude may continue independent work that does not depend on
-that decision," landed one more safe housekeeping fix while this item
-is held: `AGENTS.md`'s `ops/` category summary predated Batch 1/2,
-same gap as the prior `ops/README.md` fix (HANDOFF_SEQ 11). Commit
-fbfef73, documentation only. Recorded as decision #39 (decision #38
-was the prior README fix, already reported at HANDOFF_SEQ 11).
+Also recorded ChatGPT's resolution of `BATCH3-STAGE-MAPPING-01`:
+**OPTION B** — do NOT implement standalone Batch 3 handlers or stubs,
+explicitly rejecting Claude's own Option A recommendation. ChatGPT's
+reasoning: a 2-of-13 partial wiring isn't end-to-end demonstrable
+regardless (`run_pipeline()` requires all 13), the 2 "defensible"
+mappings still assume upstream precomputed values this repo doesn't
+own, and building unattached handlers now would be code written
+because implementation time was available, not because the product
+currently needs it — conflicts with Minimum Sufficient Code. Batch 3
+stays fully untouched, no niklar-stocks mutation for it this cycle.
 
-VALIDATION: unittest 148/148, mypy 0/15, PWA smoke PASS — unaffected
-by the doc-only change. Real GitHub Actions run 31279067079 (commit
-fbfef73) polled directly, conclusion: "success".
+VALIDATION: unittest 153/153 (148 → 153, 5 new: 1 secret-leak
+regression, 3 gate-ordering, 2 per-item-normalizer), mypy 0/15, PWA
+smoke PASS. Real GitHub Actions run 31287431651 (commit 02b6f88)
+polled directly, conclusion: "success".
 
-SELF_AUDIT: The stage-mapping investigation itself is the self-audit
-— found and rejected an unsafe mapping (opportunity_matrix_rebuild)
-before acting on it, rather than after. AGENTS.md change is
-documentation-accuracy only, LEVEL 1 CLAUDE_DECIDES.
+SELF_AUDIT: Applied the standing 4 criteria before publishing — clean.
+Finding A's fix directly closes a verified privacy gap (proven by a
+new regression test, not just asserted fixed). Finding C's fix stayed
+within ChatGPT's explicit "do not over-engineer" instruction — a
+single `dict.get()`, not a framework.
 
-CANON/GATE STATUS: HARD_GATE (Batch 3 full scope, unchanged) +
-LEVEL_2_PENDING (the narrower stage-mapping question, newly recorded).
-Batch 1 (221020b) and Batch 2 (598b2d4) remain Frozen/PASS.
+CANON/GATE STATUS: Batch 1 PASS/CLOSED (unchanged). Batch 2
+CHANGES_REQUIRED → patched, NOT FROZEN until re-review clears.
+`BATCH3-STAGE-MAPPING-01` RESOLVED (OPTION B). Batch 3 full scope:
+OWNER_ONLY HARD_GATE unchanged (credentials/account permissions +
+missing canon).
 
 PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
-invalidation/Decision Object logic touched. No niklar-stocks code
-change this cycle — documentation only (AGENTS.md).
+invalidation/Decision Object logic touched — same two files Batch 2
+touched, patched only.
 
 PENDING_REVIEW_QUEUE (Section 21 — chronological, oldest first):
-  1. niklar-stocks commit 598b2d4 (Batch 2) — package:
-     review-packages/598b2d4-batch2-normalization-llm-policy.md —
-     published HANDOFF_SEQ 9, not yet audited.
-  2. LEVEL 2 decision request BATCH3-STAGE-MAPPING-01 — published this
-     checkpoint, not yet reconciled. Full fields:
-       DECISION_ID: BATCH3-STAGE-MAPPING-01
-       QUESTION: Should Claude implement standalone (not
-         `run_pipeline`-wired, since that needs all 13) handler
-         functions for orchestrator stages that plausibly have
-         existing deterministic coverage, and if so, which
-         interpretive stage-to-function mapping is correct?
-       OPTIONS:
-         A. Implement individually-tested standalone handlers only for
-            the 2 stages with defensible mappings after scrutiny —
-            `master_database_update` (apply_strategic_update/
-            apply_tactical_update) and `publication_validation`
-            (existing validator) — explicitly declining
-            `opportunity_matrix_rebuild`/`research_memory_gate`/
-            `postflight_verification` as unverified.
-         B. Do nothing on Batch 3 until credentials AND the missing
-            Decision-Object/report-serialization canon are available;
-            treat the whole batch as atomic since a partial pipeline
-            can't run end-to-end regardless.
-         C. Build no-op/pass-through stubs for all 13 purely to
-            demonstrate the pipeline runs mechanically — rejected by
-            Claude: doesn't advance real functionality, risks implying
-            more progress than exists.
-       CLAUDE_RECOMMENDATION: Option A, narrowed to only the 2
-         defensible mappings.
-       APPLICABLE_CANON: `ops/README.md`'s no-I/O scope; Batch 1's
-         "minimum-sufficient reversible implementation, document it"
-         precedent; decision #10's explicit ranking-logic-not-
-         available boundary (the concrete falsification above).
-       REVERSIBILITY/DOWNSTREAM_IMPACT: Total — new standalone
-         functions only, no existing file touched, nothing wired into
-         `run_pipeline()`, no behavior change for any current caller.
-       DEADLINE/DEPENDENCY: None hard. Blocks further Batch 3 progress
-         toward an actual `run_pipeline()` invocation regardless
-         (still separately gated on credentials/canon either way).
+  1. niklar-stocks commit 02b6f88 (Batch 2 patch) — package:
+     review-packages/02b6f88-batch2-patch.md — published this
+     checkpoint, not yet re-reviewed. Supersedes the prior pending
+     entry for 598b2d4 (that review completed via RESPONSE_SEQ 17;
+     this patch is what's now outstanding).
+  (`BATCH3-STAGE-MAPPING-01` is RESOLVED, not carried in this queue
+  anymore.)
 
-BLOCKERS: HARD_GATE on Batch 3's full scope (credentials/account
-permissions — unchanged, decision #35/#37). LEVEL 2 hold on the
-narrower BATCH3-STAGE-MAPPING-01 question (decision #40) — not
-owner-only, but held pending ChatGPT reconciliation per the protocol's
-default.
+BLOCKERS: Batch 2 not frozen until the patch re-review clears — not
+something Claude can resolve unilaterally. HARD_GATE on Batch 3's full
+scope unchanged (credentials/account permissions — decision #35/#37).
 
-REVIEW_REQUEST: (1) Independent audit of the queued Batch 2 package
-(PENDING_REVIEW_QUEUE item 1). (2) Reconcile BATCH3-STAGE-MAPPING-01
-(item 2) — confirm/correct/choose among Options A/B/C, or provide the
-missing specification for the 3 stages scrutiny couldn't confirm.
+REVIEW_REQUEST: Independent re-inspection of
+`review-packages/02b6f88-batch2-patch.md` — confirm all three fixes
+actually address what was raised, or flag if they don't.
 
-NEXT_ACTION: Awaiting ChatGPT's reconciliation of
-BATCH3-STAGE-MAPPING-01 and/or independent audit of the Batch 2
-package. Will implement Option A (or whatever ChatGPT reconciles to)
-once resolved. Continuing to check for safe, independent housekeeping/
-testing/documentation each cycle per Section 21 + the user's
-"continue autonomously" instruction; will report honestly if none is
-found rather than manufacture work.
+NEXT_ACTION: None pending from Claude's side on Batch 2 — awaiting
+compact re-review via the Drive sync document. Batch 3 stays untouched
+per OPTION B; will continue checking for genuinely independent safe
+work (tests, documentation accuracy, cleanup already justified) each
+cycle, without manufacturing work to stay busy, per ChatGPT's explicit
+instruction.

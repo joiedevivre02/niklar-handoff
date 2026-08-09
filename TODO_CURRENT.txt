@@ -1,9 +1,48 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-09 (LEVEL 2 decision recorded for Batch 3's
-partial stage-handler mapping question (BATCH3-STAGE-MAPPING-01);
-AGENTS.md housekeeping landed; HANDOFF_SEQ 12.)
+Last updated: 2026-08-09 (Batch 2 patch complete per RESPONSE_SEQ 17's
+"CHANGES REQUIRED"; BATCH3-STAGE-MAPPING-01 resolved OPTION B by
+ChatGPT -- Batch 3 stays untouched; HANDOFF_SEQ 13.)
 
-LEVEL 2 DELEGATED — Batch 3 partial stage-handler mapping (BATCH3-STAGE-MAPPING-01) (this update)
+DONE — Batch 2 patch (3 findings) + BATCH3-STAGE-MAPPING-01 resolved OPTION B (this update)
+---------------------------------------------------------------------------
+  - Drive sync doc RESPONSE_SEQ 17 (responding to HANDOFF_SEQ 12):
+    independently reviewed the Batch 2 package for commit 598b2d4 --
+    verdict CHANGES REQUIRED, three real findings, all verified
+    against the actual code before fixing (not assumed correct on
+    ChatGPT's word alone): (A) attempt_normalization()'s review-entry
+    detail could leak raw normalizer-exception text -- fixed to record
+    only field + exception type name, new regression test proves a
+    fake secret in the exception message never appears in the review
+    entry; (B) decide_llm_escalation() conflated "provider unavailable"
+    with "owner authorization pending" -- added a distinct
+    QUARANTINED_PROVIDER_UNAVAILABLE state with correct gate ordering
+    (paid-authorized checked first, so it's never masked), 3 new
+    gate-ordering tests; (C) run_llm_dependency_audit()'s single
+    corpus-wide normalizer was insufficient for a real heterogeneous
+    corpus -- added a minimal per-item normalizer override (not a
+    registry/framework, per ChatGPT's explicit "do not over-engineer"
+    instruction), 2 new tests.
+  - Patched only the same two files Batch 2 touched, no new file/
+    dependency. 5 new tests (18->23 for this module, 148->153
+    overall). unittest 153/153, mypy 0/15, PWA smoke PASS, real GitHub
+    Actions run 31287431651 confirmed conclusion: "success".
+    niklar-stocks main: 598b2d4 -> 02b6f88. Full patched diff + a
+    point-by-point response to each finding published in
+    review-packages/02b6f88-batch2-patch.md for independent re-review.
+    Batch 2 remains NOT FROZEN until that clears. Recorded as
+    decisions #41 (reconciliation) and #42 (the patch itself).
+  - Same response resolved delegated decision BATCH3-STAGE-MAPPING-01
+    as OPTION B: do NOT implement standalone Batch 3 handlers, do NOT
+    add stubs -- explicitly rejecting Claude's own Option A lean.
+    ChatGPT's reasoning: a 2-of-13 partial wiring isn't end-to-end
+    demonstrable regardless, the 2 "defensible" mappings still assume
+    upstream precomputed values this repo doesn't own, and building
+    unattached handlers now would be code written because time was
+    available rather than because the product needs it -- conflicts
+    with Minimum Sufficient Code. Batch 3 stays fully untouched.
+    Recorded as part of decision #41.
+
+DONE — LEVEL 2 decision recorded for Batch 3's partial stage-handler mapping question (BATCH3-STAGE-MAPPING-01) (prior update)
 ---------------------------------------------------------------------------
   - Per the user's direct instruction ("continue autonomously under
     the delegated-decision protocol until a true OWNER_ONLY hard

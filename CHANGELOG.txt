@@ -758,3 +758,51 @@ NIKLAR-HANDOFF — CHANGELOG
   - PENDING_REVIEW_QUEUE now carries two items: Batch 2 (598b2d4,
     awaiting audit) and BATCH3-STAGE-MAPPING-01 (awaiting
     reconciliation). Archived HANDOFF_SEQ 11 first.
+
+2026-08-09 (Batch 2 patch (3 findings) + BATCH3-STAGE-MAPPING-01 resolved OPTION B, HANDOFF_SEQ 13)
+  - Drive sync doc RESPONSE_SEQ 17 (responding to HANDOFF_SEQ 12):
+    independently reviewed the Batch 2 package for commit 598b2d4 --
+    verdict CHANGES REQUIRED, three real findings, all verified
+    against the actual code before fixing:
+    (A) attempt_normalization()'s review-entry detail
+    (f"{field}: {exc}") could leak raw/sensitive normalizer-exception
+    text into a review entry that build_current_state_snapshot()
+    surfaces downstream -- fixed to record only field + the
+    exception's type name; new regression test embeds a fake secret in
+    a normalizer's exception message and proves it never appears in
+    the resulting review entry.
+    (B) decide_llm_escalation() returned
+    QUARANTINED_PENDING_OWNER_AUTHORIZATION when free LLM was
+    owner-authorized but the free provider was merely unavailable --
+    factually wrong, since authorization already exists. Added a
+    distinct QUARANTINED_PROVIDER_UNAVAILABLE state, checked after the
+    paid-authorized gate (so an owner-approved paid path is never
+    masked by the free provider being down) and before the generic
+    no-authorization-at-all default. 3 new gate-ordering tests matching
+    ChatGPT's exact requested cases.
+    (C) run_llm_dependency_audit()'s single corpus-wide normalizer was
+    insufficient for a real heterogeneous disclosure/research corpus.
+    Per ChatGPT's explicit "do not over-engineer... Minimum Sufficient
+    Code" instruction, added a minimal per-item normalizer override
+    (item.get("normalizer", normalizer)) -- not a registry/dispatch
+    framework. 2 new tests (override used when supplied; omitted key
+    behaves identically to the prior form).
+  - Patched only the same two files Batch 2 touched, no new file/
+    dependency. 5 new tests (18->23 for this module, 148->153
+    overall). unittest 153/153, mypy 0/15, PWA smoke PASS, real GitHub
+    Actions run 31287431651 confirmed conclusion: "success".
+    niklar-stocks main: 598b2d4 -> 02b6f88. Full patched diff +
+    point-by-point response to each finding published in
+    review-packages/02b6f88-batch2-patch.md for independent re-review.
+    Batch 2 remains NOT FROZEN until that clears. Recorded as
+    decisions #41/#42.
+  - Same response resolved delegated decision BATCH3-STAGE-MAPPING-01
+    as OPTION B: do NOT implement standalone Batch 3 handlers or
+    stubs -- explicitly rejecting Claude's own Option A lean. A
+    2-of-13 partial wiring isn't end-to-end demonstrable regardless,
+    the "defensible" mappings still assume upstream precomputed values
+    this repo doesn't own, and building unattached handlers now would
+    be code written because time was available, not because the
+    product needs it -- conflicts with Minimum Sufficient Code. Batch
+    3 stays fully untouched. Recorded as part of decision #41.
+  - Archived HANDOFF_SEQ 12 first.

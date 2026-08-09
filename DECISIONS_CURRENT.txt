@@ -1042,3 +1042,84 @@ NIKLAR — DECISIONS (current)
     safe work per "Claude may continue independent work that does not
     depend on that decision" — found and completed decisions #38/#39
     (README/AGENTS.md housekeeping) instead.
+
+41) Decision: ChatGPT's Drive sync doc RESPONSE_SEQ 17 (responding to
+    HANDOFF_SEQ 12) reconciled: (a) independently reviewed the Batch 2
+    package for commit 598b2d4 — verdict CHANGES REQUIRED, three real
+    findings; (b) resolved delegated decision BATCH3-STAGE-MAPPING-01
+    as OPTION B (do nothing on Batch 3 until credentials AND the
+    missing canon are available — explicitly rejecting Claude's own
+    Option A recommendation).
+    Date: 2026-08-09
+    Rationale (Batch 2 findings, each verified against the actual code
+    before accepting, not assumed correct on ChatGPT's word alone —
+    all three were real): (A) `attempt_normalization()`'s
+    `detail=f"{field}: {exc}"` could leak raw/sensitive normalizer-
+    exception text into a review entry `build_current_state_snapshot()`
+    surfaces downstream — a genuine, verified privacy gap; (B)
+    `decide_llm_escalation()` returned
+    `QUARANTINED_PENDING_OWNER_AUTHORIZATION` when free was
+    owner-authorized but the provider was merely unavailable —
+    factually wrong, verified true by reading the actual gate order;
+    (C) `run_llm_dependency_audit()`'s single corpus-wide `normalizer`
+    is insufficient for a real heterogeneous corpus — verified true,
+    with ChatGPT explicitly leaving the exact fix to Claude's Minimum
+    Sufficient Code judgment rather than dictating one.
+    Rationale (BATCH3-STAGE-MAPPING-01 → OPTION B): ChatGPT's stated
+    reasoning — a 2-of-13 partial wiring isn't end-to-end demonstrable
+    regardless (`run_pipeline()` requires all 13); the 2 "defensible"
+    mappings still assume upstream precomputed values this repo doesn't
+    own; building unattached standalone handlers now would be code
+    written because time was available, not because the product
+    currently needs it, conflicting with Minimum Sufficient Code and
+    the anti-speculative-complexity rule. Explicitly: "DO NOT implement
+    standalone Batch 3 handlers merely to show partial progress. DO NOT
+    add no-op/pass-through stubs... Claude may continue only genuinely
+    independent safe work... and must not manufacture work to stay
+    busy." Recorded as a correction to Claude's own Option A lean, not
+    disputed — ChatGPT's reasoning is sound and the delegated-decision
+    protocol exists precisely so this kind of call doesn't need to
+    return to the owner.
+    Affected component: niklar-stocks
+    ops/niklar_normalization_policy.py, tests/
+    test_niklar_normalization_policy.py (patched, see decision #42);
+    Batch 3 implementation status (unchanged — remains untouched,
+    OPTION B confirms Claude's own prior restraint was correct).
+    Status: Recorded. Batch 2 CHANGES REQUIRED / NOT FROZEN until the
+    patch (decision #42) is re-reviewed. BATCH3-STAGE-MAPPING-01:
+    RESOLVED (OPTION B) — no further Batch 3 action pending owner/
+    ChatGPT input.
+
+42) Decision: Patch Batch 2's three findings from decision #41. (A)
+    `attempt_normalization()`'s review-entry `detail` now records only
+    `field` + the exception's *type name*
+    (`f"{field}: {type(exc).__name__}"`), never the exception's
+    message/args — new regression test embeds a fake secret in a
+    normalizer's exception message and proves it never reaches the
+    review entry. (B) Added a distinct
+    `LLM_ESCALATION_QUARANTINED_PROVIDER_UNAVAILABLE` state to
+    `decide_llm_escalation()`, checked after the paid-authorized gate
+    (so an owner-approved paid path is never masked by the free
+    provider being down) and before the generic
+    `QUARANTINED_PENDING_OWNER_AUTHORIZATION` default — 3 new
+    gate-ordering tests matching ChatGPT's exact requested cases. (C)
+    `run_llm_dependency_audit()` now accepts an optional per-item
+    `"normalizer"` override (`item.get("normalizer", normalizer)`),
+    falling back to the corpus-level default — deliberately not a
+    registry/dispatch framework, per ChatGPT's explicit "do not
+    over-engineer" instruction; 2 new tests (override used when
+    supplied; omitted key behaves identically to the prior
+    single-normalizer form).
+    Date: 2026-08-09
+    Rationale: Direct fix for each of decision #41's three verified
+    findings — see the published review package for the exact diff and
+    a point-by-point response to each finding.
+    Affected component: niklar-stocks ops/niklar_normalization_policy.py,
+    tests/test_niklar_normalization_policy.py (same two files Batch 2
+    touched, patched only, no new file/dependency, per Minimum
+    Sufficient Code)
+    Status: Frozen (implemented) — commit 02b6f88. unittest 153/153
+    (23 for this module, 5 new), mypy 0/15, PWA smoke unaffected. Full
+    patched diff published in
+    review-packages/02b6f88-batch2-patch.md for independent re-review.
+    Batch 2 remains NOT FROZEN until that re-review passes.
