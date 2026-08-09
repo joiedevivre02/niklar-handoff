@@ -1797,3 +1797,58 @@ NIKLAR — DECISIONS (current)
     ALREADY-AUTHORIZED GROUNDED WORK: YES. PRELIVE GOVERNANCE AUDIT
     RELEASED: NO (unchanged).
     Status: CLOSED. PENDING_REVIEW_QUEUE cleared to empty again.
+
+59) Decision: Implemented owner-priority batch
+    `PWA-PRIVATE-SNAPSHOT-BRIDGE-01` (Drive ChatGPT->Claude sync
+    RESPONSE_SEQ 24, responding to HANDOFF_SEQ 26 — owner wants a
+    usable Niklar Stocks build). New file
+    `ops/mobile_snapshot_export.py`: reads a caller-supplied LOCAL
+    canonical Master Database snapshot (CSV or JSON), validates it via
+    `niklar_stocks_ops_v4.validate_schema()` (reused, not a parallel
+    validator — fails closed on any extra/missing/reordered column),
+    transforms rows through `mobile_contract.py`'s own unmodified
+    functions (no scoring/ranking logic added, input order preserved),
+    writes a versioned mobile snapshot to `pwa/private-data/`
+    (`.gitignore`d, never committed — verified via `git check-ignore`).
+    `pwa/app.js` resolves DEMO vs PRIVATE SNAPSHOT mode once per load:
+    the ONLY path to DEMO fallback is a clean 404 on
+    `private-data/meta.json` or total server unreachability; any other
+    outcome commits to PRIVATE mode and shows an honest per-section
+    error rather than ever silently substituting demo data — verified
+    in a real headless-browser pass (3 scenarios: private-with-data,
+    demo-no-snapshot, and the critical configured-but-broken case).
+    `service-worker.js` explicitly never caches `private-data/`
+    (defense in depth). Found and fixed a genuine pre-existing gap:
+    `python3 -m http.server 8000` alone binds ALL network interfaces
+    by default (confirmed empirically, "Serving HTTP on 0.0.0.0") —
+    the documented default now explicitly binds 127.0.0.1; LAN mode is
+    a separate, clearly-labeled, opt-in, temporary section.
+    Date: 2026-08-09
+    Rationale: Direct, explicit, time-sensitive owner priority
+    ("usable build by tomorrow if possible"); implemented exactly the
+    authorized scope (12 numbered items in the response) and nothing
+    broader — no public endpoint, no live API, no new scoring logic,
+    no second source of truth, no scope creep into Daily Brief/Inbox/
+    push notifications/Slack controls/position views/live intraday
+    entry, all explicitly declined per the response's own instruction.
+    Affected component: niklar-stocks
+    ops/mobile_snapshot_export.py (new),
+    tests/test_mobile_snapshot_export.py (new),
+    pwa/app.js, pwa/index.html, pwa/styles.css, pwa/service-worker.js,
+    pwa/smoke_test.py, pwa/README.md, ops/README.md, AGENTS.md,
+    .gitignore (commit 12bb227)
+    Status: Frozen (implemented) — commit 12bb227. unittest 285/285
+    (243->285, 42 new), mypy 0/19, PWA smoke PASS, node --check clean.
+    Real GitHub Actions run 31340958910 confirmed conclusion:
+    "success". Explicit confirmation: no real ticker/trading data
+    anywhere in this commit (verified via diff scan — only synthetic
+    DEMO/TEST/REALX markers); `pwa/private-data/` does not exist in
+    the working tree or in this commit's file list; `.gitignore`
+    coverage re-verified via `git check-ignore` after the commit
+    landed. `mobile_contract.py`/`niklar_stocks_ops_v4.py` (both
+    Drive-verbatim) unmodified. Full review package:
+    review-packages/12bb227-pwa-private-snapshot-bridge-01.md,
+    including the 3-scenario manual browser verification and known
+    limitations. Per the response's own "then stop for ChatGPT review
+    before any broader next increment" instruction, no further
+    increment follows this one.

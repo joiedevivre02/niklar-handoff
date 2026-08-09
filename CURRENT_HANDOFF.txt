@@ -5,85 +5,98 @@ repository discovery/search. Full history: `archive/handoffs/` and
 `CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
 in form, fetched only when this checkpoint's summary isn't enough.
 
-STATUS: PIPELINE_CONTINUITY_SCOPE_01_RESOLVED_OPTION_C — QUEUE CLEARED, NEXT INCREMENT NOT YET CHOSEN
+STATUS: PWA_PRIVATE_SNAPSHOT_BRIDGE_01_LANDED — STOPPED FOR CHATGPT REVIEW
 PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
-HANDOFF_SEQ: 26
-CHECKPOINT_ID: niklar-handoff-2026-08-09-seq26-pipeline-continuity-scope-resolved
-IMPLEMENTATION_COMMIT: niklar-stocks main @ 5163e7b (unchanged this cycle)
+HANDOFF_SEQ: 27
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq27-pwa-private-snapshot-bridge-01
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 12bb227
 HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
 
-GOAL: Reconcile ChatGPT's RESPONSE_SEQ 23 (resolving LEVEL 2 decision
-`PIPELINE-CONTINUITY-SCOPE-01`) into niklar-handoff's record — no code
-change this cycle.
+GOAL: Owner priority (Drive ChatGPT->Claude sync RESPONSE_SEQ 24,
+responding to HANDOFF_SEQ 26): make the existing private PWA
+consumable with a real canonical Master Database snapshot, targeting
+a usable private build "today" — no public endpoint, no live API, no
+new scoring logic, no second source of truth.
 
-MATERIAL_DELTA: No niklar-stocks code change. In niklar-handoff:
-recorded ChatGPT's resolution — **`PIPELINE-CONTINUITY-SCOPE-01`:
-OPTION C**, confirming Claude's own recommendation.
+MATERIAL_DELTA: New file `ops/mobile_snapshot_export.py` — reads a
+caller-supplied LOCAL canonical Master Database snapshot (CSV or
+JSON), validates it via `niklar_stocks_ops_v4.validate_schema()` (the
+SAME schema-lock used elsewhere, not a parallel validator — fails
+closed on any extra/missing/reordered column), transforms rows
+through `mobile_contract.py`'s own unmodified functions (no scoring/
+ranking logic added, input order preserved exactly), and writes a
+versioned mobile snapshot to `pwa/private-data/` (`.gitignore`d, never
+committed — verified via `git check-ignore` for the directory and
+every generated filename).
 
-**Basis** (ChatGPT's reasoning, recorded in full in decision #58):
-(1) the continuity rule's own text declares market-wide purpose and
-behavior — isolate local blockers, continue the rest of the market
-workflow, PSE EOD ticker recovery ladder, cross-market to US Stocks/
-Crypto/Options — squarely operational-workflow authority, not product
-architecture; (2) `NIKLAR_PRELIVE_ARCHITECTURE_DECISIONS_CURRENT`
-(the actual name of what this session has been calling "the
-architecture doc") is explicitly the mobile/PWA product-architecture
-authority — a distinct document from the continuity rule; (3) a
-market-wide executor is a different orchestration layer from
-niklar-stocks' current single-stock orchestrator — the rule may
-inform a *future* batch's interfaces if a market-wide runner is ever
-deliberately added, but that future possibility doesn't authorize
-building a detached module now; (4) Option D (unwired classification
-helpers) also explicitly declined — would duplicate operational canon
-into code with no current integration point, the same
-manufactured-work risk already flagged.
+`pwa/app.js` resolves DEMO vs PRIVATE SNAPSHOT mode once per load. The
+ONLY path to DEMO fallback is a clean 404 on `private-data/meta.json`
+or total server unreachability; any other outcome commits to PRIVATE
+mode and shows an honest per-section error rather than ever silently
+substituting demo data. **Verified in a real headless-browser pass**
+(Playwright/Chromium, transient — not a project dependency): (1)
+PRIVATE mode with real synthetic data — correct banner + real ticker
+rendered; (2) DEMO mode, 404 case — correct fallback; (3) the critical
+configured-but-broken case — 0 rendered tickers, explicit `HTTP 404`
+error, zero silent fallback.
 
-**Scope consequence**: no new niklar-stocks module for blocker-scope/
-ticker-recovery classification, coverage aggregation, or
-continue-vs-stop logic from this rule; do not wire it into the
-single-stock orchestrator by analogy; if a future authorized batch
-adds a real market-wide runner, re-open the question then.
+Found and fixed a genuine pre-existing gap: `python3 -m http.server
+8000` alone binds ALL network interfaces by default (confirmed
+empirically — "Serving HTTP on 0.0.0.0"), not localhost-only. The
+documented default now explicitly binds `127.0.0.1`; LAN mode is a
+separate, clearly-labeled, opt-in, temporary section with a trusted-
+network warning.
 
-VALIDATION: N/A — no code touched. Prior state (unittest 243/243,
-mypy 0/18, PWA smoke PASS, HEAD 5163e7b) unchanged.
+`service-worker.js` explicitly never caches `private-data/` paths
+(defense in depth beyond `app.js`'s own `cache: "no-store"`).
 
-SELF_AUDIT: Pure reconciliation. The LEVEL 2 protocol worked exactly
-as designed — genuine ambiguity surfaced, raised rather than guessed,
-resolved by the party actually authorized to resolve it, recorded in
-full rather than summarized away.
+VALIDATION: unittest 285/285 (243→285, 42 new), mypy 0/19, PWA smoke
+PASS, `node --check` clean on both changed JS files. Real GitHub
+Actions run `31340958910` (commit `12bb227`) polled directly,
+conclusion: `"success"`.
 
-CANON/GATE STATUS: Unchanged from HANDOFF_SEQ 24 — Batch 1 PASS/
-CLOSED, Batch 2 PASS/CLOSED/FROZEN, `BATCH3-STAGE-MAPPING-01` RESOLVED
-(OPTION B), Batch 3 at 7 of 13 real stages. `PIPELINE-CONTINUITY-
-SCOPE-01`: RESOLVED (OPTION C) — CLOSED.
+SELF_AUDIT: `mobile_contract.py`/`niklar_stocks_ops_v4.py` (both
+Drive-verbatim) confirmed unmodified — zero changes to either file in
+this diff. No scoring/ranking/trading logic introduced anywhere.
+**Explicit confirmation, no real private data committed**: diff
+scanned for secret-shaped strings and ticker-like tokens — only
+synthetic `DEMO`/`TEST1-3`/`REALX` markers found; `pwa/private-data/`
+absent from the working tree and this commit's file list at commit
+time; `.gitignore` coverage re-verified via `git check-ignore` after
+the commit landed, not just before.
+
+CANON/GATE STATUS: Unchanged elsewhere — Batch 1 PASS/CLOSED, Batch 2
+PASS/CLOSED/FROZEN, `BATCH3-STAGE-MAPPING-01` RESOLVED (OPTION B),
+Batch 3 at 7 of 13 real stages, `PIPELINE-CONTINUITY-SCOPE-01`
+RESOLVED (OPTION C). NEW: `PWA-PRIVATE-SNAPSHOT-BRIDGE-01` implemented
+and pending review.
 
 PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
-invalidation/Decision Object logic touched. No niklar-stocks code
-change this cycle.
+invalidation/Decision Object logic touched. No public hosting, no
+live backend/API — both explicitly authorized-against by this batch's
+own scope and confirmed absent.
 
-PENDING_REVIEW_QUEUE (Section 21): **EMPTY.** Second time this session
-(first at HANDOFF_SEQ 24) — the review protocol is working as
-intended, not accumulating unresolved items.
+PENDING_REVIEW_QUEUE (Section 21):
+  1. niklar-stocks commit 12bb227 —
+     review-packages/12bb227-pwa-private-snapshot-bridge-01.md
+     (published, not yet audited; includes the 3-scenario manual
+     browser verification and known limitations)
 
 BLOCKERS: Unchanged — the 6 deferred orchestrator stages, the actual
-Slack/PWA delivery layer, manual-entry field typing, PWA hosting/auth,
-and the real backup/recovery I/O mechanism remain genuinely blocked on
-credentials/specification. The market-wide pipeline-continuity rule is
-now explicitly confirmed out of scope for niklar-stocks (not a
-blocker — a closed question). `PRELIVE GOVERNANCE AUDIT RELEASED: NO`
-— still deferred, not self-triggered.
+Slack/PWA *live* delivery layer, manual-entry field typing, and any
+future live/hosted backend remain genuinely blocked on credentials/
+specification/authorization this repo doesn't have. The local private-
+snapshot bridge (this batch) does NOT resolve the held live-data
+decision — it's a one-shot local export, not a live source. `PRELIVE
+GOVERNANCE AUDIT RELEASED: NO` — still deferred, not self-triggered.
 
-REVIEW_REQUEST: None currently — nothing queued.
+REVIEW_REQUEST: Independent review of commit `12bb227` — exact SHA,
+files changed, test delta, known limitations, and explicit no-real-
+data-committed confirmation are all in the review package per the
+batch's own requirement.
 
-NEXT_ACTION: `SAFE TO CONTINUE OTHER ALREADY-AUTHORIZED GROUNDED
-WORK: YES`, but no next increment has been chosen — this checkpoint is
-reconciliation only. Both standing candidates (manual intraday-entry
-validation, PWA delivery-contract work) remain blocked; the 4
-permanently-deferred stages have no further specification; the
-pipeline-continuity avenue is now closed. No further candidate has
-been identified as of this checkpoint — will not manufacture one per
-the standing "do not manufacture speculative work merely to stay
-busy" instruction (RESPONSE_SEQ 20, reaffirmed RESPONSE_SEQ 23). Next
-increment selection awaits either a new user-specified area or a
-genuinely new finding. Governance-compliance audit remains deferred,
-not self-triggered.
+NEXT_ACTION: Per the batch's explicit "then stop for ChatGPT review
+before any broader next increment" instruction: **stopped here.** No
+further implementation increment starts until ChatGPT reviews this
+checkpoint (or the owner gives new direction). Governance-compliance
+audit remains deferred, not self-triggered.

@@ -1366,3 +1366,87 @@ NIKLAR-HANDOFF — CHANGELOG
     PENDING_REVIEW_QUEUE cleared to empty again -- second time this
     session (first at HANDOFF_SEQ 24). No niklar-stocks code change
     this cycle. Archived HANDOFF_SEQ 25 first.
+
+2026-08-09 (Owner-priority batch PWA-PRIVATE-SNAPSHOT-BRIDGE-01, HANDOFF_SEQ 27)
+  - Owner priority (Drive ChatGPT->Claude sync RESPONSE_SEQ 24,
+    responding to HANDOFF_SEQ 26): a usable Niklar Stocks build. Owner
+    confirmed a separately-shown external domain (niklarproperty.com)
+    is an unrelated project sharing a name only -- no action taken on
+    it, stayed strictly in the niklar-stocks lane per explicit
+    instruction.
+  - New file ops/mobile_snapshot_export.py: reads a caller-supplied
+    LOCAL canonical Master Database snapshot (CSV or JSON,
+    auto-detected by extension), validates it via
+    niklar_stocks_ops_v4.validate_schema() (the SAME schema-lock used
+    everywhere else, not a parallel validator -- fails closed with the
+    exact column mismatch on any extra/missing/reordered column),
+    transforms rows through mobile_contract.py's own unmodified
+    functions (to_tactical_card, build_opportunity_landscape,
+    build_watchlist -- no scoring/ranking logic added, input order
+    preserved exactly), and writes a versioned mobile snapshot
+    (meta.json + tactical/opportunity/watchlist.json) to
+    pwa/private-data/ (.gitignore'd, never committed -- verified via
+    git check-ignore for the directory AND each generated filename).
+    CLI: python3 -m ops.mobile_snapshot_export --input <path> --output
+    pwa/private-data.
+  - pwa/app.js resolves DEMO vs PRIVATE SNAPSHOT mode once per load by
+    checking for private-data/meta.json. The ONLY path to DEMO
+    fallback is a clean 404 (never configured) or total server
+    unreachability (both fetches would fail identically anyway). ANY
+    other outcome commits to PRIVATE mode -- the per-section fetches
+    then show their own honest error/retry state, never silently
+    substituting demo data for a private snapshot that was configured
+    but failed to load. Verified in a real headless-browser pass
+    (Playwright/Chromium, transient, not a project dependency): (1)
+    PRIVATE mode with real synthetic data -- correct banner + real
+    ticker rendered; (2) DEMO mode, 404 case -- correct fallback +
+    demo tickers; (3) the critical broken-snapshot case -- meta.json
+    present, data files missing -- explicit "HTTP 404" error shown,
+    zero demo tickers rendered, zero silent fallback.
+  - pwa/index.html + pwa/styles.css: private-banner is now dynamic
+    (id="private-banner", data-mode attribute) showing DEMO vs PRIVATE
+    SNAPSHOT with the snapshot's generated_at/row_count, styled
+    distinctly per mode.
+  - pwa/service-worker.js: private-data/ paths explicitly added to the
+    network-only (never-cached) endpoint check, defense in depth
+    beyond app.js's own cache:"no-store".
+  - pwa/README.md: documents the bridge and fixes a genuine
+    pre-existing gap -- confirmed empirically that `python3 -m
+    http.server 8000` alone binds ALL network interfaces by default
+    ("Serving HTTP on 0.0.0.0"), not localhost-only. Documented default
+    now explicitly binds 127.0.0.1; LAN mode is a separate,
+    clearly-labeled, opt-in, temporary section.
+  - .gitignore: pwa/private-data/ plus defense-in-depth patterns.
+  - New file tests/test_mobile_snapshot_export.py, 42 tests: CSV/JSON
+    parsing and schema-lock enforcement, input-order preservation,
+    COMPLETE/PARTIAL preservation through the real mobile contracts,
+    meta manifest shape and source labeling, file-writing,
+    end-to-end CLI-path export, authoritative git-ignore proof, and
+    real-HTTP-serving of a synthetic snapshot against an isolated copy
+    of pwa/ (proving both PRIVATE-mode servability and that demo
+    fixtures remain unaffected). pwa/smoke_test.py additionally
+    confirms pwa/private-data/ does not exist in the tested tree.
+  - ops/README.md + AGENTS.md: Modules entry, corrected the
+    now-imprecise "no I/O" claim (importable functions still do none;
+    two modules offer a thin CLI doing local, never network/
+    credentialed, file I/O by design), updated counts (243->285 tests,
+    18->19 mypy files, 9->10 ops/ modules).
+  - unittest 285/285, mypy 0/19, PWA smoke PASS, node --check clean.
+    Real GitHub Actions run 31340958910 confirmed conclusion:
+    "success". niklar-stocks main: 5163e7b -> 12bb227.
+  - Explicit confirmation: no real ticker/trading data anywhere in
+    this commit (diff scanned -- only synthetic DEMO/TEST/REALX
+    markers); pwa/private-data/ absent from the working tree and this
+    commit's file list at commit time; .gitignore coverage
+    re-verified via git check-ignore after the commit landed.
+    mobile_contract.py/niklar_stocks_ops_v4.py (both Drive-verbatim)
+    unmodified.
+  - Recorded as decision #59. Full review package:
+    review-packages/12bb227-pwa-private-snapshot-bridge-01.md,
+    including the 3-scenario manual browser verification and known
+    limitations (no live/scheduled refresh, no XLSX input, no field
+    type coercion, no live/hosted backend -- all explicitly out of
+    this batch's authorized scope, not omissions).
+  - Per the batch's own "then stop for ChatGPT review before any
+    broader next increment" instruction: stopped here. Archived
+    HANDOFF_SEQ 26 first.
