@@ -2200,3 +2200,68 @@ NIKLAR — DECISIONS (current)
     the two named gaps (Property Transfer read authorization; live
     Cloudflare/local-machine facts), no further Cloudflare-related work
     proceeds.
+
+65) Decision: Owner explicitly authorized reading Property Transfer's
+    Drive canon for the specific, bounded, read-only routing-collision
+    question decision #64 surfaced (asked directly: "Grant access, let
+    me read it" for the Cloudflare question; "I'll tell you the facts"
+    for the live-infrastructure question). Read narrowly, resolved
+    Section A of the audit with real evidence, and updated the
+    published checkpoint's disposition and recommendation accordingly.
+    Date: 2026-08-10
+    Rationale: The owner's answer closes blocker 1 from decision #64
+    for this specific purpose only -- not a blanket authorization to
+    import Property Transfer's product/business logic into
+    niklar-stocks, and this session held to that: read only the
+    Cloudflare/DNS/Worker-route sections of the primary
+    `PROPERTY_TRANSFER_CHATGPT_HANDOFF_CURRENT` Drive document (via
+    the already-cloned `niklar-operating-engineering-system` reference
+    repo in `/workspace`, first `git pull`ed to confirm freshness
+    rather than trusting a stale local clone -- it was 13 days behind
+    origin/master) -- Property Transfer's own product logic (JCN
+    issuance, PDF rendering, email/webhook handling, etc.) was
+    deliberately not read or imported, per this session's existing
+    scope-firewall discipline for that repository (decision #12).
+    FINDING (decisive, not theoretical): Property Transfer's
+    Cloudflare Worker `niklar-property-edge` has live, confirmed-
+    working routes covering both `niklarproperty.com/*` AND
+    `*.niklarproperty.com/*` (per the handoff's own "CHECKPOINT 18 --
+    LIVE CLOUDFLARE -> CLOUD RUN INFRASTRUCTURE DEPLOYED AND
+    SMOKE-PROVEN" -- the newest Cloudflare-state checkpoint in that
+    document), explicitly marked "KNOWN-GOOD INFRASTRUCTURE --
+    PRESERVE... without a demonstrated requirement." A direct text
+    search of the full handoff confirmed zero existing mentions of
+    `niklar-stocks` or any Niklar-Stocks-specific subdomain -- no
+    existing carve-out. Any `niklarproperty.com` subdomain today would
+    be caught by that live wildcard and routed to the Property
+    Transfer Cloud Run origin, not a Niklar Stocks origin, unless a
+    new, more-specific Worker route were added -- real infrastructure
+    surgery on Property Transfer's own explicitly-protected live
+    production routing, undertaken purely to host an unrelated second
+    product on its domain.
+    RECOMMENDATION (updated in the published audit checkpoint): do NOT
+    use any `niklarproperty.com` subdomain for Niklar Stocks remote
+    access. Use a separate, dedicated domain sharing no Cloudflare
+    zone with Property Transfer -- avoids the collision entirely
+    rather than managing around it, and leaves Property Transfer's
+    live infrastructure completely untouched.
+    Blocker 2 (live Cloudflare-account/local-machine facts for
+    whichever domain is ultimately used) remains open, per the owner's
+    own "I'll tell you the facts" answer -- correctly deferred, not
+    resolved by guessing.
+    Affected component: niklar-handoff
+    review-packages/NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01.md
+    (updated in place -- disposition NOT_READY -> CONDITIONAL, section
+    2 filled in with real evidence, blocker 1 marked CLOSED),
+    CURRENT_HANDOFF.txt (HANDOFF_SEQ 33), archive/handoffs/
+    HANDOFF_SEQ_32.txt (archived). No niklar-stocks mutation --
+    read-only throughout, confirmed via unchanged `git status --short`
+    in both niklar-stocks and the reference clone (only a `git pull`
+    fast-forward, no local edits).
+    Status: Frozen (audit substantially advanced this cycle) --
+    HANDOFF_SEQ 33. DISPOSITION: CONDITIONAL. SAFE TO PREPARE
+    IMPLEMENTATION PROMPT: NO -- blocker 2 remains open and the
+    domain-change recommendation itself needs the owner's agreement
+    first. Per the audit's own "after publishing the audit checkpoint,
+    STOP" instruction, no further Cloudflare-related work proceeds
+    without further owner/ChatGPT direction.

@@ -7,40 +7,72 @@ this audit-first sequence — that authorization is superseded and was
 never acted on by this session; nothing from RESPONSE_SEQ 28 was
 implemented).
 
-**Disposition up front: this audit is PARTIAL, not complete.** Two of
-the five required read-set items are genuinely out of this session's
-reach, for reasons explained below rather than guessed past. Everything
-this session *can* verify from within the niklar-stocks repo itself is
-covered fully.
+**UPDATE (same-cycle correction)**: the owner explicitly authorized
+reading the Property Transfer canon for this specific, bounded,
+read-only routing-collision question (asked directly after the first
+publish of this checkpoint, when it was still PARTIAL/NOT_READY on
+that point). Read narrowly, from the primary source
+(`PROPERTY_TRANSFER_CHATGPT_HANDOFF_CURRENT`, Drive), only the
+Cloudflare/DNS/Worker-route sections — not Property Transfer's product/
+business logic (JCN issuance, PDF rendering, email, etc.), per this
+session's standing scope-firewall discipline for that project. Section
+2 and the disposition below are updated with real evidence as a
+result; section 7's blocker 1 is now CLOSED. Blocker 2 (live account/
+local-machine facts beyond what's in Drive canon) remains open — the
+owner has agreed to report those directly when needed.
 
 ## 1. DISPOSITION
 
-**NOT_READY.** Real, unresolved UNKNOWNs remain in sections A, D, E
-(below) — none fabricated or approximated. See section 7 for the exact
-two gaps and what would close each.
+**CONDITIONAL.** Section A (routing collision) is now resolved with
+real evidence — and the answer is a clear recommendation against using
+any `niklarproperty.com` subdomain at all, not a green light to
+proceed with one. Sections D and E remain open pending the owner's
+direct report of live Cloudflare-account/local-machine facts (blocker
+2, unchanged). See section 7.
 
 ## 2. Recommended exact hostname and routing pattern, with collision analysis
 
-**Not determinable from this session.** The audit's own read-set item
-4 calls for "Property Transfer CURRENT handoff... especially the
-known-good production edge state and wildcard/subdomain routing" —
-that repository/canon is not attached to this session (this session's
-GitHub scope is `niklar-stocks` + `niklar-handoff` only), and this
-session was separately, directly instructed earlier by the owner to
-"stay in niklar-stocks lane" regarding `niklarproperty.com` when it
-surfaced as an apparently-unrelated screenshot. RESPONSE_SEQ 29 now
-asks for exactly the cross-project read that instruction told this
-session not to pursue — a real conflict, flagged to the owner rather
-than resolved unilaterally in either direction (see section 7).
+**Resolved, from the primary Property Transfer Drive canon
+(`PROPERTY_TRANSFER_CHATGPT_HANDOFF_CURRENT`, "CHECKPOINT 18 — LIVE
+CLOUDFLARE → CLOUD RUN INFRASTRUCTURE DEPLOYED AND SMOKE-PROVEN",
+the newest Cloudflare-state checkpoint in that document, read
+narrowly per the owner's explicit authorization for this purpose):**
 
-In principle (general Cloudflare practice, not specific to this
-account's actual config, so not to be treated as a finding): a
-dedicated subdomain (e.g. `app.niklarproperty.com` or
-`stocks.niklarproperty.com`) with its own explicit Worker route/DNS
-record would need to be checked against the existing
-`*.niklarproperty.com/*` wildcard's actual route priority in the real
-Cloudflare dashboard — Cloudflare evaluates routes by specificity, but
-confirming that requires seeing the real route table, not assuming it.
+- Cloudflare Worker `niklar-property-edge` has **live, active** routes
+  covering **both** `niklarproperty.com/*` **and**
+  `*.niklarproperty.com/*` — confirmed by direct owner/ChatGPT
+  verification during the deployment session (root-domain and
+  `/health` checks against the real domain, both returning real
+  Property Transfer responses through Cloudflare).
+- That checkpoint explicitly marks this state **"KNOWN-GOOD
+  INFRASTRUCTURE — PRESERVE. Do not change Cloudflare authoritative
+  nameservers, Worker routes, Cloud Run ingress/auth architecture,
+  edge-secret handshake, or currently working runtime secret mappings
+  without a demonstrated requirement."**
+- Confirmed via direct text search of the full handoff document: zero
+  mentions of `niklar-stocks`, `app.niklarproperty.com`,
+  `stocks.niklarproperty.com`, or any existing carve-out for a second
+  product on this domain.
+
+**Collision analysis**: the `*.niklarproperty.com/*` wildcard is not a
+theoretical risk — it is a live, confirmed-working route that would
+catch **any** subdomain request today, including a hypothetical
+`app.niklarproperty.com` for Niklar Stocks, and hand it to the
+Property Transfer Worker/Cloud Run origin (which would almost
+certainly return a 404 or a Property Transfer error page, not the
+Niklar Stocks PWA). Avoiding that would require adding a new,
+more-specific Worker route for the new subdomain — real infrastructure
+surgery on Property Transfer's own explicitly-protected "known-good"
+production routing, on a system already serving a real, live product,
+purely to host a second, unrelated product on its domain.
+
+**Recommendation**: do **not** use any `niklarproperty.com` subdomain
+for Niklar Stocks remote access. Use a separate, dedicated domain (or
+a subdomain of one) that shares no Cloudflare zone with Property
+Transfer at all. This avoids the collision entirely rather than
+managing around it, and doesn't touch Property Transfer's own
+canon-protected live infrastructure to do so — the lowest-risk,
+Minimum Sufficient choice, not merely the first one considered.
 
 ## 3. Security controls required and current evidence for each
 
@@ -104,8 +136,10 @@ bfcache finding above — that's an origin-response-header change
 - **Machine-local configuration**: `cloudflared` installation/service
   setup on the owner's machine, tunnel credentials file — entirely
   outside this repo, owner-only.
-- **Cloudflare provider configuration**: DNS record, Worker route
-  (pending collision analysis — blocked, section 7), Access
+- **Cloudflare provider configuration**: a zone/DNS record on a
+  **new, separate domain** (per section 2's recommendation — not a
+  niklarproperty.com subdomain, avoiding any Worker-route interaction
+  with Property Transfer's live infrastructure entirely), Access
   application + policy + identity provider/MFA setup — owner-only,
   interactive, outside this session's reach.
 - **Owner-only actions**: everything in the two bullets above; also
@@ -123,42 +157,35 @@ origin change, not because this audit found a regression risk there.
 
 Cloudflare-side (cannot be authored without the real environment):
 unauthenticated-hostname-request test, wrong-identity test, MFA-failure
-test, Access-bypass-policy test, tunnel-down test, DNS/Worker-route
-collision test against the real `*.niklarproperty.com/*` route.
+test, Access-bypass-policy test, tunnel-down test. The DNS/Worker-route
+collision test is now moot given the recommendation in section 2 (use
+a non-`niklarproperty.com` domain, avoiding the collision entirely
+rather than testing around it).
 
 ## 7. Risks/UNKNOWNs/blockers
 
-**Two real blockers, both requiring the owner's direct decision — not
-something this session should resolve silently in either direction:**
+**Blocker 1 — CLOSED this cycle.** Cross-project scope conflict:
+RESPONSE_SEQ 29's read-set item 4 asked this session to read Property
+Transfer's Drive canon for niklarproperty.com's live routing facts,
+which conflicted with an earlier "stay in niklar-stocks lane"
+instruction from this same session. The owner explicitly authorized
+this specific, bounded, read-only purpose after this checkpoint's
+first publish surfaced the conflict rather than resolving it
+unilaterally. Read narrowly (Cloudflare/DNS/Worker-route sections of
+the primary Property Transfer handoff doc only — not its product/
+business logic), per this session's standing scope-firewall discipline
+for that project. Result: see section 2 — a live wildcard collision is
+confirmed, and the recommendation is to avoid the domain entirely
+rather than engineer around the collision.
 
-1. **Cross-project scope conflict.** RESPONSE_SEQ 29's read-set item 4
-   asks this session to read Property Transfer's Drive canon and
-   current handoff for niklarproperty.com's live routing facts. This
-   session was earlier told directly by the owner, in this same
-   conversation, to "stay in niklar-stocks lane" regarding
-   `niklarproperty.com` — at the time, in a context where it looked
-   like unrelated name-sharing. RESPONSE_SEQ 29 makes clear the two
-   are not infrastructure-independent if Niklar Stocks is hosted on a
-   `niklarproperty.com` subdomain: a real collision risk against
-   Property Transfer's live Worker route is explicitly named. This
-   session will not add the Property Transfer repository or read its
-   canon without the owner's explicit go-ahead for this specific,
-   bounded, read-only purpose — that's the owner's call, not
-   ChatGPT's or Claude's to make on their behalf, and the earlier
-   instruction is the more recent, more specific signal until told
-   otherwise.
-2. **Live-infrastructure/local-machine state is unobservable from this
-   environment.** This session runs in an isolated cloud container —
-   it has no access to the owner's actual Cloudflare account
-   (dashboard, API, DNS records, Worker routes, Access policies,
-   account plan/tier) or their local Windows laptop (cloudflared
-   service state, PWA process lifecycle, restart/reboot behavior).
-   Sections A, D, E, and part of G of the audit task depend entirely
-   on that state. Closing this gap requires either the owner reporting
-   the specific facts directly, or a different mechanism this session
-   doesn't currently have (e.g., a Cloudflare API token deliberately
-   granted for read-only inspection — itself a credentials decision,
-   OWNER_ONLY).
+**Blocker 2 — still open, unchanged.** Live-infrastructure/local-
+machine state (the owner's actual Cloudflare account for whatever
+domain is ultimately chosen, and their local Windows laptop's
+cloudflared/PWA-process behavior) remains unobservable from this cloud
+session. Sections D and E of the audit task depend on it. The owner
+has agreed to report the specific facts directly when implementation
+reaches that point — not resolved in this cycle, correctly deferred
+rather than guessed.
 
 One real, verified finding (not a blocker, a fix candidate): the
 bfcache logout-bypass gap in section 3.
@@ -176,21 +203,32 @@ bfcache logout-bypass gap in section 3.
   `pwa/service-worker.js`, `pwa/README.md`, `.gitignore`, and a direct
   HTTP header check against the documented local server command (run
   and killed within this session, no persistent process left).
-- **NOT read**: Property Transfer Drive canon or GitHub repo/handoff
-  (cross-project scope conflict, see section 7); the owner's live
-  Cloudflare account or local machine (not observable from this
-  environment).
+- **Property Transfer Drive canon** (`PROPERTY_TRANSFER_CHATGPT_HANDOFF_CURRENT`),
+  read narrowly for Cloudflare/DNS/Worker-route sections only, after
+  explicit owner authorization for this specific purpose (see
+  blocker 1 above) — Property Transfer's product/business logic
+  (JCN issuance, PDF rendering, email/webhook handling, etc.) was
+  deliberately not read/imported, per this session's standing
+  scope-firewall discipline.
+- **NOT read**: the owner's live Cloudflare account or local machine
+  (not observable from this environment — blocker 2, still open).
 
 ## 9. Explicit confirmation: NO configuration/code/provider mutation performed during audit
 
 Confirmed. This cycle's only actions were: reading existing repo files
-(no edits), and running the *already-documented, already-accepted*
+(no edits, both niklar-stocks and, narrowly, the Property Transfer
+Drive canon), and running the *already-documented, already-accepted*
 local server command briefly to inspect its real HTTP response headers
 — the process was killed immediately after, no files were created or
 changed, `git status --short` is empty. No Cloudflare, DNS, Access,
-Tunnel, or any provider was touched or contacted.
+Tunnel, or any provider was touched or contacted — the Property
+Transfer read was Drive-document-only, not a GitHub Actions run, API
+call, or dashboard action.
 
 ## 10. SAFE TO PREPARE IMPLEMENTATION PROMPT: NO
 
-Not until the two blockers in section 7 resolve. The app-layer
-evidence (sections 3–6) is solid and reusable once they do.
+Not yet — blocker 2 (section 7) remains open, and section 2's
+recommendation (a different domain) itself needs the owner's
+agreement before an implementation prompt targets it specifically.
+The app-layer evidence (sections 3–6) and the routing recommendation
+(section 2) are both solid and reusable once those close.

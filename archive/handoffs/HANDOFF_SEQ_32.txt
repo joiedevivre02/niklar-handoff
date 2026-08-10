@@ -1,0 +1,134 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: CLOUDFLARE_REMOTE_ACCESS_AUDIT_PARTIAL — TWO BLOCKERS ESCALATED TO OWNER — STOPPED FOR CHATGPT REVIEW
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 32
+CHECKPOINT_ID: niklar-handoff-2026-08-10-seq32-cloudflare-remote-access-audit-01-partial
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 9b2c78c6539863f09f117154fb8678e883b52455 (unchanged this cycle — audit was read-only)
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Process RESPONSE_SEQ 29 (Drive sync doc) via "Sync" — a
+correction superseding RESPONSE_SEQ 28's direct authorization of
+`CLOUDFLARE-PRIVATE-REMOTE-ACCESS-01` with a mandatory READ-ONLY
+audit-first sequence (`NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01`)
+before any Cloudflare/DNS/Access/Tunnel/runtime mutation.
+RESPONSE_SEQ 28 was never seen or acted on by this session — nothing
+from it was implemented.
+
+MATERIAL_DELTA: No niklar-stocks code/config mutation — the audit
+task is explicitly read-only and this cycle honored that (confirmed
+via unchanged `git status --short` throughout). Completed the portion
+of the audit genuinely verifiable from within this session's actual
+access:
+
+- Confirmed by reading the real current code (not from memory):
+  `private-data/` remains git-ignored; both `app.js` data fetches use
+  `{cache: "no-store"}`; `service-worker.js` never caches
+  `/private-data/` paths or the three demo data files; `app.js` has
+  zero `localStorage`/`sessionStorage`/`indexedDB`/`document.cookie`
+  usage anywhere. Conclusion: no real Niklar setting/contract
+  (63-column mobile contract, private snapshot flow, demo/private
+  separation, git-ignore protections, trading/scoring/tactical/
+  Decision Object boundaries) would need to change for a Cloudflare
+  Tunnel+Access front-end — that sits entirely at the network/auth
+  layer in front of the origin.
+- **NEW FINDING**: the documented local server (`python3 -m
+  http.server`) sends no `Cache-Control` header on any asset
+  (confirmed via a direct HTTP header check against the real
+  documented command, run and killed within this session — no
+  persistent process, no file changes left). This creates a real
+  **bfcache logout-bypass risk**: a browser's back-forward cache could
+  restore a page already showing real trading data via the Back
+  button after a Cloudflare Access "logout," since a bfcache
+  restoration never touches the network and Access has no visibility
+  into it. Recommended fix (not yet applied — audit is read-only): add
+  `Cache-Control: no-store` to the app shell response. Stands
+  independently of the two blockers below.
+
+**TWO REAL BLOCKERS, escalated to the owner rather than resolved
+silently in either direction:**
+
+1. **Cross-project scope conflict.** The audit's own read-set asks
+   this session to read Property Transfer's Drive canon/current
+   handoff for niklarproperty.com's live Cloudflare routing facts, to
+   check for a collision with Property Transfer's existing
+   `*.niklarproperty.com/*` Worker route. Earlier in this same
+   session, the owner directly instructed "It's a different project.
+   You just share a name... stay in niklar-stocks lane" regarding
+   `niklarproperty.com`, in a context where it looked like unrelated
+   name-sharing. RESPONSE_SEQ 29 reveals the two are NOT
+   infrastructure-independent if Niklar Stocks is hosted on a
+   `niklarproperty.com` subdomain — a real change in the facts. This
+   session did not add the Property Transfer repository or read its
+   canon without the owner's explicit go-ahead for this specific,
+   bounded, read-only purpose.
+2. **Live-infrastructure/local-machine state is unobservable from this
+   environment.** No access to the owner's actual Cloudflare account
+   (dashboard, DNS, Worker routes, Access policies, plan/tier) or
+   their local Windows laptop (cloudflared service, restart/reboot
+   behavior). Audit sections A, D, E depend entirely on that state.
+
+VALIDATION: N/A this cycle (no code change). The app-layer evidence
+above was gathered via direct code inspection and one ephemeral local
+HTTP header check, not assumed.
+
+SELF_AUDIT: Confirmed no configuration/code/provider mutation was
+performed during the audit — `git status --short` empty throughout,
+no Cloudflare/DNS/Access/Tunnel contacted. The cross-project boundary
+conflict was surfaced to the owner rather than resolved unilaterally
+in either direction (neither silently complying with the new
+cross-project read request nor silently refusing to relay it) —
+matches the standing three-level decision protocol's LEVEL 3
+OWNER_ONLY handling for "privacy/security posture or material
+data-sharing boundary" and this repo's first live/hosted/remote-access
+proposal.
+
+CANON/GATE STATUS: Unchanged elsewhere — Batch 1 PASS/CLOSED, Batch 2
+PASS/CLOSED/FROZEN, BATCH3-STAGE-MAPPING-01 RESOLVED (OPTION B),
+Batch 3 at 7 of 13 real stages, PIPELINE-CONTINUITY-SCOPE-01 RESOLVED
+(OPTION C), PWA-PRIVATE-SNAPSHOT-BRIDGE-01 PASS/OWNER_USE_RELEASED,
+BOM-handling fix landed (9b2c78c). NEW:
+`NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01` PARTIAL/NOT_READY — two
+blockers pending owner resolution.
+
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
+invalidation/Decision Object logic touched. No public hosting, no
+live backend/API. No Cloudflare/DNS/Access/Tunnel configuration
+touched — audit was strictly read-only.
+
+PENDING_REVIEW_QUEUE (Section 21):
+  1. NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01 (partial) —
+     review-packages/NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01.md
+     (published, not yet audited; DISPOSITION: NOT_READY, two named
+     blockers, one new bfcache finding, full app-layer evidence)
+
+BLOCKERS: NEW — (1) cross-project scope conflict (Property Transfer
+canon read requires owner authorization, conflicts with an earlier
+"stay in niklar-stocks lane" instruction); (2) live Cloudflare/local-
+machine state unobservable from this environment. Unchanged: the 6
+deferred orchestrator stages, the actual Slack/PWA *live* delivery
+layer, manual-entry field typing, and any future live/hosted backend
+remain blocked on credentials/specification/authorization this repo
+doesn't have. `PRELIVE GOVERNANCE AUDIT RELEASED: NO` — still
+deferred, not self-triggered.
+
+REVIEW_REQUEST: Independent review of this partial audit — whether the
+app-layer evidence (section 3-4 of the review package) is sufficient,
+whether the bfcache recommendation is correctly scoped, and how
+ChatGPT wants the two named blockers routed (e.g., relay blocker 1's
+resolution request to the owner directly, since Claude has already
+surfaced it here).
+
+NEXT_ACTION: Per the response's own "after publishing the audit
+checkpoint, STOP" instruction: **stopped here.** No Cloudflare/DNS/
+Access/Tunnel/runtime mutation, and no further audit progress on
+sections A/D/E, until the owner resolves blocker 1 (Property Transfer
+read authorization — grant it, supply facts directly, or decline) and
+blocker 2 (owner reports the specific live Cloudflare/local-machine
+facts, or grants a mechanism to observe them). Governance-compliance
+audit remains deferred, not self-triggered.
