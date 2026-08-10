@@ -1,10 +1,43 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-10 (NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01
-substantially advanced -- HANDOFF_SEQ 33. DISPOSITION: CONDITIONAL.
-Blocker 1 (Property Transfer read) CLOSED with a decisive, real
-routing-collision finding; blocker 2 (live account/laptop facts) still
-open per the owner's own choice to report those directly later. No
-Cloudflare/DNS/Access/Tunnel/runtime mutation performed.)
+Last updated: 2026-08-10 (Owner accepted the audit's domain
+recommendation; NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01 moved to
+explicit HOLD pending the new domain + blocker 2 -- HANDOFF_SEQ 34. No
+other safe, already-authorized, unblocked increment currently queued;
+reported honestly rather than manufactured.)
+
+HOLD — NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01: domain accepted, pending selection (this update)
+---------------------------------------------------------------------------
+  - Owner directly accepted the audit's routing recommendation
+    (decision #65): use a separate, dedicated domain for Niklar Stocks
+    remote access, leave niklarproperty.com / Property Transfer
+    infrastructure completely untouched. The exact new domain is not
+    yet chosen and will be provided later. Explicit instruction: do
+    not implement Cloudflare remote access yet, no DNS/Access/Tunnel/
+    provider changes, continue only with other already-authorized
+    Niklar work not dependent on the domain decision, do not invent a
+    new implementation batch solely to stay busy.
+  - NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01 moves from CONDITIONAL to
+    explicit HOLD, pending (1) the domain choice and (2) blocker 2's
+    still-open live Cloudflare-account/local-machine facts (unchanged,
+    owner will report directly later).
+  - Checked TODO_CURRENT.txt's full queue for any other already-
+    authorized, unblocked, safe increment not dependent on the domain
+    decision -- found none: Batch 3's 6 remaining deferred
+    orchestrator stages remain HARD_GATE (missing credentials,
+    unchanged); PWA-PRIVATE-SNAPSHOT-BRIDGE-01 is fully accepted/
+    closed with its one corrective finding already fixed.
+  - The audit's own bfcache/Cache-Control recommendation was
+    explicitly considered and NOT implemented this cycle: it's
+    Claude's own self-generated audit recommendation, not yet
+    independently reviewed by ChatGPT or explicitly authorized by the
+    owner -- applying Section 21's 5-question self-check, "already
+    authorized?" resolves NO/UNCERTAIN, so per Section 21's own rule
+    and this cycle's explicit "do not invent a new implementation
+    batch" instruction, it stays queued in the same pending review
+    package rather than self-authorized now.
+  - Recorded as decision #66. No niklar-stocks mutation this cycle.
+    Archived HANDOFF_SEQ 33 first.
+
 
 CONDITIONAL (blocker 1 closed) — NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01 (this update)
 ---------------------------------------------------------------------------

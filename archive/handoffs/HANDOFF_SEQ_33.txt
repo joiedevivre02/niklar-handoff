@@ -1,0 +1,129 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: CLOUDFLARE_REMOTE_ACCESS_AUDIT_CONDITIONAL — BLOCKER 1 CLOSED WITH DECISIVE FINDING — STOPPED FOR CHATGPT REVIEW
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 33
+CHECKPOINT_ID: niklar-handoff-2026-08-10-seq33-cloudflare-remote-access-audit-01-conditional
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 9b2c78c6539863f09f117154fb8678e883b52455 (unchanged this cycle — audit was read-only)
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Advance NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01 (HANDOFF_SEQ
+32's partial audit, two blockers) after the owner directly answered
+how to resolve both: authorized a narrow, bounded read of Property
+Transfer's Drive canon for the routing-collision question ("Grant
+access, let me read it"), and will report live Cloudflare-account/
+local-machine facts directly when needed ("I'll tell you the facts").
+
+MATERIAL_DELTA: No niklar-stocks mutation — read-only throughout,
+confirmed via unchanged `git status --short`. Read narrowly, from the
+primary source (`PROPERTY_TRANSFER_CHATGPT_HANDOFF_CURRENT`, via the
+already-cloned `niklar-operating-engineering-system` reference repo in
+`/workspace`, first `git pull`ed to confirm freshness — it was 13
+days behind origin/master), only the Cloudflare/DNS/Worker-route
+sections. Property Transfer's own product/business logic (JCN
+issuance, PDF rendering, email/webhook handling, etc.) was
+deliberately not read or imported, per this session's existing
+scope-firewall discipline for that repository (decision #12).
+
+**DECISIVE FINDING**: Property Transfer's Cloudflare Worker
+`niklar-property-edge` has live, confirmed-working routes covering
+**both** `niklarproperty.com/*` **and** `*.niklarproperty.com/*` (per
+the handoff's own "CHECKPOINT 18 — LIVE CLOUDFLARE → CLOUD RUN
+INFRASTRUCTURE DEPLOYED AND SMOKE-PROVEN", the newest Cloudflare-state
+checkpoint in that document), explicitly marked "KNOWN-GOOD
+INFRASTRUCTURE — PRESERVE... without a demonstrated requirement." A
+direct text search of the full handoff confirmed zero existing
+mentions of `niklar-stocks` or any Niklar-Stocks-specific subdomain —
+no existing carve-out. Any `niklarproperty.com` subdomain today would
+be caught by that live wildcard and routed to the Property Transfer
+Cloud Run origin, not a Niklar Stocks origin, unless a new,
+more-specific Worker route were added — real infrastructure surgery
+on Property Transfer's own explicitly-protected live production
+routing, undertaken purely to host an unrelated second product on its
+domain.
+
+**RECOMMENDATION**: do NOT use any `niklarproperty.com` subdomain for
+Niklar Stocks remote access. Use a separate, dedicated domain sharing
+no Cloudflare zone with Property Transfer — avoids the collision
+entirely rather than managing around it, and leaves Property
+Transfer's live infrastructure completely untouched.
+
+Blocker 2 (live Cloudflare-account/local-machine facts for whichever
+domain is ultimately used) remains open, per the owner's own choice —
+correctly deferred, not guessed.
+
+The published audit checkpoint
+(`review-packages/NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01.md`) was
+updated in place: disposition NOT_READY → CONDITIONAL, section 2
+filled in with real evidence, blocker 1 marked CLOSED, sections
+5/7/8/9/10 updated to match. The app-layer evidence from HANDOFF_SEQ
+32 (63-column contract/private-snapshot flow/git-ignore/no-store/
+service-worker/zero-client-storage all confirmed preserved; the
+bfcache `Cache-Control` finding) is unchanged and still valid.
+
+VALIDATION: N/A this cycle (no code change). All new evidence gathered
+via direct primary-source document reads and a text search for
+existing Niklar-Stocks references (zero found) — not assumed.
+
+SELF_AUDIT: Confirmed no configuration/code/provider mutation was
+performed — `git status --short` empty in both niklar-stocks and the
+reference clone throughout (only a `git pull` fast-forward in the
+latter, no local edits). Stayed within the owner's specific
+authorization (routing-collision facts only) rather than broadening
+into Property Transfer's product logic — matches decision #12's
+existing scope-firewall discipline for that repository, applied
+consistently rather than relaxed just because a new authorization
+existed for one narrow purpose.
+
+CANON/GATE STATUS: Unchanged elsewhere — Batch 1 PASS/CLOSED, Batch 2
+PASS/CLOSED/FROZEN, BATCH3-STAGE-MAPPING-01 RESOLVED (OPTION B),
+Batch 3 at 7 of 13 real stages, PIPELINE-CONTINUITY-SCOPE-01 RESOLVED
+(OPTION C), PWA-PRIVATE-SNAPSHOT-BRIDGE-01 PASS/OWNER_USE_RELEASED,
+BOM-handling fix landed (9b2c78c). UPDATED:
+`NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01` now CONDITIONAL (was
+NOT_READY) — blocker 1 CLOSED, blocker 2 open.
+
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
+invalidation/Decision Object logic touched. No public hosting, no
+live backend/API. No Cloudflare/DNS/Access/Tunnel configuration
+touched — audit remains strictly read-only. Property Transfer's own
+canon-protected live infrastructure was read-only inspected, never
+modified, and its product logic was deliberately not imported into
+niklar-stocks.
+
+PENDING_REVIEW_QUEUE (Section 21):
+  1. NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01 (updated) —
+     review-packages/NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01.md
+     (published, not yet audited; DISPOSITION: CONDITIONAL, blocker 1
+     closed with the decisive wildcard-collision finding and a
+     concrete domain recommendation, blocker 2 still open)
+
+BLOCKERS: Blocker 2 only (live Cloudflare-account/local-machine facts
+for whichever domain is ultimately chosen — owner will report
+directly when needed). Blocker 1 (Property Transfer read
+authorization) is CLOSED. Unchanged: the 6 deferred orchestrator
+stages, the actual Slack/PWA *live* delivery layer, manual-entry field
+typing, and any future live/hosted backend remain blocked on
+credentials/specification/authorization this repo doesn't have.
+`PRELIVE GOVERNANCE AUDIT RELEASED: NO` — still deferred, not
+self-triggered.
+
+REVIEW_REQUEST: Independent review of the updated audit checkpoint —
+whether the routing-collision finding and domain recommendation are
+sound, and whether CONDITIONAL is the right disposition given blocker
+2 remains open.
+
+NEXT_ACTION: Per the audit's own "after publishing the audit
+checkpoint, STOP" instruction: **stopped here.** No Cloudflare/DNS/
+Access/Tunnel/runtime mutation, and no implementation prompt
+preparation, until: (1) the owner confirms agreement with the
+"use a different domain" recommendation (or provides a reason to
+reconsider it), and (2) the owner reports the specific live
+Cloudflare-account/local-machine facts needed for sections D/E once
+implementation is ready to proceed. Governance-compliance audit
+remains deferred, not self-triggered.

@@ -1809,3 +1809,41 @@ NIKLAR-HANDOFF — CHANGELOG
     the audit checkpoint, STOP" instruction: stopped here. No further
     Cloudflare-related work without further owner/ChatGPT direction.
     Archived HANDOFF_SEQ 32 first.
+
+2026-08-10 (Owner accepted domain recommendation; audit moved to explicit HOLD)
+  - Owner directly accepted the audit's routing recommendation
+    (decision #65): use a separate, dedicated domain for Niklar Stocks
+    remote access, leave niklarproperty.com / Property Transfer
+    infrastructure completely untouched. The exact new domain is not
+    yet chosen and will be provided later. Explicit instruction: do
+    not implement Cloudflare remote access yet, no DNS/Access/Tunnel/
+    provider changes, continue only with other already-authorized
+    Niklar work not dependent on the domain decision, do not invent a
+    new implementation batch solely to stay busy.
+  - NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01 moves from CONDITIONAL to
+    explicit HOLD, pending (1) the domain choice and (2) blocker 2's
+    still-open live Cloudflare-account/local-machine facts (unchanged,
+    owner will report directly later).
+  - Checked the full TODO_CURRENT.txt queue for any other already-
+    authorized, unblocked, safe increment not dependent on the domain
+    decision -- found none: Batch 3's 6 remaining deferred
+    orchestrator stages remain HARD_GATE (missing credentials,
+    unchanged since decisions #35/#37); PWA-PRIVATE-SNAPSHOT-BRIDGE-01
+    is fully accepted/closed with its one corrective finding (BOM
+    handling) already fixed and accepted.
+  - The audit's own bfcache/Cache-Control recommendation from
+    decisions #64/#65 was explicitly considered and NOT implemented
+    this cycle: it is Claude's own self-generated audit
+    recommendation, not yet independently reviewed by ChatGPT or
+    explicitly authorized by the owner. Applying Section 21's
+    5-question self-check, "already authorized?" resolves
+    NO/UNCERTAIN; per Section 21's own "if any answer is no or
+    uncertain, classify as HARD_GATE" rule, and per this cycle's
+    explicit "do not invent a new implementation batch solely to stay
+    busy" instruction, it stays queued in the same pending review
+    package rather than self-authorized now.
+  - Recorded as decision #66. No niklar-stocks mutation this cycle --
+    no other safe increment currently available, reported honestly
+    rather than manufactured. Next material work awaits either the
+    domain, ChatGPT's review of the pending audit package, or new
+    owner direction. Archived HANDOFF_SEQ 33 first.
