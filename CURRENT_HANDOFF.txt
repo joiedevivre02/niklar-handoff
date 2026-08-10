@@ -5,92 +5,107 @@ repository discovery/search. Full history: `archive/handoffs/` and
 `CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
 in form, fetched only when this checkpoint's summary isn't enough.
 
-STATUS: PWA_PRIVATE_SNAPSHOT_BRIDGE_01_OWNER_USE_RELEASED — NO CODE CHANGE THIS CYCLE
+STATUS: BLOCKED — AWAITING OWNER'S REAL MASTER DATABASE EXPORT
 PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
-HANDOFF_SEQ: 29
-CHECKPOINT_ID: niklar-handoff-2026-08-09-seq29-response26-pass-owner-use-released
+HANDOFF_SEQ: 30
+CHECKPOINT_ID: niklar-handoff-2026-08-10-seq30-owner-operability-verification-blocked
 IMPLEMENTATION_COMMIT: niklar-stocks main @ e84bce90b6421b818c2fe46a817ad1e77f4ffe0f (unchanged this cycle)
 HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
 
-GOAL: Record ChatGPT's independent-review PASS on corrective commit
-e84bce9 (Drive sync doc RESPONSE_SEQ 26, responding to HANDOFF_SEQ 28)
-and the resulting owner-use release for PWA-PRIVATE-SNAPSHOT-BRIDGE-01.
+GOAL: Owner "Cont": run the already-accepted private Niklar PWA with
+the owner's real Master Database — verify the exact input file/
+format, generate the private snapshot, confirm the documented local
+run workflow end to end; stop and ask if the real file/location/
+format is not available.
 
-MATERIAL_DELTA: None to niklar-stocks — acknowledgment/reconciliation
-only. F1 RESOLVED (confirmed by ChatGPT): the input boundary fails
-closed before transformation whenever "No-Chase Flag" arrives as a
-non-empty string, removing the unsafe truthiness inversion. The
-deliberate non-change to invalidation_known accepted as semantically
-correct (presence test, not boolean-source interpretation).
-OUTPUT-PATH HARDENING ACCEPTED as proportionate, including the
-trailing-slash git-check-ignore case; no generalized filesystem policy
-or new dependency introduced.
+MATERIAL_DELTA: No niklar-stocks code change. Searched this
+environment exhaustively (session scratchpad, home directory,
+/workspace, the Claude uploads folder for this session) — confirmed
+no real Master Database CSV/JSON/XLSX export exists anywhere here.
+This remote container is not the owner's own machine/Drive; the real
+canonical export genuinely does not exist in this environment, not
+assumed absent.
 
-OWNER-USE STATUS (explicit, from RESPONSE_SEQ 26): PWA-PRIVATE-
-SNAPSHOT-BRIDGE-01 is now accepted as a usable private snapshot path.
-JSON: SAFE for real/private owner use when canon-compatible and
-No-Chase Flag is a native JSON boolean or null. CSV: SAFE for real/
-private owner use only under the explicit V1 restriction that
-No-Chase Flag is blank for every row — any non-empty value must fail
-closed, no string-to-boolean convention may be invented. The accepted
-path remains one-shot/private/local: owner-supplied canonical Master
-snapshot → ops.mobile_snapshot_export → git-ignored pwa/private-data/
-→ private PWA. Does not claim live freshness or continuous monitoring.
+Re-verified the exact input contract before asking: `--input` accepts
+a local `.csv` or `.json` file whose columns match
+`ops/niklar_stocks_ops_v4.FROZEN_SCHEMA` exactly (63 named columns,
+exact order, fails closed on any mismatch via the same
+`validate_schema()` used elsewhere). CSV additionally requires the
+`No-Chase Flag` column blank for every row (JSON may carry a native
+boolean/null there instead) — per RESPONSE_SEQ 26's owner-use
+restriction.
 
-One known minor documentation note (a docstring says validation
-surfaces "every problem row at once" while the implementation raises
-on the first ambiguous row — wording mismatch only, not a behavior
-defect) explicitly NOT actioned now, per the response's own "fix
-opportunistically only if touching that documentation later; do not
-create a new batch just for it."
+Ran the exact documented workflow, cold, with a freshly generated
+synthetic verification CSV (tickers VERIFY1/VERIFY2, schema-correct,
+No-Chase Flag blank, one fuller row and one deliberately sparse row,
+kept outside the repo per the README's own instruction):
+`python3 -m ops.mobile_snapshot_export --input <file> --output
+pwa/private-data` (exit 0, 4 files written); `git check-ignore -v
+pwa/private-data/` confirmed ignored; the documented `python3 -m
+http.server 8000 --bind 127.0.0.1` (confirmed localhost-only); a real
+headless-browser render (Playwright/Chromium, transient) confirmed the
+banner reads "PRIVATE SNAPSHOT — generated <timestamp> (2
+ticker(s))", data-mode=PRIVATE, both VERIFY1/VERIFY2 render, zero DEMO
+fixture tickers leak in, zero console errors.
 
-VALIDATION: Independently re-confirmed by ChatGPT via its own GitHub
-connector and direct private-repo commit inspection — unittest
-303/303, mypy 0/19, PWA smoke PASS, node checks clean, 3 browser
-scenarios re-verified; GitHub Actions run 31341827199 confirmed
-"ai-qa" completed successfully; the fix stays confined to the
-snapshot/export boundary and tests/docs, frozen mobile_contract.py and
-canonical trading/scoring logic not modified.
+All generated `pwa/private-data/` artifacts and the test server
+process were removed/killed immediately after; working tree confirmed
+clean (`git status --short` empty) before concluding.
 
-SELF_AUDIT: No niklar-stocks mutation this cycle. Reconciliation
-recorded verbatim from RESPONSE_SEQ 26's own text, not reworded in any
-way that could shift its meaning.
+VALIDATION: No suite changes this cycle (verification-only). The
+end-to-end manual re-run above is the validation: export CLI, git-
+ignore enforcement, localhost-only server binding, and real-browser
+render all reconfirmed working, unmodified, against the already-
+accepted e84bce9 code.
 
-CANON/GATE STATUS: Unchanged elsewhere — Batch 1 PASS/CLOSED, Batch 2
+SELF_AUDIT: No niklar-stocks mutation. Did not fabricate or substitute
+synthetic data as if it were the real snapshot for the owner's actual
+use — stopped and asked instead, per the owner's own explicit
+fallback instruction and this session's standing "fail closed rather
+than guess" rule. No public hosting, live API, Slack, Inbox, journal,
+or broader architecture work attempted, per explicit instruction.
+
+CANON/GATE STATUS: Unchanged — Batch 1 PASS/CLOSED, Batch 2
 PASS/CLOSED/FROZEN, BATCH3-STAGE-MAPPING-01 RESOLVED (OPTION B),
 Batch 3 at 7 of 13 real stages, PIPELINE-CONTINUITY-SCOPE-01 RESOLVED
-(OPTION C). PWA-PRIVATE-SNAPSHOT-BRIDGE-01 (12bb227, corrective fix
-e84bce9) is now PASS/OWNER_USE_RELEASED — no longer pending review.
+(OPTION C), PWA-PRIVATE-SNAPSHOT-BRIDGE-01 PASS/OWNER_USE_RELEASED
+(RESPONSE_SEQ 26). This cycle adds no new canon/gate state — a
+verification-only re-confirmation, now blocked on real owner data.
 
 PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
 invalidation/Decision Object logic touched. No public hosting, no
-live backend/API. Boundaries reaffirmed unchanged by RESPONSE_SEQ 26:
-no public hosting/deployment, no live backend/API authorization, no
-Daily Brief/Slack/Inbox/journal/push/broader-orchestrator work
-authorized by this review, no canonical logic changes, pre-live
-governance audit remains preserved and NOT released.
+live backend/API. No real private/trading data anywhere — confirmed
+absent from this environment entirely, not merely absent from the
+diff.
 
-PENDING_REVIEW_QUEUE (Section 21): Empty. Every package queued since
-the PWA-PRIVATE-SNAPSHOT-BRIDGE-01 batch has now reached a final
-disposition (PASS).
+PENDING_REVIEW_QUEUE (Section 21): Empty — this cycle produced no new
+code checkpoint requiring independent review, only a verification
+re-confirmation and a blocker.
 
-BLOCKERS: Unchanged — the 6 deferred orchestrator stages, the actual
+BLOCKERS: NEW — the owner's real Master Database export is not
+present anywhere in this environment (checked exhaustively: session
+scratchpad, home directory, /workspace, Claude uploads folder). This
+is a genuine external blocker, not a judgment call: Claude cannot
+generate a real private snapshot without the owner supplying the real
+file. Unchanged: the 6 deferred orchestrator stages, the actual
 Slack/PWA *live* delivery layer, manual-entry field typing, and any
-future live/hosted backend remain genuinely blocked on credentials/
+future live/hosted backend remain blocked on credentials/
 specification/authorization this repo doesn't have. `PRELIVE
 GOVERNANCE AUDIT RELEASED: NO` — still deferred, not self-triggered.
 
-REVIEW_REQUEST: None outstanding. Per RESPONSE_SEQ 26's own terms, the
-next required ChatGPT review is any new material code checkpoint, new
-Level 2/OWNER_ONLY decision, or any mismatch discovered against the
-owner's actual Master snapshot.
+REVIEW_REQUEST: None required by this cycle — no new code. ChatGPT may
+still audit this verification cycle's reasoning/scope if useful, but
+nothing here is FIX_REQUIRED-eligible.
 
-NEXT_ACTION: RESPONSE_SEQ 26 authorizes continuing "only the shortest
-already-authorized owner-operability steps for this private PWA" — but
-per this session's established "Sync" precedent (decision #57, the
-RESPONSE_SEQ 22 PASS cycle), a bare "Sync" records acknowledgment and
-clears the review queue; it does not itself start a new increment.
-Next-increment selection (including that owner-operability direction)
-is deferred to the next explicit "Cont" or other owner direction, not
-started automatically here. Governance-compliance audit remains
-deferred, not self-triggered.
+NEXT_ACTION: **THE EXACT ASK (to the owner):** supply the real,
+canonical Master Database export as a local `.csv` or `.json` file (or
+its exact reachable location, if one exists that this environment can
+access) with columns matching `FROZEN_SCHEMA`'s 63 columns in order —
+a genuine Master Database export already has this shape. If CSV, the
+`No-Chase Flag` column must be blank for every row (a real value there
+fails the export closed by design). Once supplied, the already-
+verified CLI + local-server workflow is ready to run against it with
+no further code change expected. No further implementation work
+starts until the owner provides this, or gives other explicit
+direction. Governance-compliance audit remains deferred, not
+self-triggered.

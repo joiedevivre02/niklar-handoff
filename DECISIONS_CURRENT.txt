@@ -1983,3 +1983,70 @@ NIKLAR — DECISIONS (current)
     ChatGPT review (per the response's own terms): any new material
     code checkpoint, new Level 2/OWNER_ONLY decision, or any mismatch
     discovered against the owner's actual Master snapshot.
+
+62) Decision: On explicit "Cont" (owner: "proceed with the shortest
+    owner-operable path to run the accepted private Niklar PWA with my
+    real Master Database"), re-verified the entire documented workflow
+    end-to-end with fresh synthetic data, confirmed no real Master
+    Database file/location exists anywhere in this environment, and
+    stopped to ask the owner for it rather than guessing or
+    substituting synthetic data for the real request -- per the
+    owner's own explicit fallback instruction.
+    Date: 2026-08-10
+    Rationale: Searched this environment exhaustively for any real
+    Master Database export before concluding it's absent: the session
+    scratchpad, home directory, /workspace, and the Claude uploads
+    folder for this session (contains only a setup doc and an
+    unrelated screenshot, confirmed at session start to be a different
+    project sharing a name only) -- no CSV/JSON/XLSX resembling a
+    Master Database export anywhere. This remote container is not the
+    owner's own machine/Drive; the real canonical Master Database
+    export genuinely does not exist here and was never expected to
+    (this session's standing rule: no real Niklar trading/ticker/
+    portfolio data may ever be committed, tested with, or left in any
+    tracked or working-tree path -- extending that to "must not be
+    fabricated/assumed present" when the owner explicitly asks for the
+    real thing).
+    Re-verified the exact input contract before asking: --input
+    accepts a local .csv or .json file whose columns match
+    `ops/niklar_stocks_ops_v4.FROZEN_SCHEMA` exactly (63 named
+    columns, exact order, enforced by the same `validate_schema()`
+    used elsewhere in this repo -- fails closed on any mismatch); CSV
+    additionally requires the `No-Chase Flag` column to be blank for
+    every row (per RESPONSE_SEQ 26's owner-use restriction and this
+    session's F1 fix) -- JSON may carry a native boolean/null there
+    instead.
+    Ran the exact documented workflow, cold, with a freshly generated
+    synthetic verification CSV (tickers VERIFY1/VERIFY2, schema-
+    correct, No-Chase Flag blank, one COMPLETE-ish row and one
+    deliberately sparse PARTIAL row, kept outside the repo per the
+    README's own instruction): `python3 -m ops.mobile_snapshot_export
+    --input <file> --output pwa/private-data` (exit 0, 4 files
+    written); `git check-ignore -v pwa/private-data/` confirmed
+    ignored; `cd pwa && python3 -m http.server 8000 --bind 127.0.0.1`
+    (confirmed localhost-only); a real headless-browser render
+    (Playwright/Chromium, transient) confirmed the banner reads
+    "PRIVATE SNAPSHOT -- generated <timestamp> (2 ticker(s))",
+    data-mode=PRIVATE, both VERIFY1/VERIFY2 render, zero DEMO fixture
+    tickers leak in, zero console errors. All generated
+    pwa/private-data/ artifacts and the test server process were
+    removed/killed immediately after; working tree confirmed clean
+    (`git status --short` empty) before concluding.
+    No niklar-stocks code change was made or needed -- this cycle is a
+    verification-only re-confirmation of an already-accepted path, not
+    new implementation. Per the owner's explicit "if the real Master
+    Database file/location or format is not available to you, stop
+    and tell me exactly what you need" instruction, and per the
+    standing "never invent missing behavior/field semantics... fail
+    closed rather than guess" rule, did not fabricate or substitute a
+    synthetic file as if it were the real snapshot for the owner's
+    actual use -- stopped and asked instead.
+    Affected component: none (niklar-stocks) -- verification only, no
+    file changes; niklar-handoff CURRENT_HANDOFF.txt (HANDOFF_SEQ 30),
+    archive/handoffs/HANDOFF_SEQ_29.txt (archived)
+    Status: Frozen (verification complete, blocker recorded) —
+    HANDOFF_SEQ 30. BLOCKED on the owner supplying the real Master
+    Database export (or its exact location if reachable from this
+    environment) — see CURRENT_HANDOFF.txt NEXT_ACTION for the precise
+    ask. No public hosting, live API, Slack, Inbox, journal, or
+    broader architecture work attempted, per explicit instruction.

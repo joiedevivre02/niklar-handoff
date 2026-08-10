@@ -1570,3 +1570,57 @@ NIKLAR-HANDOFF — CHANGELOG
     "prioritize the shortest owner-operable path" direction) is
     deferred to the next explicit "Cont", not started automatically
     under a bare "Sync". Archived HANDOFF_SEQ 28 first.
+
+2026-08-10 (Owner-operability verification cycle -- blocked on real Master Database)
+  - Owner "Cont": proceed with the shortest owner-operable path to run
+    the accepted private Niklar PWA with the real Master Database;
+    verify the exact input file/format; generate the private snapshot;
+    confirm the documented local run workflow end to end; stop and ask
+    if the real file/location/format is not available.
+  - Searched this environment exhaustively (session scratchpad, home
+    directory, /workspace, the Claude uploads folder for this
+    session) -- confirmed no real Master Database CSV/JSON/XLSX
+    export exists anywhere here. This remote container is not the
+    owner's own machine/Drive; the real canonical export genuinely
+    does not exist in this environment.
+  - Re-verified the exact input contract before asking: --input
+    accepts a local .csv or .json file whose columns match
+    ops/niklar_stocks_ops_v4.FROZEN_SCHEMA exactly (63 named columns,
+    exact order, fails closed on any mismatch via the same
+    validate_schema() used elsewhere); CSV additionally requires the
+    No-Chase Flag column blank for every row (JSON may carry a native
+    boolean/null there instead).
+  - Ran the exact documented workflow, cold, with a freshly generated
+    synthetic verification CSV (tickers VERIFY1/VERIFY2, schema-
+    correct, No-Chase Flag blank, one fuller row and one deliberately
+    sparse row, kept outside the repo per the README's own
+    instruction): python3 -m ops.mobile_snapshot_export --input
+    <file> --output pwa/private-data (exit 0, 4 files written); git
+    check-ignore -v pwa/private-data/ confirmed ignored; the
+    documented python3 -m http.server 8000 --bind 127.0.0.1 (confirmed
+    localhost-only); a real headless-browser render (Playwright/
+    Chromium, transient) confirmed the banner reads "PRIVATE SNAPSHOT
+    -- generated <timestamp> (2 ticker(s))", data-mode=PRIVATE, both
+    VERIFY1/VERIFY2 render, zero DEMO fixture tickers leak in, zero
+    console errors.
+  - All generated pwa/private-data/ artifacts and the test server
+    process were removed/killed immediately after; working tree
+    confirmed clean (git status --short empty) before concluding.
+  - No niklar-stocks code change was made or needed -- this cycle is a
+    verification-only re-confirmation of an already-accepted path
+    (RESPONSE_SEQ 26 PASS), not new implementation. Did not fabricate
+    or substitute synthetic data as if it were the real snapshot for
+    the owner's actual use, per the owner's own explicit fallback
+    instruction and this session's standing "fail closed rather than
+    guess" rule.
+  - THE EXACT ASK (to the owner): supply the real, canonical Master
+    Database export as a local .csv or .json file (or its exact
+    reachable location, if one exists that this environment can
+    access) with columns matching FROZEN_SCHEMA's 63 columns in
+    order. If CSV, the No-Chase Flag column must be blank for every
+    row. Once supplied, the already-verified CLI + local-server
+    workflow is ready to run against it with no further code change
+    expected.
+  - Recorded as decision #62. No public hosting, live API, Slack,
+    Inbox, journal, or broader architecture work attempted, per
+    explicit instruction. Archived HANDOFF_SEQ 29 first.
