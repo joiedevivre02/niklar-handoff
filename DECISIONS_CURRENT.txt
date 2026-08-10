@@ -2384,3 +2384,63 @@ NIKLAR — DECISIONS (current)
     instruction, implementation stops here. Cloudflare remote access
     remains exactly as HOLD as decision #66 left it -- unchanged,
     untouched by this cycle.
+
+68) Decision: Record the owner's domain purchase/selection
+    (`niklarintelligence.pro`) and complete the final, read-only
+    provider/local-machine fact-closure audit ChatGPT requested (Drive
+    sync doc RESPONSE_SEQ 33, responding to niklar-handoff
+    HANDOFF_SEQ 35) -- no niklar-stocks mutation, per the audit's own
+    explicit hard stops.
+    Date: 2026-08-10
+    Rationale: `PWA-BFCACHE-NO-STORE-HARDENING-01` (decision #67) was
+    independently reviewed and accepted PASS/CLOSED in the same
+    response. The owner has purchased and selected
+    `niklarintelligence.pro` as the dedicated Niklar Stocks domain,
+    closing the prior domain-choice blocker; `niklarproperty.com` and
+    Property Transfer infrastructure remain explicitly out of scope
+    and were not reread this cycle, per the response's own instruction
+    (the collision question is already resolved by the separate-domain
+    decision).
+    Completed the fact-closure audit honestly, distinguishing what
+    this session can actually observe from what it cannot, rather than
+    assuming either way: confirmed via a direct test (a network
+    request to Cloudflare's own API from this environment returned a
+    blocked-by-proxy 403) that live Cloudflare account/zone state is
+    genuinely unobservable here -- not merely asserted, matching the
+    same constraint Property Transfer's own canon independently
+    documented for its sandboxed sessions. Confirmed, directly from
+    the current niklar-stocks repo (not guessed): the accepted origin
+    path is `pwa/serve.py` with `127.0.0.1:8000` defaults and
+    `Cache-Control: no-store` already landed (decision #67); and that
+    no Windows service/startup/Task-Scheduler wrapper exists anywhere
+    in this repo today, so the PWA server only runs when manually
+    started and does not survive a reboot on its own -- confirmed via
+    a direct filename search, not assumed.
+    Everything requiring the owner's actual Cloudflare account or
+    physical Windows machine (zone/nameserver state, Zero Trust/Access
+    availability, `cloudflared` installation state, the owner's real
+    plan/tier for the cost question) was reported as UNKNOWN with the
+    exact fact/action needed to close it, rather than guessed --
+    including one Minimum Sufficient Access-pattern recommendation
+    (owner-only identity, MFA required, no Everyone/Bypass) offered
+    explicitly as general product-knowledge guidance to confirm, not
+    as an observed or configured fact.
+    No Cloudflare/DNS/Access/Tunnel/MFA/provider mutation, no zone
+    creation, no nameserver change, no cloudflared installation, no
+    repo/code change -- all explicitly forbidden by the audit's own
+    hard-stop list and confirmed absent (zero niklar-stocks file
+    changes this cycle, confirmed via `git status --short`).
+    Affected component: niklar-handoff CURRENT_HANDOFF.txt
+    (HANDOFF_SEQ 36), archive/handoffs/HANDOFF_SEQ_35.txt (archived).
+    No niklar-stocks mutation.
+    Status: Frozen (final fact audit published) -- HANDOFF_SEQ 36.
+    SAFE TO PREPARE IMPLEMENTATION PROMPT: NO -- four explicit,
+    owner-only remaining blockers recorded (Cloudflare zone/
+    nameserver state, Zero Trust/Access + identity/MFA choice,
+    `cloudflared` installation + reboot-survival design, and cost/plan
+    confirmation). Full checkpoint: review-packages/
+    NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01-final-facts.md. Per the
+    response's own "after publishing the final fact checkpoint, STOP"
+    instruction, no further Cloudflare-related work proceeds --
+    ChatGPT will derive the bounded implementation prompt from this
+    evidence.

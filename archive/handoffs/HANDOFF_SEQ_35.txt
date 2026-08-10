@@ -1,0 +1,120 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: PWA_BFCACHE_NO_STORE_HARDENING_01_LANDED — STOPPED FOR CHATGPT REVIEW — CLOUDFLARE REMAINS ON HOLD
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 35
+CHECKPOINT_ID: niklar-handoff-2026-08-10-seq35-pwa-bfcache-no-store-hardening-01
+IMPLEMENTATION_COMMIT: niklar-stocks main @ c24ecb66a740517480a26e85b90590748ab8fc84
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Implement ChatGPT's explicitly authorized bounded batch
+`PWA-BFCACHE-NO-STORE-HARDENING-01` (Drive sync doc RESPONSE_SEQ 31,
+responding to HANDOFF_SEQ 34) — the bfcache/`Cache-Control` finding
+from the Cloudflare audit, which decision #66 had deliberately left
+unimplemented pending exactly this authorization.
+
+MATERIAL_DELTA: The documented local server sent no `Cache-Control`
+header on any response, including the HTML app shell — a browser's
+back-forward cache (bfcache) could restore an already-rendered page
+(real trading data included) via the Back button without a network
+request. Real, domain-independent gap, unrelated to whether/when
+Cloudflare remote access is ever added.
+
+New `pwa/serve.py`: a minimal wrapper around the exact same stdlib
+`SimpleHTTPRequestHandler`/`HTTPServer` pattern already used elsewhere
+in this repo (no new framework/dependency). `NoStoreHTMLRequestHandler`
+hooks `send_header()` to catch the base class's own `Content-Type:
+text/html` signal (robust to both a direct `/index.html` request and
+the indirect `/` → `index.html` directory-resolution path) and adds
+`Cache-Control: no-store` only to that response.
+
+Non-HTML assets, `app.js`'s existing private-data `{cache: "no-store"}`
+fetch behavior, `service-worker.js`'s network-only `/private-data/`
+handling, DEMO/PRIVATE mode resolution, the 63-column contract, and
+all trading/scoring/tactical/Decision Object logic are all unaffected
+— confirmed via the unchanged regression suite and by leaving
+`mobile_contract.py`/`niklar_stocks_ops_v4.py` (both Drive-verbatim)
+untouched.
+
+`pwa/smoke_test.py` now serves via the same handler real owner usage
+does (not a parallel implementation that could drift out of sync),
+with a new assertion that `index.html` gets the header and every
+other asset does not. `pwa/README.md`'s "Running it locally"/LAN-mode
+sections updated to the new `python3 serve.py` command, same
+`--port`/`--bind` names and defaults as the command it replaces.
+
+Manually verified against the real documented command: `curl`
+confirmed `Cache-Control: no-store` on both `/index.html` and `/`,
+confirmed absent on `/app.js`, confirmed the existing DEMO fallback
+(`private-data/meta.json` 404 when no snapshot exists) unaffected.
+
+Known, accepted limitation documented in `serve.py`'s own docstring: a
+`304 Not Modified` response doesn't carry the header (self-resolving
+once a client receives `no-store` on a fresh `200` response) — not
+fixed further, per Minimum Sufficient Code.
+
+VALIDATION: unittest 311/311 (307→311, 4 new: direct/indirect HTML
+requests get `no-store`, non-HTML assets don't, `Content-Type`
+unaffected), mypy 0/20 (19→20, `pwa/serve.py` added to scope), PWA
+smoke PASS (now via the real handler with header assertions built
+in), `node --check` clean (unaffected). Real GitHub Actions run
+`31361914641` confirmed conclusion: "success".
+
+SELF_AUDIT: `mobile_contract.py`/`niklar_stocks_ops_v4.py` (both
+Drive-verbatim) confirmed unmodified — zero changes to either file in
+this diff. No new dependency — reuses the exact existing stdlib
+server pattern. No Cloudflare/DNS/Access/Tunnel/MFA/provider
+configuration, no domain selection, no Property Transfer changes, no
+browser persistent storage, no service-worker caching of private-data
+— all explicitly out of this batch's authorized scope and confirmed
+absent from this diff (grep for `localStorage`/`sessionStorage`/
+`indexedDB`/`document.cookie` across the diff: zero matches).
+
+CANON/GATE STATUS: Unchanged elsewhere — Batch 1 PASS/CLOSED, Batch 2
+PASS/CLOSED/FROZEN, BATCH3-STAGE-MAPPING-01 RESOLVED (OPTION B),
+Batch 3 at 7 of 13 real stages, PIPELINE-CONTINUITY-SCOPE-01 RESOLVED
+(OPTION C), PWA-PRIVATE-SNAPSHOT-BRIDGE-01 PASS/OWNER_USE_RELEASED.
+NEW: `PWA-BFCACHE-NO-STORE-HARDENING-01` implemented, pending review.
+`NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01` remains exactly HOLD, as
+decision #66 left it — untouched this cycle.
+
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
+invalidation/Decision Object logic touched. No public hosting, no
+live backend/API. No Cloudflare/DNS/Access/Tunnel configuration
+touched — remains on hold, untouched.
+
+PENDING_REVIEW_QUEUE (Section 21):
+  1. niklar-stocks commit c24ecb6 —
+     review-packages/c24ecb6-bfcache-no-store-hardening.md
+     (published, not yet audited; PWA-BFCACHE-NO-STORE-HARDENING-01)
+  2. NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01 (unchanged from
+     HANDOFF_SEQ 33/34) —
+     review-packages/NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01.md
+     (still open, on HOLD pending the domain choice and blocker 2)
+
+BLOCKERS: Cloudflare remote access remains on explicit HOLD pending
+(1) the owner's domain choice and (2) blocker 2 (live Cloudflare-
+account/local-machine facts) — unchanged, untouched by this cycle.
+Unchanged: the 6 deferred orchestrator stages, the actual Slack/PWA
+*live* delivery layer, manual-entry field typing, and any future
+live/hosted backend remain blocked on credentials/specification/
+authorization this repo doesn't have. `PRELIVE GOVERNANCE AUDIT
+RELEASED: NO` — still deferred, not self-triggered.
+
+REVIEW_REQUEST: Independent review of commit c24ecb6 — exact SHA,
+files changed, test delta, the send_header-hook design rationale, and
+the explicit scope-boundary confirmations are all in the review
+package.
+
+NEXT_ACTION: Per the batch's own "after the bounded fix and
+validation, STOP for ChatGPT review" instruction: **stopped here.**
+No Cloudflare/DNS/Access/Tunnel/MFA/provider configuration, no domain
+implementation, until the owner supplies the domain and/or the live
+Cloudflare-account/local-machine facts, or ChatGPT/the owner gives new
+direction. Governance-compliance audit remains deferred, not
+self-triggered.

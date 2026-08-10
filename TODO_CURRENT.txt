@@ -1,9 +1,48 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-10 (PWA-BFCACHE-NO-STORE-HARDENING-01 landed --
-HANDOFF_SEQ 35. Stopped for ChatGPT review per the batch's own
-instruction. Cloudflare remote access remains on HOLD, untouched.)
+Last updated: 2026-08-10 (Owner domain recorded (niklarintelligence.pro);
+final read-only Cloudflare fact-closure audit published -- HANDOFF_SEQ
+36. No niklar-stocks mutation. Four owner-only blockers remain before
+an implementation prompt is safe to prepare.)
 
-DONE — PWA-BFCACHE-NO-STORE-HARDENING-01: bfcache hardening fix (this update)
+DONE — Domain recorded + final Cloudflare fact-closure audit (this update)
+---------------------------------------------------------------------------
+  - Owner purchased and selected niklarintelligence.pro as the
+    dedicated Niklar Stocks domain (RESPONSE_SEQ 33, responding to
+    HANDOFF_SEQ 35), closing the prior domain-choice blocker.
+    niklarproperty.com / Property Transfer remain untouched and were
+    not reread this cycle, per the response's own instruction.
+  - PWA-BFCACHE-NO-STORE-HARDENING-01 (decision #67) independently
+    reviewed and accepted PASS/CLOSED in the same response.
+  - Completed the final, read-only provider/local-machine fact-closure
+    audit: confirmed via a direct test (a request to Cloudflare's own
+    API from this environment returned a blocked-by-proxy 403) that
+    live Cloudflare account/zone state is genuinely unobservable here
+    -- not merely asserted. Confirmed directly from the repo: the
+    accepted origin path is pwa/serve.py with 127.0.0.1:8000 defaults
+    and Cache-Control: no-store already landed; no Windows service/
+    startup/Task-Scheduler wrapper exists anywhere in this repo today,
+    so the PWA server only runs when manually started.
+  - Everything requiring the owner's actual Cloudflare account or
+    physical Windows machine (zone/nameserver state, Zero Trust/Access
+    availability, cloudflared installation state, real plan/tier for
+    the cost question) reported as UNKNOWN with the exact fact/action
+    needed to close it -- including one Minimum Sufficient Access-
+    pattern recommendation (owner-only identity, MFA required, no
+    Everyone/Bypass) offered as general guidance to confirm, not an
+    observed fact.
+  - No Cloudflare/DNS/Access/Tunnel/MFA/provider mutation, no zone
+    creation, no nameserver change, no cloudflared installation, no
+    repo/code change -- confirmed via unchanged git status --short
+    throughout.
+  - Recorded as decision #68. SAFE TO PREPARE IMPLEMENTATION PROMPT:
+    NO -- four explicit owner-only blockers remain. Full checkpoint:
+    review-packages/NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01-final-facts.md.
+  - Per the response's own "after publishing the final fact
+    checkpoint, STOP" instruction: stopped here. Archived HANDOFF_SEQ
+    35 first.
+
+
+DONE — PWA-BFCACHE-NO-STORE-HARDENING-01: bfcache hardening fix (prior update)
 ---------------------------------------------------------------------------
   - ChatGPT independently reviewed and accepted the bfcache/
     Cache-Control finding decision #66 had deliberately left
