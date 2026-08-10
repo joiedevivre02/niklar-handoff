@@ -1,11 +1,64 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-10 (Owner accepted the audit's domain
-recommendation; NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01 moved to
-explicit HOLD pending the new domain + blocker 2 -- HANDOFF_SEQ 34. No
-other safe, already-authorized, unblocked increment currently queued;
-reported honestly rather than manufactured.)
+Last updated: 2026-08-10 (PWA-BFCACHE-NO-STORE-HARDENING-01 landed --
+HANDOFF_SEQ 35. Stopped for ChatGPT review per the batch's own
+instruction. Cloudflare remote access remains on HOLD, untouched.)
 
-HOLD — NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01: domain accepted, pending selection (this update)
+DONE — PWA-BFCACHE-NO-STORE-HARDENING-01: bfcache hardening fix (this update)
+---------------------------------------------------------------------------
+  - ChatGPT independently reviewed and accepted the bfcache/
+    Cache-Control finding decision #66 had deliberately left
+    unimplemented, then explicitly authorized a bounded batch
+    (RESPONSE_SEQ 31, responding to HANDOFF_SEQ 34) to fix it.
+  - The documented local server sent no Cache-Control header on any
+    response, including the HTML app shell -- a browser's back-forward
+    cache could restore an already-rendered page (real trading data
+    included) via the Back button without a network request. Real,
+    domain-independent gap.
+  - New pwa/serve.py: a minimal wrapper around the exact same stdlib
+    SimpleHTTPRequestHandler/HTTPServer pattern already used elsewhere
+    in this repo (no new framework/dependency). NoStoreHTMLRequestHandler
+    hooks send_header() to catch the base class's own Content-Type:
+    text/html signal (robust to both a direct /index.html request and
+    the indirect "/" -> index.html directory-resolution path) and adds
+    Cache-Control: no-store only to that response.
+  - Non-HTML assets, app.js's existing private-data {cache: "no-store"}
+    fetch behavior, service-worker.js's network-only /private-data/
+    handling, DEMO/PRIVATE mode resolution, the 63-column contract,
+    and all trading/scoring/tactical/Decision Object logic are all
+    unaffected -- confirmed via the unchanged regression suite and by
+    leaving mobile_contract.py/niklar_stocks_ops_v4.py (both
+    Drive-verbatim) untouched.
+  - pwa/smoke_test.py now serves via the same handler real owner usage
+    does, with a new assertion that index.html gets the header and
+    every other asset does not. pwa/README.md's "Running it locally"/
+    LAN-mode sections updated to the new "python3 serve.py" command,
+    same --port/--bind names and defaults as before.
+  - Manually verified against the real documented command: curl
+    confirmed Cache-Control: no-store on both /index.html and /,
+    confirmed absent on /app.js, confirmed the existing DEMO fallback
+    (private-data/meta.json 404 when no snapshot exists) unaffected.
+  - Known, accepted limitation documented in serve.py's own docstring:
+    a 304 Not Modified response doesn't carry the header
+    (self-resolving once a client receives no-store on a fresh 200
+    response) -- not fixed further, per Minimum Sufficient Code.
+  - 4 new tests (tests/test_pwa_serve.py, 307->311). unittest 311/311,
+    mypy 0/20 (19->20), PWA smoke PASS, node --check clean. Real
+    GitHub Actions run 31361914641 confirmed conclusion: "success".
+    niklar-stocks main: 9b2c78c -> c24ecb6.
+  - No Cloudflare/DNS/Access/Tunnel/MFA/provider configuration, no
+    domain selection, no Property Transfer changes, no browser
+    persistent storage, no service-worker caching of private-data --
+    all explicitly out of this batch's authorized scope and confirmed
+    absent from this diff.
+  - Recorded as decision #67. Full review package: review-packages/
+    c24ecb6-bfcache-no-store-hardening.md.
+  - Per the batch's own "after the bounded fix and validation, STOP
+    for ChatGPT review" instruction: stopped here. Cloudflare remote
+    access remains exactly as HOLD as decision #66 left it -- unchanged,
+    untouched by this cycle. Archived HANDOFF_SEQ 34 first.
+
+
+HOLD — NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01: domain accepted, pending selection (prior update)
 ---------------------------------------------------------------------------
   - Owner directly accepted the audit's routing recommendation
     (decision #65): use a separate, dedicated domain for Niklar Stocks

@@ -1,0 +1,105 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: CLOUDFLARE_REMOTE_ACCESS_ON_HOLD_PENDING_DOMAIN — NO OTHER SAFE INCREMENT QUEUED
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 34
+CHECKPOINT_ID: niklar-handoff-2026-08-10-seq34-owner-accepts-domain-recommendation-hold
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 9b2c78c6539863f09f117154fb8678e883b52455 (unchanged this cycle — no code change)
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Record the owner's direct decision on the Cloudflare
+remote-access audit (HANDOFF_SEQ 33's CONDITIONAL disposition) and
+check for any other safe, already-authorized, unblocked increment
+before concluding none is currently available.
+
+MATERIAL_DELTA: No niklar-stocks code change. Owner directly accepted
+the audit's routing recommendation (decision #65): use a separate,
+dedicated domain for Niklar Stocks remote access, leave
+niklarproperty.com / Property Transfer infrastructure completely
+untouched. The exact new domain is not yet chosen and will be
+provided later. Explicit instruction: do not implement Cloudflare
+remote access yet, no DNS/Access/Tunnel/provider changes, continue
+only with other already-authorized Niklar work not dependent on the
+domain decision, do not invent a new implementation batch solely to
+stay busy.
+
+`NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01` moves from CONDITIONAL to
+explicit **HOLD**, pending (1) the domain choice and (2) blocker 2's
+still-open live Cloudflare-account/local-machine facts (unchanged, the
+owner will report those directly when needed).
+
+Checked the full `TODO_CURRENT.txt` queue for any other safe,
+already-authorized, unblocked increment not dependent on the domain
+decision — found none:
+- Batch 3's 6 remaining deferred orchestrator stages remain HARD_GATE
+  (missing credentials, unchanged since decisions #35/#37).
+- `PWA-PRIVATE-SNAPSHOT-BRIDGE-01` is fully accepted/closed
+  (RESPONSE_SEQ 26 PASS) with its one corrective finding (BOM
+  handling) already fixed and accepted.
+- The audit's own bfcache/`Cache-Control` recommendation (decisions
+  #64/#65) was explicitly considered and **not** implemented this
+  cycle: it's Claude's own self-generated audit recommendation, not
+  yet independently reviewed by ChatGPT or explicitly authorized by
+  the owner. Applying Section 21's 5-question self-check, "already
+  authorized?" resolves NO/UNCERTAIN; per that rule and this cycle's
+  explicit "do not invent a new implementation batch solely to stay
+  busy" instruction, it stays queued in the same pending review
+  package rather than self-authorized now.
+
+VALIDATION: N/A this cycle (no code change).
+
+SELF_AUDIT: Reported an empty safe queue honestly rather than
+manufacturing work, matching this session's established precedent
+(decisions #27, #57). The one candidate that looked tempting (the
+bfcache fix) was deliberately not self-authorized, applying the same
+5-question discipline used for every other continuation decision this
+session, not waived because a code change happened to be "already
+written up."
+
+CANON/GATE STATUS: Unchanged elsewhere — Batch 1 PASS/CLOSED, Batch 2
+PASS/CLOSED/FROZEN, BATCH3-STAGE-MAPPING-01 RESOLVED (OPTION B),
+Batch 3 at 7 of 13 real stages, PIPELINE-CONTINUITY-SCOPE-01 RESOLVED
+(OPTION C), PWA-PRIVATE-SNAPSHOT-BRIDGE-01 PASS/OWNER_USE_RELEASED.
+UPDATED: `NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01` CONDITIONAL → HOLD
+(owner-directed, domain pending).
+
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
+invalidation/Decision Object logic touched. No public hosting, no
+live backend/API. No Cloudflare/DNS/Access/Tunnel configuration
+touched — unchanged, explicitly on hold.
+
+PENDING_REVIEW_QUEUE (Section 21):
+  1. NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01 (unchanged from
+     HANDOFF_SEQ 33) —
+     review-packages/NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01.md
+     (published, not yet audited; DISPOSITION: CONDITIONAL in the
+     package text, now HOLD operationally per the owner's decision;
+     includes the still-queued bfcache/Cache-Control recommendation)
+
+BLOCKERS: Cloudflare remote access is on explicit HOLD pending (1) the
+owner's domain choice and (2) blocker 2 (live Cloudflare-account/
+local-machine facts). Unchanged: the 6 deferred orchestrator stages,
+the actual Slack/PWA *live* delivery layer, manual-entry field typing,
+and any future live/hosted backend remain blocked on credentials/
+specification/authorization this repo doesn't have. `PRELIVE
+GOVERNANCE AUDIT RELEASED: NO` — still deferred, not self-triggered.
+
+REVIEW_REQUEST: Independent review of the still-queued audit checkpoint
+remains open (unchanged ask from HANDOFF_SEQ 33) — including whether
+the bfcache/Cache-Control recommendation should be authorized as a
+standalone fix independent of the domain decision, which this cycle
+deliberately left for that review rather than self-deciding.
+
+NEXT_ACTION: **On HOLD.** No Cloudflare/DNS/Access/Tunnel/runtime
+mutation, no implementation prompt preparation, and no other
+niklar-stocks increment starts until one of: (1) the owner supplies
+the chosen domain, (2) the owner reports the live Cloudflare-account/
+local-machine facts (blocker 2), (3) ChatGPT reviews the pending audit
+package (including the bfcache recommendation), or (4) the owner gives
+new direction. Governance-compliance audit remains deferred, not
+self-triggered.

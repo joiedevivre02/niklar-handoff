@@ -1847,3 +1847,68 @@ NIKLAR-HANDOFF — CHANGELOG
     rather than manufactured. Next material work awaits either the
     domain, ChatGPT's review of the pending audit package, or new
     owner direction. Archived HANDOFF_SEQ 33 first.
+
+2026-08-10 (PWA-BFCACHE-NO-STORE-HARDENING-01 landed)
+  - ChatGPT independently reviewed and accepted the bfcache/
+    Cache-Control finding decision #66 had deliberately left
+    unimplemented, then explicitly authorized a bounded batch
+    (RESPONSE_SEQ 31, responding to HANDOFF_SEQ 34) to fix it.
+  - The documented local server sent no Cache-Control header on any
+    response, including the HTML app shell -- a browser's back-forward
+    cache could restore an already-rendered page (real trading data
+    included) via the Back button without a network request. Real,
+    domain-independent gap, unrelated to whether/when Cloudflare
+    remote access is ever added.
+  - New pwa/serve.py: a minimal wrapper around the exact same stdlib
+    SimpleHTTPRequestHandler/HTTPServer pattern already used elsewhere
+    in this repo (no new framework/dependency). NoStoreHTMLRequestHandler
+    hooks send_header() to catch the base class's own Content-Type:
+    text/html signal (robust to both a direct /index.html request and
+    the indirect "/" -> index.html directory-resolution path) and adds
+    Cache-Control: no-store only to that response.
+  - Non-HTML assets, app.js's existing private-data {cache: "no-store"}
+    fetch behavior, service-worker.js's network-only /private-data/
+    handling, DEMO/PRIVATE mode resolution, the 63-column contract,
+    and all trading/scoring/tactical/Decision Object logic are all
+    unaffected -- confirmed via the unchanged regression suite and by
+    leaving mobile_contract.py/niklar_stocks_ops_v4.py (both
+    Drive-verbatim) untouched.
+  - pwa/smoke_test.py now serves via the same handler real owner usage
+    does (not a parallel implementation that could drift out of
+    sync), with a new assertion that index.html gets the header and
+    every other asset does not. pwa/README.md's "Running it locally"/
+    LAN-mode sections updated to the new "python3 serve.py" command,
+    same --port/--bind names and defaults as the command it replaces.
+    ops/README.md's test/mypy counts corrected (285->311 tests,
+    19->20 mypy files -- already stale from two prior cycles, now also
+    directly affected by this one).
+  - Manually verified against the real documented command: curl
+    confirmed Cache-Control: no-store on both /index.html and /,
+    confirmed absent on /app.js, confirmed the existing DEMO fallback
+    (private-data/meta.json 404 when no snapshot exists) unaffected.
+  - Known, accepted limitation documented in serve.py's own docstring:
+    a 304 Not Modified response doesn't carry the header
+    (self-resolving once a client receives no-store on a fresh 200
+    response) -- not fixed further, to avoid duplicating http.server's
+    internal path-resolution logic for a transient edge case, per
+    Minimum Sufficient Code.
+  - 4 new tests (tests/test_pwa_serve.py, 307->311): direct and
+    indirect (root "/") requests to the HTML app shell get
+    Cache-Control: no-store, non-HTML assets do not, Content-Type
+    remains correctly unaffected. unittest 311/311, mypy 0/20
+    (pwa/serve.py added to pyproject.toml's scope), PWA smoke PASS,
+    node --check clean (app.js/service-worker.js unchanged). Real
+    GitHub Actions run 31361914641 confirmed conclusion: "success".
+    niklar-stocks main: 9b2c78c -> c24ecb6.
+  - No Cloudflare/DNS/Access/Tunnel/MFA/provider configuration, no
+    domain selection, no Property Transfer changes, no browser
+    persistent storage, no service-worker caching of private-data --
+    all explicitly out of this batch's authorized scope and confirmed
+    absent from this diff (grep for localStorage/sessionStorage/
+    indexedDB/document.cookie across the diff: zero matches).
+  - Recorded as decision #67. Full review package: review-packages/
+    c24ecb6-bfcache-no-store-hardening.md.
+  - Per the batch's own "after the bounded fix and validation, STOP
+    for ChatGPT review" instruction: stopped here. Cloudflare remote
+    access remains exactly as HOLD as decision #66 left it -- unchanged,
+    untouched by this cycle. Archived HANDOFF_SEQ 34 first.
