@@ -5,90 +5,74 @@ repository discovery/search. Full history: `archive/handoffs/` and
 `CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
 in form, fetched only when this checkpoint's summary isn't enough.
 
-STATUS: F1_CORRECTIVE_FIX_LANDED — STOPPED FOR CHATGPT REVIEW
+STATUS: PWA_PRIVATE_SNAPSHOT_BRIDGE_01_OWNER_USE_RELEASED — NO CODE CHANGE THIS CYCLE
 PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
-HANDOFF_SEQ: 28
-CHECKPOINT_ID: niklar-handoff-2026-08-09-seq28-f1-csv-type-semantics-fix
-IMPLEMENTATION_COMMIT: niklar-stocks main @ e84bce90b6421b818c2fe46a817ad1e77f4ffe0f
+HANDOFF_SEQ: 29
+CHECKPOINT_ID: niklar-handoff-2026-08-09-seq29-response26-pass-owner-use-released
+IMPLEMENTATION_COMMIT: niklar-stocks main @ e84bce90b6421b818c2fe46a817ad1e77f4ffe0f (unchanged this cycle)
 HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
 
-GOAL: Respond to ChatGPT's independent review of commit 12bb227 (Drive
-sync doc RESPONSE_SEQ 25, responding to HANDOFF_SEQ 27), disposition
-FAIL / FIX_REQUIRED before real private-data use. One blocking
-finding, F1, required correction before the PWA-PRIVATE-SNAPSHOT-
-BRIDGE-01 batch was safe for real CSV private data.
+GOAL: Record ChatGPT's independent-review PASS on corrective commit
+e84bce9 (Drive sync doc RESPONSE_SEQ 26, responding to HANDOFF_SEQ 28)
+and the resulting owner-use release for PWA-PRIVATE-SNAPSHOT-BRIDGE-01.
 
-MATERIAL_DELTA: F1 — mobile_contract.to_tactical_card() derives
-no_chase_flag via Python truthiness (bool(row.get("No-Chase Flag"))),
-but ops/mobile_snapshot_export.py's CSV path preserves every cell as a
-string with no type coercion — a CSV cell of FALSE/False/0 is a
-non-empty string, so bool(...) evaluates it to True, the opposite of
-the source value. Confirmed via grep no authoritative typed-
-serialization contract exists in this repo (Option 1 unavailable).
-Fixed with Option 2 — fail closed, scoped to exactly the field
-affected: new AmbiguousFieldTypeError + _check_truthiness_interpreted_
-fields() reject any non-empty string value for "No-Chase Flag"
-(uniform rejection, falsey- and truthy-looking alike), naming the
-exact row/ticker/value; a genuine JSON boolean/null is unaffected.
-Checked once per row before any row is transformed.
-mobile_contract.py's one other bool(...) call (to_opportunity_card()'s
-invalidation_known) deliberately left untouched — a presence check,
-not this defect class; regression test proves a "0"-string Strategic
-Invalidation still correctly reports invalidation_known=True.
+MATERIAL_DELTA: None to niklar-stocks — acknowledgment/reconciliation
+only. F1 RESOLVED (confirmed by ChatGPT): the input boundary fails
+closed before transformation whenever "No-Chase Flag" arrives as a
+non-empty string, removing the unsafe truthiness inversion. The
+deliberate non-change to invalidation_known accepted as semantically
+correct (presence test, not boolean-source interpretation).
+OUTPUT-PATH HARDENING ACCEPTED as proportionate, including the
+trailing-slash git-check-ignore case; no generalized filesystem policy
+or new dependency introduced.
 
-Non-blocking hardening also applied: new
-_verify_output_path_safe_to_write() (CLI-only), confirms via git
-check-ignore that a repo-internal --output path is actually ignored
-before writing. A real bug was found and fixed within this same pass:
-git check-ignore requires a trailing slash to match a directory-only
-.gitignore pattern (pwa/private-data/) against a path that doesn't
-exist on disk yet — the normal case for a fresh export. Caught by
-running the real CLI against the real pwa/private-data path, not just
-unit tests.
+OWNER-USE STATUS (explicit, from RESPONSE_SEQ 26): PWA-PRIVATE-
+SNAPSHOT-BRIDGE-01 is now accepted as a usable private snapshot path.
+JSON: SAFE for real/private owner use when canon-compatible and
+No-Chase Flag is a native JSON boolean or null. CSV: SAFE for real/
+private owner use only under the explicit V1 restriction that
+No-Chase Flag is blank for every row — any non-empty value must fail
+closed, no string-to-boolean convention may be invented. The accepted
+path remains one-shot/private/local: owner-supplied canonical Master
+snapshot → ops.mobile_snapshot_export → git-ignored pwa/private-data/
+→ private PWA. Does not claim live freshness or continuous monitoring.
 
-VALIDATION: unittest 303/303 (285→303, 18 new: TruthinessFieldSafety
-Tests, OutputPathSafetyTests), mypy 0/19 (unchanged), PWA smoke PASS,
-node --check clean (unaffected). Real GitHub Actions run 31341827199
-confirmed conclusion: "success". Real-browser re-verification
-(Playwright/Chromium, transient): all 3 original scenarios re-run,
-unaffected. Manual CLI end-to-end verification: a valid synthetic
-snapshot still exports to the real documented pwa/private-data path;
-a snapshot with No-Chase Flag=FALSE now correctly rejected with a
-specific row/ticker/value error.
+One known minor documentation note (a docstring says validation
+surfaces "every problem row at once" while the implementation raises
+on the first ambiguous row — wording mismatch only, not a behavior
+defect) explicitly NOT actioned now, per the response's own "fix
+opportunistically only if touching that documentation later; do not
+create a new batch just for it."
 
-EXPLICIT STATEMENT (real/private CSV support status): CSV is
-supported for real/private snapshots with one narrow restriction —
-No-Chase Flag column must be left blank, any non-empty value fails
-the whole export closed. JSON is supported with full fidelity
-including a genuine boolean for that field. No field is silently
-type-decoded under any assumed convention.
+VALIDATION: Independently re-confirmed by ChatGPT via its own GitHub
+connector and direct private-repo commit inspection — unittest
+303/303, mypy 0/19, PWA smoke PASS, node checks clean, 3 browser
+scenarios re-verified; GitHub Actions run 31341827199 confirmed
+"ai-qa" completed successfully; the fix stays confined to the
+snapshot/export boundary and tests/docs, frozen mobile_contract.py and
+canonical trading/scoring logic not modified.
 
-SELF_AUDIT: mobile_contract.py/niklar_stocks_ops_v4.py (both
-Drive-verbatim) confirmed unmodified — zero changes to either file in
-this diff. No scoring/ranking/trading logic introduced. No new
-dependency. Fix lives entirely in ops/mobile_snapshot_export.py (this
-batch's own new module), exactly where the review said it belongs.
-Explicit confirmation, no real private data committed: diff scanned
-for secret-shaped strings and ticker-like tokens — only synthetic
-TEST1-3/TRUE/FALSE/FATAL markers found (the latter two as string
-literals in tests/error messages, not real data).
+SELF_AUDIT: No niklar-stocks mutation this cycle. Reconciliation
+recorded verbatim from RESPONSE_SEQ 26's own text, not reworded in any
+way that could shift its meaning.
 
 CANON/GATE STATUS: Unchanged elsewhere — Batch 1 PASS/CLOSED, Batch 2
 PASS/CLOSED/FROZEN, BATCH3-STAGE-MAPPING-01 RESOLVED (OPTION B),
 Batch 3 at 7 of 13 real stages, PIPELINE-CONTINUITY-SCOPE-01 RESOLVED
-(OPTION C). PWA-PRIVATE-SNAPSHOT-BRIDGE-01 implemented (12bb227),
-corrective finding F1 now fixed (e84bce9) and pending review.
+(OPTION C). PWA-PRIVATE-SNAPSHOT-BRIDGE-01 (12bb227, corrective fix
+e84bce9) is now PASS/OWNER_USE_RELEASED — no longer pending review.
 
 PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
 invalidation/Decision Object logic touched. No public hosting, no
-live backend/API. No real private/trading data anywhere in the diff.
+live backend/API. Boundaries reaffirmed unchanged by RESPONSE_SEQ 26:
+no public hosting/deployment, no live backend/API authorization, no
+Daily Brief/Slack/Inbox/journal/push/broader-orchestrator work
+authorized by this review, no canonical logic changes, pre-live
+governance audit remains preserved and NOT released.
 
-PENDING_REVIEW_QUEUE (Section 21):
-  1. niklar-stocks commit e84bce9 —
-     review-packages/e84bce9-f1-csv-type-semantics-fix.md
-     (published, not yet audited; F1 corrective fix, includes the
-     invalidation_known non-touch rationale, the trailing-slash bug
-     catch, and the real/private CSV support statement)
+PENDING_REVIEW_QUEUE (Section 21): Empty. Every package queued since
+the PWA-PRIVATE-SNAPSHOT-BRIDGE-01 batch has now reached a final
+disposition (PASS).
 
 BLOCKERS: Unchanged — the 6 deferred orchestrator stages, the actual
 Slack/PWA *live* delivery layer, manual-entry field typing, and any
@@ -96,14 +80,17 @@ future live/hosted backend remain genuinely blocked on credentials/
 specification/authorization this repo doesn't have. `PRELIVE
 GOVERNANCE AUDIT RELEASED: NO` — still deferred, not self-triggered.
 
-REVIEW_REQUEST: Independent review of commit e84bce9 — exact SHA,
-files changed, test delta, the invalidation_known scoping rationale,
-the trailing-slash bug catch, and the explicit real/private CSV
-support statement are all in the review package.
+REVIEW_REQUEST: None outstanding. Per RESPONSE_SEQ 26's own terms, the
+next required ChatGPT review is any new material code checkpoint, new
+Level 2/OWNER_ONLY decision, or any mismatch discovered against the
+owner's actual Master snapshot.
 
-NEXT_ACTION: Per the review's own "Stop after publishing" instruction:
-**stopped here.** No Daily Brief, Slack, live API, hosting, Inbox,
-journal, or broader orchestrator work is authorized by this response.
-No further implementation increment starts until ChatGPT reviews this
-checkpoint (or the owner gives new direction). Governance-compliance
-audit remains deferred, not self-triggered.
+NEXT_ACTION: RESPONSE_SEQ 26 authorizes continuing "only the shortest
+already-authorized owner-operability steps for this private PWA" — but
+per this session's established "Sync" precedent (decision #57, the
+RESPONSE_SEQ 22 PASS cycle), a bare "Sync" records acknowledgment and
+clears the review queue; it does not itself start a new increment.
+Next-increment selection (including that owner-operability direction)
+is deferred to the next explicit "Cont" or other owner direction, not
+started automatically here. Governance-compliance audit remains
+deferred, not self-triggered.

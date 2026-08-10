@@ -1924,3 +1924,62 @@ NIKLAR — DECISIONS (current)
     review-packages/e84bce9-f1-csv-type-semantics-fix.md. Per the
     review's own "Stop after publishing" instruction, no further
     increment follows this one.
+
+61) Decision: Record ChatGPT's independent-review PASS on corrective
+    commit e84bce9 (Drive sync doc RESPONSE_SEQ 26, responding to
+    HANDOFF_SEQ 28) and the resulting owner-use release for
+    PWA-PRIVATE-SNAPSHOT-BRIDGE-01. F1 RESOLVED, output-path hardening
+    ACCEPTED, no further code change required by this response.
+    Date: 2026-08-09
+    Rationale: RESPONSE_SEQ 26 disposition PASS: the input boundary
+    now fails closed before transformation whenever "No-Chase Flag"
+    arrives as a non-empty string, removing the unsafe truthiness
+    inversion; the deliberate non-change to invalidation_known is
+    accepted as semantically correct (presence test, not boolean-
+    source interpretation); the CLI-only repo-local output guard is
+    accepted as proportionate, including the trailing-slash
+    git-check-ignore case. GitHub Actions run 31341827199
+    independently checked through ChatGPT's own connector -- confirmed
+    "ai-qa" completed successfully. Direct private-repo commit
+    inspection confirmed the fix stays confined to the snapshot/export
+    boundary and tests/docs; frozen mobile_contract.py and canonical
+    trading/scoring logic were not modified.
+    OWNER-USE STATUS (explicit, from the response): PWA-PRIVATE-
+    SNAPSHOT-BRIDGE-01 is now accepted as a usable private snapshot
+    path. JSON: SAFE for real/private owner use when canon-compatible
+    and No-Chase Flag is a native JSON boolean or null. CSV: SAFE for
+    real/private owner use only under the explicit V1 restriction that
+    No-Chase Flag is blank for every row -- any non-empty value must
+    fail closed, no string-to-boolean convention may be invented. The
+    accepted path remains one-shot/private/local (owner-supplied
+    canonical Master snapshot -> ops.mobile_snapshot_export ->
+    git-ignored pwa/private-data/ -> private PWA) -- no live freshness
+    or continuous monitoring claimed.
+    One known minor documentation note (a docstring says validation
+    surfaces "every problem row at once" while the implementation
+    raises on the first ambiguous row -- wording mismatch only, not a
+    behavior defect) explicitly NOT actioned now, per the response's
+    own "fix opportunistically only if touching that documentation
+    later; do not create a new batch just for it."
+    Boundaries reaffirmed unchanged: no public hosting/deployment, no
+    live backend/API authorization, no Daily Brief/Slack/Inbox/
+    journal/push/broader-orchestrator work authorized by this review,
+    no canonical trading/scoring/tactical/invalidation/Decision Object
+    logic changes, pre-live governance audit remains preserved and NOT
+    released.
+    Per this session's established "Sync" precedent (decision #57,
+    the RESPONSE_SEQ 22 PASS cycle): a PASS acknowledgment is recorded
+    and the review queue is cleared, but next-increment selection
+    (including the response's own "prioritize the shortest
+    owner-operable path" direction) is deferred to the next explicit
+    "Cont" or other owner direction, not started automatically under a
+    bare "Sync" -- consistent with the standing "don't manufacture a
+    new increment just because continuation is now permitted" rule.
+    Affected component: niklar-handoff CURRENT_HANDOFF.txt (HANDOFF_SEQ
+    29), archive/handoffs/HANDOFF_SEQ_28.txt (archived)
+    Status: Frozen (implemented) — HANDOFF_SEQ 29. No niklar-stocks
+    mutation this cycle -- acknowledgment/reconciliation only.
+    PENDING_REVIEW_QUEUE cleared to empty again. Next required
+    ChatGPT review (per the response's own terms): any new material
+    code checkpoint, new Level 2/OWNER_ONLY decision, or any mismatch
+    discovered against the owner's actual Master snapshot.
