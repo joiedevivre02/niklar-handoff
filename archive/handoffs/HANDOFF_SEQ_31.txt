@@ -1,0 +1,111 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: BOM_HANDLING_FIX_LANDED_AND_VERIFIED_AGAINST_REAL_DATA — STOPPED FOR CHATGPT REVIEW
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 31
+CHECKPOINT_ID: niklar-handoff-2026-08-10-seq31-bom-handling-fix
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 9b2c78c6539863f09f117154fb8678e883b52455
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Continue the owner-operability cycle (HANDOFF_SEQ 30's blocker):
+the owner supplied their real Master Database export directly.
+Verify it against the accepted PWA-PRIVATE-SNAPSHOT-BRIDGE-01 pipeline
+(RESPONSE_SEQ 26 PASS), fix any real issue found, and confirm the
+documented local-run workflow end to end with the real data.
+
+MATERIAL_DELTA: One real, narrow bug found and fixed. The owner's real
+export — saved as "UTF-8" by a spreadsheet tool — carried a leading
+byte-order mark (BOM). `load_snapshot_rows()` read files with plain
+`"utf-8"`, so the BOM surfaced as a literal `U+FEFF` character
+prepended to the text, corrupting the first column name (`Ticker` →
+`﻿Ticker`) and failing schema validation for a reason unrelated to
+the actual data. Fixed with `encoding="utf-8-sig"` instead — strips a
+leading BOM if present, exactly equivalent to `"utf-8"` if one is
+absent, fully backward compatible. Applies uniformly to both the CSV
+and JSON read paths.
+
+Distinguished this from the "never guess" discipline governing field
+semantics (the prior F1 fix): BOM handling is a well-defined,
+mechanical text-**decoding** convention ("how are these bytes turned
+into text"), not a business-**semantics** guess ("what does this value
+mean") — so fixing it does not conflict with that discipline.
+`AmbiguousFieldTypeError`'s fail-closed behavior for genuinely
+ambiguous field values is completely unaffected, confirmed by the full
+regression suite (including every pre-existing
+`SchemaViolation`/`AmbiguousFieldTypeError` test) still passing.
+
+VALIDATION: unittest 307/307 (303→307, 4 new: `BomHandlingTests`),
+mypy 0/19 (unchanged), PWA smoke PASS. Real GitHub Actions run
+`31347338506` confirmed conclusion: "success". Independently
+re-verified against the owner's real 25-row export after the fix:
+header parses correctly; zero rows carry a non-empty `No-Chase Flag`
+(CSV V1 restriction satisfied as-is); the documented export CLI
+produced all 4 output files; `git check-ignore -v pwa/private-data/`
+confirmed protected; a real headless-browser render (Playwright/
+Chromium, transient) against the documented `127.0.0.1`-only local
+server confirmed `data-mode="PRIVATE"`, correct ticker count, all 25
+real tickers rendering, zero console errors, zero demo-fixture
+leakage.
+
+SELF_AUDIT: `mobile_contract.py`/`niklar_stocks_ops_v4.py` (both
+Drive-verbatim) confirmed unmodified — zero changes to either file in
+this diff. No new dependency. Fix lives entirely in
+`ops/mobile_snapshot_export.py`, the same module the prior F1 fix also
+lives in. **Handling of the real data**: the owner's file was read
+only from its original upload location, never copied into any
+repo-tracked path. The resulting real private snapshot
+(`pwa/private-data/*.json`) was delivered directly to the owner as a
+private file attachment (not published, not included in any git
+history), then removed from the implementation environment
+immediately after — confirmed via an empty `git status --short`
+before committing. No real ticker symbol, price, or strategic/tactical
+field value from the owner's data appears anywhere in this commit, the
+review package, or niklar-handoff's git history — verified via an
+explicit scan of the diff for all 25 real ticker symbols before
+publishing (clean).
+
+CANON/GATE STATUS: Unchanged elsewhere — Batch 1 PASS/CLOSED, Batch 2
+PASS/CLOSED/FROZEN, BATCH3-STAGE-MAPPING-01 RESOLVED (OPTION B),
+Batch 3 at 7 of 13 real stages, PIPELINE-CONTINUITY-SCOPE-01 RESOLVED
+(OPTION C), PWA-PRIVATE-SNAPSHOT-BRIDGE-01 PASS/OWNER_USE_RELEASED
+(RESPONSE_SEQ 26). This cycle's BOM fix is a narrow correction within
+that already-accepted pipeline, not a scope change.
+
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
+invalidation/Decision Object logic touched. No public hosting, no
+live backend/API. No real trading/ticker data anywhere in git history
+— the owner's real data was used transiently for verification only
+and never committed, per this repo's standing discipline.
+
+PENDING_REVIEW_QUEUE (Section 21):
+  1. niklar-stocks commit 9b2c78c —
+     review-packages/9b2c78c-bom-handling-fix.md
+     (published, not yet audited; BOM-handling fix, includes the
+     real-data verification results and the "how the real data was
+     handled" disclosure)
+
+BLOCKERS: None currently — the owner's real Master Database blocker
+(HANDOFF_SEQ 30) is resolved; the accepted pipeline now works against
+it end-to-end. Unchanged: the 6 deferred orchestrator stages, the
+actual Slack/PWA *live* delivery layer, manual-entry field typing, and
+any future live/hosted backend remain blocked on credentials/
+specification/authorization this repo doesn't have. `PRELIVE
+GOVERNANCE AUDIT RELEASED: NO` — still deferred, not self-triggered.
+
+REVIEW_REQUEST: Independent review of commit 9b2c78c — exact SHA,
+files changed, test delta, the BOM-vs-semantics-guess distinction, the
+real-data verification results, and the explicit real-data-handling
+disclosure are all in the review package.
+
+NEXT_ACTION: Per the owner's own "after a material checkpoint, publish
+the handoff and stop for ChatGPT review" instruction: **stopped here.**
+No public hosting, live API, Slack, Inbox, journal, or broader
+orchestrator work is authorized by this cycle. No further
+implementation increment starts until ChatGPT reviews this checkpoint
+(or the owner gives new direction). Governance-compliance audit
+remains deferred, not self-triggered.

@@ -1688,3 +1688,69 @@ NIKLAR-HANDOFF — CHANGELOG
     handoff and stop for ChatGPT review" instruction: stopped here.
     No public hosting, live API, Slack, Inbox, journal, or broader
     architecture work attempted. Archived HANDOFF_SEQ 30 first.
+
+2026-08-10 (NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01, partial -- two blockers escalated)
+  - RESPONSE_SEQ 29 (Drive sync doc) corrected RESPONSE_SEQ 28's direct
+    authorization of CLOUDFLARE-PRIVATE-REMOTE-ACCESS-01 (never seen
+    or acted on by this session -- nothing from it was implemented)
+    with a mandatory READ-ONLY audit-first sequence
+    (NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01) before any Cloudflare/
+    DNS/Access/Tunnel/runtime mutation.
+  - Completed the portion of the audit genuinely verifiable from
+    within this session's actual access: confirmed by reading the real
+    current code (not from memory) that private-data/ remains
+    git-ignored, both app.js data fetches use {cache: "no-store"},
+    service-worker.js never caches /private-data/ paths or the three
+    demo data files, and app.js has zero localStorage/sessionStorage/
+    indexedDB/document.cookie usage anywhere. Conclusion: no real
+    Niklar setting or contract (63-column mobile contract, private
+    snapshot flow, demo/private separation, git-ignore protections,
+    trading/scoring/tactical/Decision Object boundaries) would need to
+    change for a Cloudflare Tunnel+Access front-end -- that sits
+    entirely at the network/auth layer in front of the origin.
+  - NEW FINDING this cycle: the documented local server (python3 -m
+    http.server) sends no Cache-Control header on any asset (confirmed
+    via a direct HTTP header check against the real documented
+    command, run and killed within this session -- no persistent
+    process, no file changes left). This creates a real bfcache
+    logout-bypass risk: a browser's back-forward cache could restore a
+    page already showing real trading data via the Back button after a
+    Cloudflare Access "logout," without a network request Access would
+    ever see. Recommended fix (not yet applied -- audit is read-only):
+    add an explicit Cache-Control: no-store response header to the app
+    shell. Stands independently of the two blockers below and would
+    strictly improve the existing local-only posture too.
+  - TWO REAL BLOCKERS, escalated to the owner rather than resolved
+    silently in either direction:
+    (1) Cross-project scope conflict: the audit's own read-set asks
+    this session to read Property Transfer's Drive canon/current
+    handoff for niklarproperty.com's live Cloudflare routing facts, to
+    check for a collision with Property Transfer's existing
+    *.niklarproperty.com/* Worker route. Earlier in this same session,
+    the owner directly instructed "It's a different project. You just
+    share a name... stay in niklar-stocks lane" regarding
+    niklarproperty.com, in a context where it looked like unrelated
+    name-sharing. RESPONSE_SEQ 29 reveals the two are NOT
+    infrastructure-independent if Niklar Stocks is hosted on a
+    niklarproperty.com subdomain -- a real change in the facts. This
+    session did not add the Property Transfer repository or read its
+    canon without the owner's explicit go-ahead for this specific,
+    bounded, read-only purpose.
+    (2) Live-infrastructure/local-machine state is unobservable from
+    this environment: no access to the owner's actual Cloudflare
+    account (dashboard, DNS, Worker routes, Access policies, plan/
+    tier) or their local Windows laptop (cloudflared service,
+    restart/reboot behavior). Sections A, D, E of the audit task
+    depend entirely on that state.
+  - DISPOSITION: NOT_READY (per the audit's own output contract). SAFE
+    TO PREPARE IMPLEMENTATION PROMPT: NO. Explicit confirmation: no
+    configuration/code/provider mutation performed during the audit --
+    confirmed via unchanged git status --short in niklar-stocks
+    throughout.
+  - Recorded as decision #64. Full audit checkpoint:
+    review-packages/NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01.md.
+  - Per the response's own "after publishing the audit checkpoint,
+    STOP" instruction: stopped here. Awaiting the owner's direct
+    resolution of both gaps before any further Cloudflare-related
+    work. No niklar-stocks code change this cycle. Archived
+    HANDOFF_SEQ 31 first.
