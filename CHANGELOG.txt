@@ -1624,3 +1624,67 @@ NIKLAR-HANDOFF — CHANGELOG
   - Recorded as decision #62. No public hosting, live API, Slack,
     Inbox, journal, or broader architecture work attempted, per
     explicit instruction. Archived HANDOFF_SEQ 29 first.
+
+2026-08-10 (BOM-handling fix, verified against the owner's real Master Database)
+  - The owner supplied their real Master Database export (CSV, 63
+    columns, 25 rows) directly, resolving the prior cycle's blocker.
+    Independently confirmed the header matched FROZEN_SCHEMA except
+    for one real, narrow issue: a leading UTF-8 byte-order mark (BOM,
+    common from Excel/Google Sheets "UTF-8" exports) corrupted the
+    first column name (Ticker -> BOM+Ticker), failing schema
+    validation for a reason unrelated to the actual data.
+  - Fixed narrowly: ops/mobile_snapshot_export.py's
+    load_snapshot_rows() now reads with encoding="utf-8-sig" instead
+    of "utf-8" -- strips a leading BOM if present, exactly equivalent
+    to "utf-8" if one is absent, fully backward compatible. Applies to
+    both the CSV and JSON read paths (shared read call). Distinguished
+    from the "never guess" discipline governing field semantics (the
+    prior F1 fix): BOM handling is a well-defined, mechanical
+    text-decoding convention -- "how are these bytes turned into
+    text" -- not a business-semantics guess -- "what does this value
+    mean". AmbiguousFieldTypeError and its fail-closed behavior are
+    completely unaffected, confirmed by the full regression suite
+    (including every pre-existing SchemaViolation/AmbiguousFieldTypeError
+    test) still passing.
+  - 4 new tests (tests/test_mobile_snapshot_export.py, 303->307,
+    BomHandlingTests): BOM-prefixed CSV and JSON both parse correctly,
+    a CSV without a BOM is unaffected (regression proof), and a
+    BOM-prefixed CSV survives export_snapshot() end-to-end. Each test
+    asserts the BOM bytes are actually present on disk first, so it
+    would fail before the fix rather than passing vacuously. unittest
+    307/307, mypy 0/19 (unchanged), PWA smoke PASS. Real GitHub
+    Actions run 31347338506 confirmed conclusion: "success".
+    niklar-stocks main: e84bce9 -> 9b2c78c.
+  - Independently re-verified against the owner's real 25-row export
+    after the fix: header now parses correctly ("Ticker", not
+    corrupted); zero rows carry a non-empty No-Chase Flag (the CSV V1
+    restriction is satisfied by the real file as-is, no rejection
+    needed); the documented export CLI (python3 -m
+    ops.mobile_snapshot_export --input <file> --output
+    pwa/private-data) produced all 4 output files, exit 0; git
+    check-ignore -v pwa/private-data/ confirmed the output path
+    protected; a real headless-browser render (Playwright/Chromium,
+    transient) against the documented 127.0.0.1-only local server
+    confirmed data-mode="PRIVATE", the correct row count in the
+    banner, all 25 real tickers rendering, zero console errors, zero
+    demo-fixture leakage.
+  - Handling of the real data: the owner's file was read only from its
+    original upload location, never copied into any repo-tracked
+    path. The resulting real private snapshot (pwa/private-data/*.json)
+    was delivered directly to the owner as a private file attachment
+    (not published, not included in any git history), then removed
+    from the implementation environment immediately after -- confirmed
+    via an empty git status --short before committing. No real ticker
+    symbol, price, or strategic/tactical field value from the owner's
+    data appears anywhere in this commit, the review package, or
+    niklar-handoff's git history -- verified via an explicit scan of
+    the diff for all 25 real ticker symbols before publishing (clean).
+  - mobile_contract.py/niklar_stocks_ops_v4.py (both Drive-verbatim)
+    unmodified -- zero changes to either file in this diff. No new
+    dependency.
+  - Recorded as decision #63. Full review package:
+    review-packages/9b2c78c-bom-handling-fix.md.
+  - Per the owner's own "after a material checkpoint, publish the
+    handoff and stop for ChatGPT review" instruction: stopped here.
+    No public hosting, live API, Slack, Inbox, journal, or broader
+    architecture work attempted. Archived HANDOFF_SEQ 30 first.

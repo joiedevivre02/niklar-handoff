@@ -1,10 +1,63 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-10 (Owner-operability verification cycle --
-HANDOFF_SEQ 30. Documented local-run workflow re-verified end-to-end
-with fresh synthetic data; BLOCKED on the owner supplying the real
-Master Database export -- see below for the exact ask.)
+Last updated: 2026-08-10 (BOM-handling fix landed against the owner's
+real Master Database export -- HANDOFF_SEQ 31. Real private snapshot
+generated and delivered to the owner; stopped for ChatGPT review per
+explicit instruction.)
 
-BLOCKED — awaiting owner's real Master Database export (this update)
+DONE — BOM-handling fix, verified against the owner's real Master Database (this update)
+---------------------------------------------------------------------------
+  - The owner supplied their real Master Database export (CSV, 63
+    columns, 25 rows) directly, resolving decision #62's blocker.
+    Independently confirmed the header matched FROZEN_SCHEMA except
+    for one real, narrow issue: a leading UTF-8 byte-order mark (BOM,
+    common from Excel/Google Sheets "UTF-8" exports) corrupted the
+    first column name (Ticker -> BOM+Ticker), failing schema
+    validation for a reason unrelated to the actual data.
+  - Fixed narrowly: ops/mobile_snapshot_export.py's
+    load_snapshot_rows() now reads with encoding="utf-8-sig" instead
+    of "utf-8" -- strips a leading BOM if present, exactly equivalent
+    to "utf-8" if one is absent, fully backward compatible. Applies to
+    both CSV and JSON (shared read call). Distinguished from the
+    "never guess" discipline governing field semantics (the prior F1
+    fix): BOM handling is a well-defined, mechanical text-decoding
+    convention, not a business-semantics guess -- AmbiguousFieldTypeError
+    and its fail-closed behavior are completely unaffected (confirmed
+    by the full regression suite, including every pre-existing
+    SchemaViolation/AmbiguousFieldTypeError test, still passing).
+  - 4 new tests (BomHandlingTests, 303->307): BOM-prefixed CSV and
+    JSON both parse correctly, a CSV without a BOM is unaffected
+    (regression proof), and a BOM-prefixed CSV survives
+    export_snapshot() end-to-end. Each test asserts the BOM bytes are
+    actually present on disk first, so it would fail before the fix
+    rather than passing vacuously. unittest 307/307, mypy 0/19
+    (unchanged), PWA smoke PASS. Real GitHub Actions run 31347338506
+    confirmed conclusion: "success".
+  - Independently re-verified against the owner's real 25-row export
+    after the fix: header now parses correctly; zero rows carry a
+    non-empty No-Chase Flag (CSV V1 restriction satisfied as-is); the
+    documented export CLI produced all 4 output files; git
+    check-ignore confirmed pwa/private-data/ protected; a real
+    headless-browser render (Playwright/Chromium) confirmed PRIVATE
+    SNAPSHOT mode with all 25 real tickers rendering, zero console
+    errors, zero demo-fixture leakage.
+  - The owner's real file was read only from its original location
+    (never copied into the repo). The resulting real private snapshot
+    was delivered directly to the owner as a private file attachment,
+    then removed from the implementation environment immediately after
+    -- confirmed via an empty git status --short before committing. No
+    real ticker/price/strategic data anywhere in the commit, review
+    package, or niklar-handoff history -- verified via an explicit
+    25-ticker scan of the diff before publishing (clean).
+  - mobile_contract.py/niklar_stocks_ops_v4.py (both Drive-verbatim)
+    unmodified. No new dependency. Recorded as decision #63. Full
+    review package: review-packages/9b2c78c-bom-handling-fix.md.
+  - Per the owner's own "after a material checkpoint, publish the
+    handoff and stop for ChatGPT review" instruction: stopped here.
+    No public hosting, live API, Slack, Inbox, journal, or broader
+    architecture work attempted. Archived HANDOFF_SEQ 30 first.
+
+
+BLOCKED — awaiting owner's real Master Database export (prior update, now resolved -- see above)
 ---------------------------------------------------------------------------
   - Owner "Cont": "proceed with the shortest owner-operable path to
     run the accepted private Niklar PWA with my real Master Database

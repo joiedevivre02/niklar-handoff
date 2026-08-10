@@ -2050,3 +2050,68 @@ NIKLAR — DECISIONS (current)
     environment) — see CURRENT_HANDOFF.txt NEXT_ACTION for the precise
     ask. No public hosting, live API, Slack, Inbox, journal, or
     broader architecture work attempted, per explicit instruction.
+
+63) Decision: Fix a real, narrow BOM-handling bug in
+    `ops/mobile_snapshot_export.py`'s `load_snapshot_rows()`,
+    discovered by verifying the accepted PWA-PRIVATE-SNAPSHOT-BRIDGE-01
+    pipeline against the owner's actual real Master Database export
+    (supplied directly to the implementation session in response to
+    decision #62's blocker).
+    Date: 2026-08-10
+    Rationale: The owner's real export -- saved as "UTF-8" by a
+    spreadsheet tool -- carried a leading byte-order mark (BOM).
+    `load_snapshot_rows()` read files with plain `"utf-8"`, so the BOM
+    surfaced as a literal `U+FEFF` character prepended to the file's
+    text, corrupting the first column name (`Ticker` -> `﻿Ticker`)
+    and failing `validate_schema()` for a reason unrelated to the
+    actual data -- a false-positive rejection of a genuinely
+    canon-compatible export. Distinguished this from the class of
+    defect the standing "never guess" discipline (and the prior F1
+    fix) targets: BOM handling is a well-defined, purely mechanical
+    text-**decoding** convention ("how are these bytes turned into
+    text"), not a business-**semantics** guess ("what does this value
+    mean") -- so fixing it does not conflict with that discipline.
+    `AmbiguousFieldTypeError`'s fail-closed behavior for genuinely
+    ambiguous field values is completely unaffected and unchanged;
+    confirmed by the full regression suite passing, including every
+    pre-existing `SchemaViolation`/`AmbiguousFieldTypeError` test.
+    Fixed with `encoding="utf-8-sig"` instead of `"utf-8"` -- strips a
+    leading BOM if present, exactly equivalent to `"utf-8"` if one is
+    absent, fully backward compatible with every file this module
+    already accepted. Applies uniformly to both the CSV and JSON read
+    paths (both share the same `read_text()` call).
+    Independently re-verified against the owner's real 25-row export
+    after the fix: header now parses as `Ticker` (not corrupted); zero
+    rows carry a non-empty `No-Chase Flag` (the CSV V1 restriction is
+    satisfied by the real file as-is); the documented export CLI
+    produced all 4 output files; `git check-ignore -v
+    pwa/private-data/` confirmed the output path protected; a real
+    headless-browser render (Playwright/Chromium, transient) against
+    the documented 127.0.0.1-only local server confirmed PRIVATE
+    SNAPSHOT mode, all 25 real tickers rendering, zero console errors,
+    zero demo-fixture leakage.
+    The owner's real Master Database file was read only from its
+    original location (never copied into any repo-tracked path). The
+    resulting real private snapshot was delivered directly to the
+    owner as a private file attachment (not published, not included in
+    any git history) and then removed from the implementation
+    environment immediately after -- confirmed via an empty `git
+    status --short` before committing. No real ticker symbol, price,
+    or strategic/tactical field value from the owner's data appears in
+    this commit, the review package, or niklar-handoff's git history --
+    verified via an explicit scan of the diff for all 25 real ticker
+    symbols before publishing (clean).
+    Affected component: niklar-stocks
+    ops/mobile_snapshot_export.py (patched, same file the F1 fix also
+    lives in), tests/test_mobile_snapshot_export.py (4 new tests:
+    `BomHandlingTests`) (commit 9b2c78c)
+    Status: Frozen (implemented) — commit
+    `9b2c78c6539863f09f117154fb8678e883b52455`. unittest 307/307
+    (303->307, 4 new), mypy 0/19 (unchanged), PWA smoke PASS. Real
+    GitHub Actions run `31347338506` confirmed conclusion: "success".
+    `mobile_contract.py`/`niklar_stocks_ops_v4.py` (both Drive-verbatim)
+    unmodified — zero changes to either file in this diff. No new
+    dependency. Full review package:
+    review-packages/9b2c78c-bom-handling-fix.md. Per the owner's own
+    "after a material checkpoint, publish the handoff and stop for
+    ChatGPT review" instruction, implementation stops here.
