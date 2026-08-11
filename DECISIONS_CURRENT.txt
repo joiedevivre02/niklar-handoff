@@ -2816,3 +2816,68 @@ NIKLAR — DECISIONS (current)
     is an infrastructure condition, not one of the six), so sub-batch B
     (`PWA-OWNER-DECISION-COCKPIT-01B-GTC`) follows next in this same
     session, per that instruction.
+
+74) Decision: Implement and ship sub-batch B,
+    `PWA-OWNER-DECISION-COCKPIT-01B-GTC` (commit `7b68d74`) -- the
+    Daily GTC Plan as a first-class owner cockpit view, from a
+    genuinely separate canonical Master workbook tab, never inferred
+    from or conflated with the 63-column Master Trade Database
+    FROZEN_SCHEMA.
+    Date: 2026-08-11
+    Rationale: Implemented exactly the design proposed and accepted in
+    the audit (section 5): new `ops/gtc_plan_contract.py`
+    (`GTC_PLAN_SCHEMA`, `to_gtc_plan_row()` raw passthrough reusing
+    `mobile_contract.py`'s own `_value_or_unknown()`/`_zone_or_none()`
+    helpers directly, `build_gtc_plan()` sorting by `Rank` -- the ONE
+    place across all four mobile contracts sorting is authorized,
+    since canon itself defines `Rank` as this tab's ordering field --
+    failing closed via a new `AmbiguousGtcRankError` on a
+    missing/non-numeric/boolean `Rank`) and new
+    `ops/gtc_plan_export.py` (a separate CLI mirroring
+    `mobile_snapshot_export.py`'s structure, reusing
+    `niklar_stocks_ops_v4.schema_hash()` and
+    `mobile_snapshot_export._verify_output_path_safe_to_write()`
+    directly rather than duplicating either, writing a single flat
+    `gtc-plan.json` into the same output directory the existing
+    exporter uses without either clobbering the other's files).
+    Extended `pwa/index.html`/`app.js`/`styles.css` with the new
+    section (placed near the top per the audit's "prominent" design),
+    reusing cross-navigation and global search with zero new search
+    code. Disclosed one small deviation from the audit's own
+    prediction: `service-worker.js` needed one line added for the new
+    DEMO fixture's root-level filename (the audit only verified the
+    `private-data/gtc-plan.json` path needed no change, which held).
+    Verified locally and exhaustively: unittest 356/356 (311 -> 356,
+    45 new tests), mypy 0/22 (20 -> 22), `pwa/smoke_test.py` PASS
+    (extended for the new fixture), `node --check` clean, and real
+    headless-browser (Playwright) passes against DEMO and a synthetic
+    PRIVATE GTC snapshot confirming Rank order (against a
+    deliberately non-Rank-sorted input fixture, proving server-side
+    not client-side sorting), cross-navigation, search coverage, and
+    zero console errors -- plus a full re-run of every Sub-batch A
+    check confirming zero regression.
+    Hosted GitHub Actions CI remains blocked with the identical
+    infrastructure signature already reported for sub-batch A (job
+    never starts, zero billable minutes) -- confirmed as the same
+    persistent external condition, not a new or worse one, and not
+    re-investigated at length again. Still flagged for the owner to
+    check GitHub billing/Actions settings; still not treated as a
+    reason to claim false CI status or to halt further sub-batch work.
+    Affected component: niklar-stocks ops/gtc_plan_contract.py (new),
+    ops/gtc_plan_export.py (new), pwa/index.html, pwa/app.js,
+    pwa/styles.css, pwa/service-worker.js, pwa/gtc-plan-data.json
+    (new), pwa/README.md, ops/README.md,
+    docs/app/NIKLAR_APP_SYSTEM_MAP.md,
+    tests/test_gtc_plan_contract.py (new),
+    tests/test_gtc_plan_export.py (new) (commit
+    7b68d74cf4c2a12655d3acb5e4f420d53e8ef180); niklar-handoff
+    CURRENT_HANDOFF.txt (HANDOFF_SEQ 42), archive/handoffs/
+    HANDOFF_SEQ_41.txt (archived)
+    Status: Frozen (sub-batch B shipped) -- HANDOFF_SEQ 42. Full
+    checkpoint: review-packages/7b68d74-owner-decision-cockpit-01b-gtc.md.
+    Per RESPONSE_SEQ 39's own "continue... if tests pass and no STOP
+    condition is hit" instruction: local tests passed exhaustively and
+    none of the six named STOP conditions were hit, so sub-batch C
+    (`PWA-OWNER-SAFE-AUTOUPDATE-01`) follows next in this same
+    session, per that instruction -- the third and final sub-batch,
+    after which this session stops for ChatGPT review.
