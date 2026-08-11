@@ -2661,3 +2661,99 @@ NIKLAR — DECISIONS (current)
     the limit of what it can do without the owner physically executing
     the runbook -- the next checkpoint in this thread should carry the
     owner's actual evidence report.
+
+72) Decision: Process RESPONSE_SEQ 38 (Drive sync doc) -- the owner's
+    remote-access implementation succeeded end to end
+    (`app.niklarintelligence.pro` working, real remote iPhone access to
+    real PRIVATE SNAPSHOT data confirmed) -- and complete the
+    AUDIT-ONLY task it authorized: `PWA-OWNER-DECISION-COCKPIT-01-AUDIT`,
+    covering a mobile-first owner decision-cockpit UX redesign, a Daily
+    GTC Plan snapshot contract, and a safe Windows auto-update
+    mechanism. No implementation performed, per the response's own
+    explicit "AUDIT ONLY... do not implement... stop for ChatGPT
+    review" instruction.
+    Date: 2026-08-10
+    Rationale: Nine owner-observed facts recorded as CLOSED, not
+    re-derived: zone/Tunnel/Access/cloudflared-service/remote-access
+    all confirmed working; the Bad Gateway issue was resolved by
+    correcting the Tunnel origin from HTTPS to HTTP; the working
+    Windows persistence configuration is `NiklarPwaServe` running under
+    the owner's own Windows logon (not SYSTEM/AtStartup as originally
+    audited) because a SYSTEM-context Scheduled Task could not reach
+    the owner's per-user Microsoft Store Python interpreter -- an
+    accepted, explicitly-disclosed compromise, not silently treated as
+    equivalent to the original design; tunnel-token rotation is
+    pending security housekeeping (part of a token appeared in an
+    owner screenshot) but explicitly must not block unrelated cockpit
+    UI work; full reboot-survival evidence remains open, not to be
+    falsely reported as proven.
+    Completed the audit per the "do not ask the owner questions that
+    can be answered from canon/repo/history" instruction -- read the
+    current PWA/mobile-contract code directly (not from memory) and
+    located and read, in full, from the primary Drive canon, BOTH
+    Daily GTC Plan documents: the original `DAILY_GTC_PLAN_RULE_CURRENT`
+    (GTC-001, 2026-08-07) and its same-day amendment
+    `NIKLAR_DAILY_GTC_RANGE_AND_SHADOW_JOURNAL_RECONCILIATION_RULE_CURRENT`
+    (2026-08-10, FROZEN OPERATIONAL AMENDMENT, converting Buy/Sell GTC
+    from single points to ranges) -- confirming the owner's own
+    RESPONSE_SEQ 38 field list is exactly the correct union of both
+    documents, not merely trusted at face value. Confirmed the Daily
+    GTC Plan lives in a genuinely separate canonical Master workbook
+    tab from the 63-column Master Trade Database tab this repo already
+    mirrors (via `STOCKS_OPS_HANDOFF_CURRENT`'s explicit tab-ownership
+    statement) -- meaning no existing `FROZEN_SCHEMA` field may be
+    silently substituted for a GTC value ("never invent a GTC price").
+    Proposed a new, separate, additive `GTC_PLAN_SCHEMA` +
+    export/contract path (explicit Low/High range columns reusing the
+    existing `_zone_or_none()`/`zoneText()` pattern, `Rank` as the one
+    legitimate ordering field since canon itself defines it) --
+    existing 63-column bridge and `mobile_contract.py`/
+    `niklar_stocks_ops_v4.py` (Drive-verbatim) left untouched by the
+    proposal.
+    Designed the cockpit grouping rules strictly as presentation-only
+    bucketing of already-existing field values (never a new score or
+    re-rank) and flagged the one genuinely borderline grouping
+    ("Watch/needs-attention") for explicit ChatGPT confirmation on
+    labeling rather than silently deciding it.
+    Found a real, minimal, architecture-informed design for the
+    Windows auto-update mechanism: confirmed directly (not assumed)
+    that `pwa/serve.py` has zero imports from `ops/` or elsewhere in
+    the repo, so only a change to `pwa/serve.py` itself ever requires
+    restarting the running process -- every other change (HTML/CSS/JS/
+    JSON/docs) is picked up by the already-running static-file server
+    with zero restart, especially given the already-landed
+    `Cache-Control: no-store` hardening. Identified that
+    `niklar-stocks` being a PRIVATE repository means `git fetch`/`pull`
+    needs the owner's own stored credentials, almost certainly bound
+    to their interactive Windows profile (the same underlying class of
+    constraint that forced `NiklarPwaServe` off `SYSTEM` per fact #9)
+    -- recommended running the auto-update task under the same
+    already-proven owner-logon context, not a new unknown.
+    Explicitly did NOT resolve, and flagged instead as a genuine open
+    question for ChatGPT: whether "preserve/restore the last known
+    working app state" on a health-check failure may ever use a
+    targeted `git reset` for recovery, given the response's own text
+    names `reset` among the forbidden mechanisms -- recommended the
+    stricter reading (no automated reset-based rollback at all,
+    relying on the restart-decision rule to naturally preserve the
+    running process's state) as the Minimum Sufficient first
+    increment, without silently picking one interpretation and hiding
+    the ambiguity.
+    Affected component: none (niklar-stocks) -- audit only, zero code
+    change, confirmed via unchanged `git status --short`; niklar-handoff
+    CURRENT_HANDOFF.txt (HANDOFF_SEQ 40), archive/handoffs/
+    HANDOFF_SEQ_39.txt (archived)
+    Status: Frozen (audit published) -- HANDOFF_SEQ 40. Full audit:
+    review-packages/PWA-OWNER-DECISION-COCKPIT-01-AUDIT.md, covering
+    all 13 required output items (current-state findings; UX
+    information architecture; grouping rules mapped to existing
+    fields; search/ticker-detail behavior; the exact GTC source +
+    proposed minimum contract; exact files expected to change;
+    the auto-update design with failure envelope/rollback question/
+    cadence/task-identity; security/privacy audit; drift audit;
+    mobile usability audit; test plan; the proposed two-plus-one
+    independent implementation increments; and the two flagged open
+    questions). Per the response's own "AUDIT ONLY... stop for
+    ChatGPT review" instruction, no implementation proceeds until
+    ChatGPT reviews this package and, in particular, resolves the two
+    flagged judgment calls.

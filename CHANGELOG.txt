@@ -2163,3 +2163,101 @@ NIKLAR-HANDOFF — CHANGELOG
     executing the runbook. The next checkpoint in this thread should
     carry the owner's actual evidence report. Archived HANDOFF_SEQ 38
     first.
+
+2026-08-10 (Remote access confirmed working end to end; cockpit/GTC/auto-update audit published)
+  - RESPONSE_SEQ 38 (Drive sync doc): app.niklarintelligence.pro
+    confirmed working end to end by the owner -- real remote iPhone
+    access to real PRIVATE SNAPSHOT data, through Cloudflare Access,
+    cloudflared running as a Windows service. The earlier Bad Gateway
+    issue was resolved by correcting the Tunnel origin from HTTPS to
+    HTTP. Nine owner-observed facts recorded as CLOSED: zone/Tunnel/
+    Access/service/remote-access all working; local Windows checkout
+    is D:\Niklar\niklar-stocks; the working persistence configuration
+    is NiklarPwaServe running under the owner's own Windows logon (not
+    SYSTEM/AtStartup as originally audited) because a SYSTEM-context
+    Scheduled Task could not reach the owner's per-user Microsoft
+    Store Python interpreter -- an accepted, explicitly-disclosed
+    compromise, not silently treated as equivalent to the original
+    design; tunnel-token rotation is pending security housekeeping
+    (part of a token appeared in an owner screenshot) but must not
+    block unrelated cockpit UI work; full reboot-survival evidence
+    remains open, not to be falsely reported as proven.
+  - Authorized PWA-OWNER-DECISION-COCKPIT-01-AUDIT: a mobile-first
+    owner decision-cockpit redesign (meaningful groupings, a global
+    ticker search bar, the Daily GTC Plan as a first-class view), plus
+    a safe Windows auto-update mechanism removing the need to manually
+    git pull after every accepted push. AUDIT ONLY -- explicit "do not
+    implement the cockpit redesign, GTC snapshot extension, or Windows
+    auto-update mechanism in this cycle... stop for ChatGPT review"
+    instruction, honored: zero niklar-stocks code changed this cycle.
+  - Read the current PWA/mobile-contract code directly (not from
+    memory) and located and read in full, from the primary Drive
+    canon, both Daily GTC Plan documents: the original
+    DAILY_GTC_PLAN_RULE_CURRENT (GTC-001, approved 2026-08-07) and its
+    same-day amendment
+    NIKLAR_DAILY_GTC_RANGE_AND_SHADOW_JOURNAL_RECONCILIATION_RULE_CURRENT
+    (2026-08-10, FROZEN OPERATIONAL AMENDMENT, converting Buy/Sell GTC
+    from single points to ranges) -- confirmed the owner's own field
+    list in RESPONSE_SEQ 38 (Rank, Ticker, Matrix Tier, Stage/Level,
+    Kind of Play, Current Ref, Buy GTC Range, Sell GTC Range, Mode,
+    Simple Rule) is exactly the correct union of both documents, not
+    merely trusted at face value. Confirmed the Daily GTC Plan lives
+    in a genuinely separate canonical Master workbook tab from the
+    63-column Master Trade Database tab this repo already mirrors --
+    meaning no existing FROZEN_SCHEMA field may be silently
+    substituted for a GTC value ("never invent a GTC price").
+  - Proposed a new, separate, additive GTC_PLAN_SCHEMA + export/
+    contract path: explicit Buy/Sell GTC Range Low/High columns
+    reusing the existing _zone_or_none()/zoneText() pattern already in
+    mobile_contract.py/app.js, Rank as the one legitimate ordering
+    field since canon itself defines that order. Existing 63-column
+    bridge and mobile_contract.py/niklar_stocks_ops_v4.py (both
+    Drive-verbatim) left completely untouched by the proposal.
+  - Designed the cockpit grouping rules strictly as presentation-only
+    bucketing of already-existing field values (stage, portfolio
+    status, invalidation-known) -- never a new score or re-rank, each
+    mapped explicitly to its source field with source-order
+    preservation stated. Flagged the one genuinely borderline grouping
+    ("Watch/needs-attention" -- recommended labeling it "Invalidation
+    Unknown," the field's own verbatim meaning, rather than any
+    phrasing implying a judgment) for explicit ChatGPT confirmation
+    rather than silently deciding it.
+  - Found a real, minimal, architecture-informed design for the
+    Windows auto-update mechanism: confirmed directly (not assumed)
+    that pwa/serve.py has zero imports from ops/ or elsewhere in the
+    repo, so only a change to pwa/serve.py itself ever requires
+    restarting the running process -- every other change (HTML/CSS/
+    JS/JSON/docs) is picked up by the already-running static-file
+    server with zero restart, especially given the already-landed
+    Cache-Control: no-store hardening. Identified that niklar-stocks
+    being a PRIVATE repository means git fetch/pull needs the owner's
+    own stored credentials, almost certainly bound to their
+    interactive Windows profile (the same underlying class of
+    constraint that forced NiklarPwaServe off SYSTEM) -- recommended
+    running the auto-update task under the same already-proven
+    owner-logon context, not a new unknown.
+  - Explicitly did NOT resolve, and flagged instead as a genuine open
+    question for ChatGPT: whether "preserve/restore the last known
+    working app state" on a health-check failure may ever use a
+    targeted git reset for recovery, given the response's own text
+    names reset among the forbidden mechanisms -- recommended the
+    stricter reading (no automated reset-based rollback at all,
+    relying on the restart-decision rule to naturally preserve the
+    running process's state) as the Minimum Sufficient first
+    increment, without silently picking one interpretation and hiding
+    the ambiguity.
+  - No niklar-stocks mutation this cycle -- audit only, confirmed via
+    unchanged git status --short throughout.
+  - Recorded as decision #72. Full audit: review-packages/
+    PWA-OWNER-DECISION-COCKPIT-01-AUDIT.md, covering all 13 required
+    output items (current-state findings; UX information architecture;
+    grouping rules; search/ticker-detail behavior; the exact GTC
+    source + proposed minimum contract; exact files expected to
+    change; the auto-update design with failure envelope/rollback
+    question/cadence/task-identity; security/privacy audit; drift
+    audit; mobile usability audit; test plan; the proposed independent
+    implementation increments; and the two flagged open questions).
+  - Per the response's own "AUDIT ONLY... stop for ChatGPT review"
+    instruction: stopped here. No implementation proceeds until
+    ChatGPT reviews this package and resolves the two flagged
+    judgment calls. Archived HANDOFF_SEQ 39 first.
