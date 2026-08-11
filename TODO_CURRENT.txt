@@ -1,8 +1,60 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-10 (Windows machine-side deployment audited,
-draft PowerShell plan returned -- HANDOFF_SEQ 37. Nothing executed.
-Stopped for ChatGPT review; the four owner-only facts remain the
-actual gate before any real machine/provider mutation.)
+Last updated: 2026-08-10 (RESPONSE_SEQ 35 PASS/CONDITIONAL recorded:
+Windows deployment draft technically accepted, 2 of 4 owner-only facts
+now CLOSED -- HANDOFF_SEQ 38. No niklar-stocks mutation; awaiting the
+2 remaining facts before ChatGPT releases the implementation batch.)
+
+DONE — RESPONSE_SEQ 35 CONDITIONAL: Windows draft accepted, gate reduced to 2 facts (this update)
+---------------------------------------------------------------------------
+  - ChatGPT independently reviewed HANDOFF_SEQ 37 (Windows machine-
+    side deployment audit + draft PowerShell). Disposition CONDITIONAL
+    / AUDIT ACCEPTED. Technically confirmed correct: the Scheduled-
+    Task-vs-native-service split, the 72-hour ExecutionTimeLimit
+    correction, absolute-interpreter-path resolution, preserved
+    127.0.0.1:8000 localhost-only origin, tunnel token kept out of
+    every saved artifact, Windows-native recovery mechanisms only (no
+    new dependency).
+  - Two of the four owner-only facts from decision #68 now CLOSED, per
+    the owner's supervised Cloudflare setup: (1) ZERO TRUST/COST --
+    CLOSED, real order screen showed Zero Trust Free, $0/month, up to
+    50 users. (2) ACCESS -- SUBSTANTIALLY CLOSED, guided private-app
+    setup shows "Protect an application with Access" and "Connect an
+    identity provider" both complete, target origin 127.0.0.1:8000
+    over HTTP; Tunnel deployment itself intentionally skipped for now.
+    Standing policy baseline (owner-only identity, no Everyone allow,
+    no Bypass, MFA/identity protection) explicitly restated as
+    unweakened, not assumed satisfied.
+  - Two facts remain open, restated exactly as given, not loosened:
+    (1) ZONE ACTIVATION STATUS -- last evidence showed
+    niklarintelligence.pro "Waiting for your registrar to propagate" /
+    "Cloudflare checking"; owner must confirm "Active" before any
+    public hostname/tunnel route activates -- not assumed complete
+    merely because time passed. (2) WINDOWS CLOUDFLARED STATE -- must
+    be checked read-only on the actual machine (Get-Command
+    cloudflared.exe / Get-Service Cloudflared), not guessed; reuse
+    existing state if present rather than reinstalling blindly.
+  - Recorded RESPONSE_SEQ 35's explicit script-landing decision: do
+    NOT land the draft PowerShell into niklar-stocks yet -- keep as a
+    reviewed handoff artifact until the first supervised Windows run
+    proves repo path, Python path, task registration, local HTTP
+    response, cloudflared service behavior, reboot survival, and
+    authenticated remote access; a small ops/windows or deploy/windows
+    artifact may then be canonically landed. Matches this session's
+    own decision #69 recommendation, now independently confirmed.
+  - Confirmed target architecture for the eventual implementation
+    batch: app.niklarintelligence.pro -> Cloudflare Access ->
+    Cloudflare Tunnel -> localhost-only http://127.0.0.1:8000 ->
+    hardened pwa/serve.py, preserving every existing boundary (no
+    Property Transfer changes, no public/anonymous real-data access,
+    no router port forwarding, no saved tunnel token, no browser
+    persistent storage, existing no-store/service-worker exclusions,
+    existing contracts, all canonical trading/scoring/tactical/
+    invalidation/Decision Object boundaries, Minimum Sufficient Code).
+  - Recorded as decision #70. No niklar-stocks mutation this cycle --
+    acknowledgment/reconciliation only, per this session's established
+    "Sync" precedent (decisions #57, #66). Archived HANDOFF_SEQ 37
+    first.
+
 
 DONE — Windows machine-side deployment audit + draft plan (this update)
 ---------------------------------------------------------------------------

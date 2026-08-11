@@ -2036,3 +2036,70 @@ NIKLAR-HANDOFF — CHANGELOG
   - Per the owner's own "stop for ChatGPT review" instruction: stopped
     here -- the four owner-only facts remain the actual gate before
     any real machine/provider mutation. Archived HANDOFF_SEQ 36 first.
+
+2026-08-10 (RESPONSE_SEQ 35 CONDITIONAL: Windows draft accepted, gate reduced to 2 facts)
+  - ChatGPT independently reviewed HANDOFF_SEQ 37 (Windows machine-
+    side deployment audit + draft PowerShell). Disposition CONDITIONAL
+    / AUDIT ACCEPTED. Technically confirmed correct: the Scheduled-
+    Task-vs-native-service split, the 72-hour ExecutionTimeLimit
+    correction, absolute-interpreter-path resolution, preserved
+    127.0.0.1:8000 localhost-only origin, tunnel token kept out of
+    every saved artifact, Windows-native recovery mechanisms only (no
+    new dependency).
+  - Two of the four owner-only facts from decision #68 now CLOSED, per
+    the owner's supervised Cloudflare setup (reported through
+    ChatGPT, not directly observed by this session):
+    (1) ZERO TRUST / COST -- CLOSED. The real Cloudflare order screen
+    showed Zero Trust Free, $0/month, up to 50 users -- no paid
+    commitment required for the current owner-only target.
+    (2) ACCESS -- SUBSTANTIALLY CLOSED. The owner completed the guided
+    private-app setup far enough that Cloudflare One shows "Protect
+    an application with Access" and "Connect an identity provider"
+    both complete, target origin entered as 127.0.0.1:8000 over HTTP.
+    Tunnel deployment itself was intentionally skipped for now. The
+    standing policy baseline (owner-only identity, no Everyone allow,
+    no Bypass, MFA/identity protection) is explicitly restated as
+    unweakened, not assumed satisfied merely because setup progressed.
+  - Two facts remain open, restated exactly as given, not loosened:
+    (1) ZONE ACTIVATION STATUS -- the last explicit Cloudflare DNS
+    evidence showed niklarintelligence.pro in "Waiting for your
+    registrar to propagate your new nameservers" / "Cloudflare
+    checking" state; the owner must confirm the zone now shows
+    "Active" before any public hostname/tunnel route is activated --
+    explicitly not to be assumed complete merely because time has
+    passed.
+    (2) WINDOWS CLOUDFLARED STATE -- on the actual Windows origin
+    machine, whether cloudflared is already installed must be checked
+    read-only (e.g. Get-Command cloudflared.exe -ErrorAction
+    SilentlyContinue / Get-Service Cloudflared -ErrorAction
+    SilentlyContinue) rather than guessed; if present, the existing
+    binary/service state should be reused rather than reinstalled
+    blindly.
+  - Recorded RESPONSE_SEQ 35's explicit script-landing decision: do
+    NOT land the draft PowerShell into niklar-stocks yet -- keep it as
+    a reviewed handoff artifact until the first supervised Windows run
+    proves the actual repo path, Python path, Scheduled Task
+    registration, local HTTP response, cloudflared service behavior,
+    reboot survival, and authenticated remote access; after that
+    evidence passes, a small ops/windows or deploy/windows artifact
+    may be canonically landed if it improves repeatability. Matches
+    this session's own decision #69 recommendation, now independently
+    confirmed rather than self-decided.
+  - Confirmed target architecture for the eventual implementation
+    batch, once both remaining facts close: app.niklarintelligence.pro
+    -> Cloudflare Access -> Cloudflare Tunnel -> localhost-only
+    http://127.0.0.1:8000 -> hardened pwa/serve.py, preserving: no
+    Property Transfer changes; no public/anonymous access to real
+    Niklar data; no router port forwarding or origin-IP exposure; no
+    saved/committed tunnel token; no browser persistent storage of
+    private data; existing private-data no-store/network-only/
+    service-worker exclusions; existing 63-column/private snapshot
+    contracts; all canonical trading/scoring/tactical/invalidation/
+    Decision Object boundaries; Minimum Sufficient Code and
+    Windows-native persistence only.
+  - Recorded as decision #70. No niklar-stocks mutation this cycle --
+    acknowledgment/reconciliation only, per this session's established
+    "Sync" precedent (decisions #57, #66): the two still-open facts
+    are genuinely owner-only (live Cloudflare zone status, live
+    Windows machine state) and unobservable from this session
+    regardless. Archived HANDOFF_SEQ 37 first.
