@@ -2103,3 +2103,63 @@ NIKLAR-HANDOFF — CHANGELOG
     are genuinely owner-only (live Cloudflare zone status, live
     Windows machine state) and unobservable from this session
     regardless. Archived HANDOFF_SEQ 37 first.
+
+2026-08-10 (Capability-boundary statement + owner-executable runbook)
+  - RESPONSE_SEQ 36 (Drive sync doc): both remaining owner facts now
+    CLOSED -- Cloudflare zone niklarintelligence.pro confirmed ACTIVE;
+    cloudflared confirmed absent on the Windows machine (both
+    Get-Command cloudflared.exe and Get-Service Cloudflared returned no
+    output). Authorized NIKLAR-REMOTE-ACCESS-CLOUDFLARE-IMPLEMENTATION-01
+    -- install cloudflared, create the niklar-intelligence Tunnel,
+    configure Access/hostname routing for app.niklarintelligence.pro,
+    register the pwa/serve.py Scheduled Task, and verify remotely
+    including a supervised reboot test.
+  - Surfaced a fundamental capability boundary rather than fabricating
+    execution: this session has no access to the owner's Windows
+    machine (no shell, no filesystem) or live Cloudflare account (no
+    dashboard, no API) -- none of the batch's 17 execution/
+    verification steps are performable from this cloud environment.
+    Confirmed, not assumed: a direct request to api.cloudflare.com
+    from this environment returned a blocked-403 in an earlier audit
+    cycle. Every single fact established across this entire Cloudflare
+    initiative -- the Zero Trust plan, the Access setup, the
+    cloudflared absence, the zone status -- was established because
+    the owner checked their own live environment and reported back,
+    never because this session observed it directly; this cycle does
+    not change that structural fact merely because the response used
+    "execute" language.
+  - Rather than either fabricating a false PASS on any verification
+    item, or silently reinterpreting the batch without saying so,
+    stated the capability boundary explicitly and plainly in the
+    published checkpoint -- matching the standing "never invent/never
+    guess, fail closed" discipline applied here to what this session
+    is even capable of doing, not just to field semantics.
+  - Published the complete, sequenced, owner-runnable runbook covering
+    every one of RESPONSE_SEQ 36's lettered/numbered steps: Windows/
+    cloudflared install + native-service registration + Service
+    Recovery config (A.1-5); hostname routing through the Tunnel plus
+    Access-policy verification, with the owner-only/no-Everyone/
+    no-Bypass check flagged as the single most security-critical step
+    in the whole runbook (B.6-9); the already-audited Scheduled Task
+    registration via the previously-reviewed
+    Register-NiklarPwaStartupTask.ps1, still not landed into
+    niklar-stocks per the response's own script-landing decision
+    (C.10-11); and the full verification sequence -- local origin
+    check, private-snapshot render confirmation, service/task status,
+    remote iPhone authentication test, and reboot-survival test with
+    an explicit instruction not to report it as proven without
+    actually testing it (D.12-17) -- plus the exact evidence-report
+    template the response's own "Acceptance Evidence" section
+    specified, ready for the owner to fill in and return.
+  - Explicitly NOT claiming any of the 17 verification items PASS --
+    all genuinely UNKNOWN pending the owner's actual run. No
+    niklar-stocks code executed or committed this cycle.
+  - Recorded as decision #71. Full runbook: review-packages/
+    NIKLAR-REMOTE-ACCESS-CLOUDFLARE-IMPLEMENTATION-01-runbook.md.
+  - Per the response's own "STOP for ChatGPT review after first
+    supervised end-to-end verification" instruction: stopped here --
+    not because the batch is complete, but because this session has
+    reached the limit of what it can do without the owner physically
+    executing the runbook. The next checkpoint in this thread should
+    carry the owner's actual evidence report. Archived HANDOFF_SEQ 38
+    first.

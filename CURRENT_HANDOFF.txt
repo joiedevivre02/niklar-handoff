@@ -5,122 +5,118 @@ repository discovery/search. Full history: `archive/handoffs/` and
 `CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
 in form, fetched only when this checkpoint's summary isn't enough.
 
-STATUS: WINDOWS_DEPLOYMENT_DRAFT_ACCEPTED — GATE REDUCED TO 2 OWNER FACTS — NO CODE CHANGE
+STATUS: CAPABILITY_BOUNDARY_STATED — OWNER_EXECUTABLE_RUNBOOK_PUBLISHED — ZERO EXECUTION PERFORMED — AWAITING OWNER'S ACTUAL RUN
 PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
-HANDOFF_SEQ: 38
-CHECKPOINT_ID: niklar-handoff-2026-08-10-seq38-response35-conditional-gate-reduced
-IMPLEMENTATION_COMMIT: niklar-stocks main @ c24ecb66a740517480a26e85b90590748ab8fc84 (unchanged this cycle)
+HANDOFF_SEQ: 39
+CHECKPOINT_ID: niklar-handoff-2026-08-10-seq39-implementation-01-runbook-capability-boundary
+IMPLEMENTATION_COMMIT: niklar-stocks main @ c24ecb66a740517480a26e85b90590748ab8fc84 (unchanged this cycle — no code executed or committed)
 HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
 
-GOAL: Record ChatGPT's independent-review PASS/CONDITIONAL on the
-Windows machine-side deployment draft (Drive sync doc RESPONSE_SEQ 35,
-responding to HANDOFF_SEQ 37) and the resulting reduction of the
-owner-only fact gate from four items to two.
+GOAL: Process RESPONSE_SEQ 36 (Drive sync doc) — both remaining owner
+facts now CLOSED (zone ACTIVE, cloudflared confirmed absent),
+authorizing `NIKLAR-REMOTE-ACCESS-CLOUDFLARE-IMPLEMENTATION-01`:
+install `cloudflared`, create the Tunnel, configure Access/hostname
+routing, register the PWA Scheduled Task, and verify remotely
+including a reboot test.
 
-MATERIAL_DELTA: No niklar-stocks code change — acknowledgment/
-reconciliation only. The Windows deployment draft (decision #69) is
-technically accepted as-is: independently confirmed correct on the
-Scheduled-Task-vs-native-service split, the 72-hour
-`ExecutionTimeLimit` correction, absolute-interpreter-path resolution,
-preserved `127.0.0.1:8000` localhost-only origin, the tunnel token
-kept out of every saved artifact, and Windows-native recovery
-mechanisms only (no new dependency).
+MATERIAL_DELTA: **This session has no access to the owner's Windows
+machine or live Cloudflare account** — none of the batch's 17
+execution/verification steps are performable from this cloud
+environment. Confirmed, not assumed: a direct request to
+`api.cloudflare.com` from this environment returned a blocked-403 in
+an earlier audit cycle. Every fact established across this entire
+Cloudflare initiative — the Zero Trust plan, the Access setup, the
+cloudflared absence, the zone status — was established because the
+owner checked their own live environment and reported back, never
+because this session observed it directly; this cycle does not change
+that structural fact merely because the response used "execute"
+language.
 
-Two of the four owner-only facts from decision #68 are now **CLOSED**,
-per the owner's supervised Cloudflare setup (reported through
-ChatGPT, not directly observed by this session):
-1. **Zero Trust / cost — CLOSED.** Real Cloudflare order screen showed
-   Zero Trust Free, $0/month, up to 50 users — no paid commitment
-   required.
-2. **Access — substantially closed.** Guided private-app setup shows
-   "Protect an application with Access" and "Connect an identity
-   provider" both complete, target origin entered as `127.0.0.1:8000`
-   over HTTP. Tunnel deployment itself intentionally skipped for now.
-   The standing policy baseline (owner-only identity, no Everyone
-   allow, no Bypass, MFA/identity protection) is explicitly restated
-   as unweakened, not assumed satisfied merely because setup
-   progressed.
+Rather than fabricating a false PASS on any verification item, or
+silently reinterpreting the batch without saying so, stated the
+capability boundary explicitly and plainly in the published
+checkpoint — matching the standing "never invent/never guess, fail
+closed" discipline applied here to what this session is even capable
+of doing, not just to field semantics.
 
-**Two facts remain open**, restated exactly as given, not loosened:
-1. **Zone activation status.** Last evidence showed
-   `niklarintelligence.pro` "Waiting for your registrar to propagate" /
-   "Cloudflare checking" — owner must confirm "Active" before any
-   public hostname/tunnel route activates. Not to be assumed complete
-   merely because time has passed.
-2. **Windows cloudflared state.** Must be checked read-only on the
-   actual machine (`Get-Command cloudflared.exe -ErrorAction
-   SilentlyContinue` / `Get-Service Cloudflared -ErrorAction
-   SilentlyContinue`), not guessed. If present, reuse the existing
-   binary/service state rather than reinstalling blindly.
+**What WAS produced**: the complete, sequenced, owner-runnable runbook
+covering every one of RESPONSE_SEQ 36's lettered/numbered steps:
 
-**Script-landing decision** (RESPONSE_SEQ 35's own terms, matching
-this session's own decision #69 recommendation, now independently
-confirmed): do NOT land the draft PowerShell into niklar-stocks yet —
-keep it as a reviewed handoff artifact until the first supervised
-Windows run proves repo path, Python path, task registration, local
-HTTP response, cloudflared service behavior, reboot survival, and
-authenticated remote access; a small `ops/windows`/`deploy/windows`
-artifact may then be canonically landed if it improves repeatability.
+- **A.1-5** (Windows/cloudflared): install via `winget`, create the
+  dedicated `niklar-intelligence` Tunnel (dashboard), the one-time
+  interactive `cloudflared.exe service install <token>` command
+  (token never scripted/saved), Windows Service Recovery config via
+  `sc.exe failure`.
+- **B.6-9** (hostname/Access): route `app.niklarintelligence.pro` →
+  `127.0.0.1:8000` through the Tunnel (dashboard); explicitly flags
+  verifying the Access policy is owner-only with no Everyone/Bypass as
+  **the single most security-critical step in the whole runbook**,
+  with an instruction to STOP before going live if the policy is
+  broader or ambiguous.
+- **C.10-11** (reboot survival): run the already-audited
+  `Register-NiklarPwaStartupTask.ps1` (unchanged from
+  `NIKLAR-WINDOWS-MACHINE-DEPLOYMENT-AUDIT-01`, already sent to the
+  owner) — still NOT landed into niklar-stocks per the response's own
+  script-landing decision.
+- **D.12-17** (verification): local origin + `Cache-Control` check,
+  private-snapshot render confirmation, service/task status, remote
+  iPhone authentication test, reboot-survival test — with an explicit
+  instruction not to report reboot survival as proven without actually
+  testing it.
 
-**Confirmed target architecture** for the eventual implementation
-batch, once both remaining facts close:
-`app.niklarintelligence.pro → Cloudflare Access → Cloudflare Tunnel →
-localhost-only http://127.0.0.1:8000 → hardened pwa/serve.py`,
-preserving: no Property Transfer changes; no public/anonymous access
-to real Niklar data; no router port forwarding or origin-IP exposure;
-no saved/committed tunnel token; no browser persistent storage of
-private data; existing private-data no-store/network-only/service-
-worker exclusions; existing 63-column/private snapshot contracts; all
-canonical trading/scoring/tactical/invalidation/Decision Object
-boundaries; Minimum Sufficient Code and Windows-native persistence
-only.
+Plus the exact evidence-report template RESPONSE_SEQ 36's own
+"Acceptance Evidence" section specified, ready for the owner to fill
+in and return.
 
-VALIDATION: N/A this cycle (no code change).
+VALIDATION: N/A — nothing executed. All 17 verification items in
+RESPONSE_SEQ 36's Section D remain genuinely UNKNOWN, explicitly
+stated as such rather than assumed passing.
 
-SELF_AUDIT: No niklar-stocks mutation this cycle — matches this
-session's established "Sync" precedent (decisions #57, #66): a PASS/
-CONDITIONAL acknowledgment is recorded, but no new work is
-manufactured merely because the review completed. The two still-open
-facts are genuinely owner-only (live Cloudflare zone status, live
-Windows machine state) and unobservable from this session regardless
-of review outcome.
+SELF_AUDIT: No niklar-stocks code executed or committed. No
+Cloudflare/DNS/Access/Tunnel/provider call made. Property Transfer/
+Journey Passport untouched and unread this cycle. The checkpoint
+itself contains an explicit "what this checkpoint does NOT claim"
+section, stating plainly that none of cloudflared-installed, Tunnel-
+created, Access-configured, task-registered, remotely-reachable, or
+reboot-survives has been confirmed by this session.
 
 CANON/GATE STATUS: Unchanged elsewhere — Batch 1 PASS/CLOSED, Batch 2
 PASS/CLOSED/FROZEN, BATCH3-STAGE-MAPPING-01 RESOLVED (OPTION B),
 Batch 3 at 7 of 13 real stages, PIPELINE-CONTINUITY-SCOPE-01 RESOLVED
 (OPTION C), PWA-PRIVATE-SNAPSHOT-BRIDGE-01 PASS/OWNER_USE_RELEASED,
-PWA-BFCACHE-NO-STORE-HARDENING-01 PASS/CLOSED. UPDATED:
-`NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01` — Windows deployment draft
-technically ACCEPTED; owner-fact gate reduced from 4 to 2 items.
+PWA-BFCACHE-NO-STORE-HARDENING-01 PASS/CLOSED.
+`NIKLAR-REMOTE-ACCESS-CLOUDFLARE-IMPLEMENTATION-01`: AUTHORIZED by
+ChatGPT, runbook published, execution genuinely pending the owner's
+own action.
 
 PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
 invalidation/Decision Object logic touched. No public hosting, no
 live backend/API. No Cloudflare/DNS/Access/Tunnel configuration
-touched by this session — remains on hold, untouched.
+touched by this session.
 
-PENDING_REVIEW_QUEUE (Section 21): Empty — every package queued since
-the Cloudflare remote-access work began has now reached a disposition
-(the final-fact checkpoint and the Windows deployment audit were both
-reviewed and accepted/conditional in RESPONSE_SEQ 34/35).
+PENDING_REVIEW_QUEUE (Section 21):
+  1. NIKLAR-REMOTE-ACCESS-CLOUDFLARE-IMPLEMENTATION-01 runbook —
+     review-packages/NIKLAR-REMOTE-ACCESS-CLOUDFLARE-IMPLEMENTATION-01-runbook.md
+     (published; not an execution-evidence checkpoint — a runbook
+     awaiting the owner's actual run)
 
-BLOCKERS: Two owner-only facts remain the actual gate before ChatGPT
-releases the implementation batch: (1) confirm `niklarintelligence.pro`'s
-Cloudflare zone shows "Active" (not still propagating), (2) check
-(read-only) whether `cloudflared` is already installed on the Windows
-machine. Unchanged: the 6 deferred orchestrator stages, the actual
-Slack/PWA *live* delivery layer, manual-entry field typing, and any
-future live/hosted backend remain blocked on credentials/
-specification/authorization this repo doesn't have. `PRELIVE
-GOVERNANCE AUDIT RELEASED: NO` — still deferred, not self-triggered.
+BLOCKERS: The owner must physically execute the runbook on their own
+Windows machine and Cloudflare dashboard — this is not something any
+further Claude/ChatGPT cycle can resolve without that. Unchanged: the
+6 deferred orchestrator stages, the actual Slack/PWA *live* delivery
+layer, manual-entry field typing, and any future live/hosted backend
+remain blocked on credentials/specification/authorization this repo
+doesn't have. `PRELIVE GOVERNANCE AUDIT RELEASED: NO` — still
+deferred, not self-triggered.
 
-REVIEW_REQUEST: None outstanding. Next required ChatGPT action (per
-RESPONSE_SEQ 35's own terms): issue the minimum-sufficient
-implementation batch once the owner reports both remaining facts.
+REVIEW_REQUEST: None outstanding from this session. Awaiting the
+owner's evidence report (using the template in the runbook) for the
+next cycle to actually review.
 
-NEXT_ACTION: Awaiting the owner to (1) confirm the Cloudflare zone is
-"Active" and (2) report the read-only `cloudflared` installation/
-service check results on the Windows machine. No Cloudflare/DNS/
-Access/Tunnel/MFA/provider configuration, no Windows service/task
-creation, no niklar-stocks commit, until both facts are reported and
-ChatGPT issues the implementation prompt. Governance-compliance audit
-remains deferred, not self-triggered.
+NEXT_ACTION: Awaiting the owner to run the published runbook on their
+Windows machine and Cloudflare dashboard, then report back using the
+evidence template. No further Cloudflare-related niklar-handoff
+checkpoint or niklar-stocks change until that evidence arrives —
+publishing a second draft of the same runbook would not move this
+forward. Governance-compliance audit remains deferred, not
+self-triggered.
