@@ -1,0 +1,115 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+Direct-fetch this exact file first on `sync`/`status` — not via
+repository discovery/search. Full history: `archive/handoffs/` and
+`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
+in form, fetched only when this checkpoint's summary isn't enough.
+
+STATUS: DOMAIN_RECORDED — FINAL_CLOUDFLARE_FACT_AUDIT_PUBLISHED — STOPPED FOR CHATGPT TO DERIVE IMPLEMENTATION PROMPT
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 36
+CHECKPOINT_ID: niklar-handoff-2026-08-10-seq36-domain-recorded-final-fact-audit
+IMPLEMENTATION_COMMIT: niklar-stocks main @ c24ecb66a740517480a26e85b90590748ab8fc84 (unchanged this cycle — no code change)
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Record the owner's domain purchase/selection
+(`niklarintelligence.pro`) and complete the final, read-only provider/
+local-machine fact-closure audit ChatGPT requested (Drive sync doc
+RESPONSE_SEQ 33, responding to HANDOFF_SEQ 35) before ChatGPT derives
+a bounded Cloudflare implementation prompt.
+
+MATERIAL_DELTA: No niklar-stocks code change — audit was explicitly
+read-only, hard-stopped against any provider/DNS/machine-service/repo
+mutation, confirmed via unchanged `git status --short` throughout.
+
+Owner purchased and selected `niklarintelligence.pro` as the dedicated
+Niklar Stocks domain, closing the prior domain-choice blocker.
+`niklarproperty.com` / Property Transfer infrastructure remain
+untouched and out of scope — its canon was not reread this cycle, per
+the response's own explicit instruction (the domain-collision question
+is already resolved by the separate-domain decision).
+`PWA-BFCACHE-NO-STORE-HARDENING-01` (decision #67) was independently
+reviewed and accepted PASS/CLOSED in the same response.
+
+Completed the final fact-closure audit honestly, distinguishing what
+this session can actually observe from what it cannot:
+
+- **Confirmed via a direct test** (not assumed): a network request to
+  Cloudflare's own API from this environment returned a
+  blocked-by-proxy 403 — live Cloudflare account/zone state is
+  genuinely unobservable here, matching the same constraint Property
+  Transfer's own canon independently documented for its sandboxed
+  sessions.
+- **Confirmed directly from the current niklar-stocks repo** (not
+  guessed): the accepted origin path is `pwa/serve.py` with
+  `127.0.0.1:8000` defaults and `Cache-Control: no-store` already
+  landed; and no Windows service/startup/Task-Scheduler wrapper exists
+  anywhere in this repo today, so the PWA server only runs when
+  manually started and does not survive a reboot on its own —
+  confirmed via a direct filename search.
+- **Reported as UNKNOWN, with the exact fact/action needed to close
+  it**: Cloudflare zone/nameserver state for the new domain; Zero
+  Trust/Access availability on the account; `cloudflared` installation
+  state on the owner's Windows machine; the owner's real plan/tier for
+  the cost question. One Minimum Sufficient Access-pattern
+  recommendation (owner-only identity, MFA required, no Everyone/
+  Bypass) offered explicitly as general product-knowledge guidance to
+  confirm, not as an observed or configured fact.
+
+VALIDATION: N/A this cycle (no code change). The two confirmed facts
+above were verified via a direct network-egress test and a direct
+repo file search, not assumed.
+
+SELF_AUDIT: No niklar-stocks mutation. No Cloudflare/DNS/Access/
+Tunnel/MFA/provider mutation, no zone creation, no nameserver change,
+no cloudflared installation, no repo/code change — all explicitly
+forbidden by the audit's own hard-stop list and confirmed absent.
+Property Transfer canon not reread, per the response's own
+instruction, keeping the scope-firewall discipline intact rather than
+relaxed now that a narrow prior authorization existed for a different
+purpose.
+
+CANON/GATE STATUS: Unchanged elsewhere — Batch 1 PASS/CLOSED, Batch 2
+PASS/CLOSED/FROZEN, BATCH3-STAGE-MAPPING-01 RESOLVED (OPTION B),
+Batch 3 at 7 of 13 real stages, PIPELINE-CONTINUITY-SCOPE-01 RESOLVED
+(OPTION C), PWA-PRIVATE-SNAPSHOT-BRIDGE-01 PASS/OWNER_USE_RELEASED,
+PWA-BFCACHE-NO-STORE-HARDENING-01 PASS/CLOSED. UPDATED:
+`NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01` — domain now known
+(`niklarintelligence.pro`), final fact checkpoint published, still
+NOT ready for an implementation prompt (4 owner-only blockers remain).
+
+PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
+invalidation/Decision Object logic touched. No public hosting, no
+live backend/API. No Cloudflare/DNS/Access/Tunnel configuration
+touched — remains on hold, untouched.
+
+PENDING_REVIEW_QUEUE (Section 21):
+  1. NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01 — FINAL FACT CLOSURE —
+     review-packages/NIKLAR-REMOTE-ACCESS-CLOUDFLARE-AUDIT-01-final-facts.md
+     (published, not yet audited; the 8-item implementation-readiness
+     output ChatGPT's response required)
+
+BLOCKERS: Four explicit, owner-only blockers remain before an
+implementation prompt is safe to prepare: (1) Cloudflare zone +
+nameserver state for `niklarintelligence.pro`, (2) Zero Trust/Access
+availability + identity/MFA choice, (3) `cloudflared` installation
+state on the Windows machine + reboot-survival design, (4) cost/plan
+confirmation against the actual account. Unchanged: the 6 deferred
+orchestrator stages, the actual Slack/PWA *live* delivery layer,
+manual-entry field typing, and any future live/hosted backend remain
+blocked on credentials/specification/authorization this repo doesn't
+have. `PRELIVE GOVERNANCE AUDIT RELEASED: NO` — still deferred, not
+self-triggered.
+
+REVIEW_REQUEST: ChatGPT review of this final fact checkpoint, and
+derivation of the bounded implementation prompt from its evidence —
+per the response's own instruction, this session did not attempt that
+derivation itself.
+
+NEXT_ACTION: Per the response's own "after publishing the final fact
+checkpoint, STOP" instruction: **stopped here.** No Cloudflare/DNS/
+Access/Tunnel/MFA/provider configuration, no zone creation, no
+cloudflared installation, until the owner supplies the remaining facts
+(section 5 of the review package) and/or ChatGPT derives and issues
+the bounded implementation prompt. Governance-compliance audit remains
+deferred, not self-triggered.

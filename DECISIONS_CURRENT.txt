@@ -2444,3 +2444,79 @@ NIKLAR — DECISIONS (current)
     instruction, no further Cloudflare-related work proceeds --
     ChatGPT will derive the bounded implementation prompt from this
     evidence.
+
+69) Decision: On the owner's direct instruction ("owner is ready for
+    the Windows machine-side deployment"), audit -- without executing
+    -- the proposed minimum implementation for `cloudflared` as a
+    Windows service plus automatic startup of the accepted hardened
+    `pwa/serve.py` origin, and return the smallest corrected PowerShell
+    plan/script for ChatGPT review.
+    Date: 2026-08-10
+    Rationale: Direct owner instruction, explicitly bounded exactly
+    like this session's prior two Cloudflare audits: "Do not execute
+    provider or machine mutations yet... Return the smallest corrected
+    PowerShell implementation plan/script and stop for ChatGPT
+    review." Read against RESPONSE_SEQ 34's "Do NOT prepare/release
+    the implementation batch until the four owner-only facts above are
+    closed" and its "No cloudflared installation or service/task
+    creation" hard stop: interpreted as a prohibition on EXECUTING/
+    LANDING the implementation, not on producing a reviewed, unexecuted
+    draft plan for ChatGPT's own review -- the same audit-first
+    pattern already used and accepted twice for this same initiative.
+    Nothing was executed: no Cloudflare/DNS/Access/Tunnel/provider
+    call, no Windows service or scheduled task actually created, no
+    niklar-stocks commit. Stated this sequencing explicitly in the
+    published checkpoint rather than silently proceeding as if no
+    tension existed with RESPONSE_SEQ 34's holding language.
+    Verified each area the owner named, catching two real, corrected
+    mistakes a naive proposal would likely make: (1) a bare `New-
+    Service -BinaryPathName "python.exe serve.py"` registration does
+    NOT work for a plain Python script -- Windows Services must speak
+    the Service Control Manager protocol, which a console-mode Python
+    process invoked this way never does; the corrected approach uses
+    a Scheduled Task (`AtStartup` trigger, `SYSTEM` principal via
+    `-LogonType ServiceAccount`, no dependency added) for
+    `pwa/serve.py`, while `cloudflared` uses its OWN native, correct
+    SCM integration (`cloudflared.exe service install`) -- the two
+    components are NOT interchangeable and were not treated as such.
+    (2) `New-ScheduledTaskSettingsSet`'s `-ExecutionTimeLimit` defaults
+    to 72 hours, after which Task Scheduler force-kills the task even
+    if healthy -- for a server meant to run indefinitely this must be
+    overridden to `[TimeSpan]::Zero`, or the PWA origin would
+    mysteriously die exactly 3 days after every boot; the draft script
+    does this explicitly.
+    Also verified and addressed: repo path and Python interpreter path
+    are unknowable from this environment and must fail closed (not
+    guessed) if wrong, rather than assumed; `SYSTEM`-account
+    `ServiceAccount` logon avoids ever storing a Windows account
+    password just to run without interactive login; localhost-only
+    binding (`127.0.0.1:8000`, no `--bind`/`--port` args passed) is
+    preserved unchanged; the real Cloudflare tunnel token is
+    deliberately kept out of every saved artifact -- presented only as
+    a one-time, manually-typed, interactive command, never embedded in
+    the `.ps1` script, never logged, never committed; `cloudflared`'s
+    failure/restart uses the native `sc.exe failure` Service Recovery
+    mechanism, while `pwa/serve.py`'s Scheduled-Task-based restart is
+    explicitly documented as a known, accepted, coarser limitation
+    (the tradeoff for adding zero new dependencies rather than
+    introducing `pywin32`/NSSM to make it a "real" service) --
+    disclosed plainly rather than hidden, matching this session's
+    established "known, accepted limitation" documentation pattern.
+    None of the four owner-only facts from decision #68/RESPONSE_SEQ
+    34 (Cloudflare zone/nameservers, Zero Trust/Access + identity/MFA
+    choice, `cloudflared` installation state, cost/plan) were resolved
+    or assumed by this cycle -- restated as still-open in the
+    published checkpoint.
+    Affected component: niklar-handoff CURRENT_HANDOFF.txt
+    (HANDOFF_SEQ 37), archive/handoffs/HANDOFF_SEQ_36.txt (archived).
+    No niklar-stocks mutation -- the draft `.ps1` script was delivered
+    to the owner directly and published in the review package, NOT
+    committed to niklar-stocks, pending ChatGPT's review/authorization
+    first (mirrors this session's standing practice of publishing
+    proposals for review before landing code).
+    Status: Frozen (audit + draft plan published) -- HANDOFF_SEQ 37.
+    Full checkpoint: review-packages/
+    NIKLAR-WINDOWS-MACHINE-DEPLOYMENT-AUDIT-01.md. Per the owner's own
+    "stop for ChatGPT review" instruction, no execution proceeds --
+    the four owner-only facts remain the actual gate before any real
+    machine/provider mutation.
