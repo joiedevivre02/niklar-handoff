@@ -2757,3 +2757,62 @@ NIKLAR — DECISIONS (current)
     ChatGPT review" instruction, no implementation proceeds until
     ChatGPT reviews this package and, in particular, resolves the two
     flagged judgment calls.
+
+73) Decision: Process RESPONSE_SEQ 39 (Drive sync doc) -- the audit
+    PASSED, both flagged judgment calls were resolved exactly as
+    recommended (exact heading "Invalidation Unknown"; STRICT NO-RESET,
+    no automated git reset/merge/rebase/force/stash/discard ever), and
+    implementation of all three sub-batches was authorized in order,
+    continuing without owner interruption if tests pass and no STOP
+    condition is hit, stopping after the third for ChatGPT review.
+    Implemented and shipped sub-batch A,
+    `PWA-OWNER-DECISION-COCKPIT-01A` (commit `8b8596f`): global ticker
+    search, stable-partition grouping of Opportunity Landscape (by
+    `stage`) and Watchlist (by `portfolio_status`), the "Invalidation
+    Unknown" highlight section (non-destructive -- rows stay in their
+    normal stage group), and tap-to-expand Quick Review cards. All
+    presentation-only, using only the three existing private-snapshot
+    contracts -- no new fetch/field/scoring/ranking/invalidation logic.
+    Date: 2026-08-11
+    Rationale: Verified locally and exhaustively before commit: full
+    unittest suite (311/311, unchanged -- no Python touched), mypy
+    (0/20), `pwa/smoke_test.py` PASS, `node --check` clean on both JS
+    files, and two full real headless-browser (Playwright) passes --
+    one against the shipped DEMO fixtures, one against a synthetic
+    PRIVATE snapshot (git-ignored, deleted after) -- confirming group
+    order (first-ticker-seen, never re-ranked), the invalidation-unknown
+    highlight's non-destructiveness (verified in a live DOM, not just
+    read from code, that the flagged ticker still appears in its own
+    stage group), search filtering and group-hiding, expand/collapse,
+    cross-navigation auto-expand, and the private banner remaining
+    visible in both modes with zero console errors. Corrected a
+    pre-existing (not newly introduced) inaccuracy in `pwa/README.md`
+    while editing the same paragraph: the app has three sections, not
+    two, as it claimed since before this batch.
+    After pushing, discovered hosted GitHub Actions CI (`ai-qa`
+    workflow) failed on all three attempts (original push plus two
+    reruns) with a job-never-started signature -- zero billable
+    minutes, no runner ever assigned, no log content, 2-5 second
+    duration each time -- and confirmed this is not specific to this
+    commit: an entirely unrelated branch
+    (`repair/pse-eod-freshness-interlock-20260812`, not touched by this
+    session) failed identically in the same time window on both its
+    push and pull_request runs. Treated this as a real, disclosed,
+    owner-actionable external infrastructure gap (most plausibly the
+    private repo's GitHub Actions minutes/spending limit) rather than
+    silently claiming green CI or silently working around it -- flagged
+    explicitly for the owner to check GitHub billing/Actions settings,
+    rather than guessed at.
+    Affected component: niklar-stocks pwa/index.html, pwa/app.js,
+    pwa/styles.css, pwa/README.md, docs/app/NIKLAR_MOBILE_ARCHITECTURE.md
+    (commit 8b8596f2009d55421f7c4610d6cc4938ce41a645); niklar-handoff
+    CURRENT_HANDOFF.txt (HANDOFF_SEQ 41), archive/handoffs/
+    HANDOFF_SEQ_40.txt (archived)
+    Status: Frozen (sub-batch A shipped) -- HANDOFF_SEQ 41. Full
+    checkpoint: review-packages/8b8596f-owner-decision-cockpit-01a.md.
+    Per RESPONSE_SEQ 39's own "continue... if tests pass and no STOP
+    condition is hit" instruction: local tests passed exhaustively and
+    none of the six named STOP conditions were hit (the hosted-CI gap
+    is an infrastructure condition, not one of the six), so sub-batch B
+    (`PWA-OWNER-DECISION-COCKPIT-01B-GTC`) follows next in this same
+    session, per that instruction.

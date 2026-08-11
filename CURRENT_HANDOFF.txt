@@ -5,79 +5,76 @@ repository discovery/search. Full history: `archive/handoffs/` and
 `CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
 in form, fetched only when this checkpoint's summary isn't enough.
 
-STATUS: REMOTE_ACCESS_CONFIRMED_WORKING — OWNER_COCKPIT_AUDIT_PUBLISHED — AUDIT ONLY, ZERO IMPLEMENTATION
+STATUS: OWNER_COCKPIT_SUB_BATCH_A_SHIPPED — PROCEEDING TO SUB-BATCH B — HOSTED CI BLOCKED (INFRA, FLAGGED FOR OWNER)
 PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
-HANDOFF_SEQ: 40
-CHECKPOINT_ID: niklar-handoff-2026-08-10-seq40-owner-cockpit-gtc-autoupdate-audit
-IMPLEMENTATION_COMMIT: niklar-stocks main @ c24ecb66a740517480a26e85b90590748ab8fc84 (unchanged this cycle — audit only)
+HANDOFF_SEQ: 41
+CHECKPOINT_ID: niklar-handoff-2026-08-11-seq41-owner-cockpit-01a-shipped
+IMPLEMENTATION_COMMIT: niklar-stocks main @ 8b8596f2009d55421f7c4610d6cc4938ce41a645
 HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
 
-GOAL: Record confirmation that `app.niklarintelligence.pro` works end
-to end (owner-observed, via ChatGPT), and complete the AUDIT-ONLY task
-RESPONSE_SEQ 38 authorized: `PWA-OWNER-DECISION-COCKPIT-01-AUDIT` — a
-mobile-first owner decision-cockpit UX redesign, a Daily GTC Plan
-snapshot contract, and a safe Windows auto-update mechanism.
+GOAL: Ship sub-batch A of the three ChatGPT-authorized
+(RESPONSE_SEQ 39) owner-cockpit sub-batches:
+`PWA-OWNER-DECISION-COCKPIT-01A` — the mobile-first cockpit UX
+(grouping, global search, Invalidation Unknown highlight,
+tap-to-expand Quick Review), using only the three existing
+private-snapshot contracts.
 
-MATERIAL_DELTA: No niklar-stocks code change — audit only, confirmed
-via unchanged `git status --short` throughout.
+MATERIAL_DELTA: `pwa/index.html`, `pwa/app.js`, `pwa/styles.css`
+rewritten for the cockpit; `pwa/README.md` and
+`docs/app/NIKLAR_MOBILE_ARCHITECTURE.md` updated to describe the new
+structure (also fixed one pre-existing, unrelated doc inaccuracy —
+"three sections," not "two"). Zero `ops/` changes.
 
-**Remote access: CONFIRMED WORKING.** Nine owner-observed facts
-recorded as CLOSED: `niklarintelligence.pro` zone active,
-`app.niklarintelligence.pro` routed through the dedicated
-`niklar-intelligence` Tunnel to `127.0.0.1:8000`, HTTPS-public/
-HTTP-local confirmed (the earlier Bad Gateway was resolved by
-correcting the Tunnel origin from HTTPS to HTTP), `cloudflared`
-installed and running as a Windows service, the private Master
-Database export works end to end with real data rendering PRIVATE
-SNAPSHOT, and **remote owner access from iPhone confirmed working**.
-Local checkout: `D:\Niklar\niklar-stocks`. Working persistence
-configuration: `NiklarPwaServe` runs under the owner's own Windows
-logon (not `SYSTEM`/`AtStartup` as originally audited) because a
-`SYSTEM`-context Scheduled Task could not reach the owner's per-user
-Microsoft Store Python interpreter — an accepted, explicitly-disclosed
-compromise, not silently treated as equivalent to the original design.
-Two items remain genuinely open, not glossed over: tunnel-token
-rotation is pending security housekeeping (part of a token appeared
-in an owner screenshot, must not block unrelated cockpit work), and
-full reboot-survival evidence remains unproven until the owner
-actually performs that test.
+**Both RESPONSE_SEQ 39 judgment calls resolved exactly as recommended**
+and now implemented: the highlight section's heading is the exact text
+"Invalidation Unknown"; the batch introduced zero automated
+`git reset`/merge/rebase/force/stash/discard anywhere (STRICT NO-RESET
+— relevant now as the standing rule for sub-batch C's auto-update
+design, not exercised by this UI-only sub-batch).
 
-**Audit completed, per the response's own "do not ask the owner
-questions that can be answered from canon/repo/history" instruction**:
-read the current PWA/mobile-contract code directly, and located and
-read in full, from primary Drive canon, both Daily GTC Plan documents
-— the original `DAILY_GTC_PLAN_RULE_CURRENT` (GTC-001, 2026-08-07) and
-its same-day amendment
-`NIKLAR_DAILY_GTC_RANGE_AND_SHADOW_JOURNAL_RECONCILIATION_RULE_CURRENT`
-(2026-08-10, converting Buy/Sell GTC from single points to ranges).
-Confirmed the owner's own field list in RESPONSE_SEQ 38 is exactly the
-correct union of both documents. Confirmed Daily GTC Plan lives in a
-genuinely separate canonical Master workbook tab from the 63-column
-Master Trade Database tab — no existing `FROZEN_SCHEMA` field may be
-silently substituted for a GTC value.
+**Sub-batch A shipped and verified.** Global ticker search (pure
+DOM show/hide, all sections). Opportunity Landscape/Watchlist grouped
+by stage/portfolio_status via a stable partition (first-ticker-seen
+group order, unchanged row order within a group — never a re-rank).
+"Invalidation Unknown" section highlights `invalidation_known === false`
+rows WITHOUT removing them from their normal stage group — verified
+live in a rendered DOM, not just read from code. Quick Review cards
+now tap-to-expand; cross-navigation auto-expands the target card
+before scrolling. Private banner made visually smaller/subordinate,
+still always rendered — mode-resolution logic byte-for-byte unchanged.
 
-Proposed a new, separate, additive `GTC_PLAN_SCHEMA` + export/contract
-path (explicit range Low/High columns reusing the existing zone-
-formatting pattern, `Rank` as the one legitimate ordering field);
-existing 63-column bridge and Drive-verbatim modules left untouched.
-Designed cockpit grouping rules as strictly presentation-only
-bucketing of existing field values; flagged one borderline grouping
-label for explicit confirmation. Found a real, minimal auto-update
-design: `pwa/serve.py` has zero imports elsewhere in the repo, so only
-a change to it ever needs a process restart; recommended running
-auto-update under the same already-proven owner-logon context (not
-`SYSTEM`) given `niklar-stocks` is a private repo. Explicitly flagged,
-not silently resolved, whether "preserve last known working state" may
-ever use a targeted `git reset`, since `reset` is named among
-forbidden mechanisms in the response's own text.
+VALIDATION: `unittest` 311/311 (unchanged — no Python touched), `mypy`
+0/20, `pwa/smoke_test.py` PASS, `node --check` clean on both JS files,
+and two full real headless-browser (Playwright) passes — shipped DEMO
+fixtures and a synthetic PRIVATE snapshot (git-ignored, deleted after
+use) — confirming group order, the highlight's non-destructiveness,
+search filtering/group-hiding, expand/collapse, cross-navigation
+auto-expand, and the private banner remaining visible in both modes
+with zero console errors.
 
-VALIDATION: N/A this cycle (audit only, no code to validate).
+**Hosted CI: BLOCKED, not a code defect — flagged for the owner.**
+The `ai-qa` GitHub Actions workflow failed on all three attempts after
+pushing (original run + two reruns) with a job-never-started
+signature: 2-5 second duration, no runner ever assigned, zero billable
+minutes, no log content at all. Confirmed NOT specific to this commit:
+an entirely unrelated branch this session never touched
+(`repair/pse-eod-freshness-interlock-20260812`) failed identically on
+both its push and pull_request runs in the same time window — strong
+evidence of a repo/account-level GitHub Actions condition (most
+plausibly the private repo's included-minutes/spending limit), which
+this session has no access to confirm or fix. Not claimed as green;
+not silently worked around. **Ask for the owner:** please check the
+niklar-stocks repo's GitHub billing/Actions settings.
 
-SELF_AUDIT: No niklar-stocks mutation. Two genuine open judgment calls
-flagged explicitly rather than silently resolved (grouping label;
-reset-based rollback question) — matches this session's standing
-discipline of surfacing real ambiguity rather than picking a silent
-default.
+SELF_AUDIT: Failure envelope unweakened (new code only operates on
+already-successfully-loaded rows; malformed grouping fields degrade to
+an explicit fallback bucket, never a silent drop). No new
+abstraction/dependency (one small generic grouping helper reused
+identically for both grouped sections; no new library/build step). No
+new network call or client-side storage (grep for
+localStorage/sessionStorage/indexedDB/document.cookie: zero matches).
+`ops/mobile_contract.py`/`ops/niklar_stocks_ops_v4.py` (Drive-verbatim)
+untouched, confirmed via the commit's own file list.
 
 CANON/GATE STATUS: Unchanged elsewhere — Batch 1 PASS/CLOSED, Batch 2
 PASS/CLOSED/FROZEN, BATCH3-STAGE-MAPPING-01 RESOLVED (OPTION B),
@@ -85,40 +82,46 @@ Batch 3 at 7 of 13 real stages, PIPELINE-CONTINUITY-SCOPE-01 RESOLVED
 (OPTION C), PWA-PRIVATE-SNAPSHOT-BRIDGE-01 PASS/OWNER_USE_RELEASED,
 PWA-BFCACHE-NO-STORE-HARDENING-01 PASS/CLOSED,
 `NIKLAR-REMOTE-ACCESS-CLOUDFLARE-IMPLEMENTATION-01` CONFIRMED WORKING
-by the owner. NEW: `PWA-OWNER-DECISION-COCKPIT-01-AUDIT` published,
-audit only, pending ChatGPT review.
+by the owner, `PWA-OWNER-DECISION-COCKPIT-01-AUDIT` PASS/RESOLVED. NEW:
+`PWA-OWNER-DECISION-COCKPIT-01A` PASS/SHIPPED (this checkpoint).
 
 PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
 invalidation/Decision Object logic touched. No Master Database schema
-change proposed or made. No public hosting beyond the already-accepted
-owner-only Access-gated hostname. No Property Transfer/Journey
-Passport touched.
+change. No public hosting beyond the already-accepted owner-only
+Access-gated hostname. No Property Transfer/Journey Passport touched.
 
 PENDING_REVIEW_QUEUE (Section 21):
-  1. PWA-OWNER-DECISION-COCKPIT-01-AUDIT —
-     review-packages/PWA-OWNER-DECISION-COCKPIT-01-AUDIT.md
-     (published; all 13 required output items; two explicit open
-     judgment calls awaiting ChatGPT's confirmation)
+  1. PWA-OWNER-DECISION-COCKPIT-01A —
+     review-packages/8b8596f-owner-decision-cockpit-01a.md
+     (published; commit 8b8596f; full verification evidence; hosted-CI
+     infrastructure gap disclosed explicitly, not omitted)
 
-BLOCKERS: None blocking further audit work. Two open items remain
-before an implementation batch: (1) the two flagged judgment calls in
-the cockpit audit (grouping label; auto-update rollback semantics),
-(2) the pre-existing tunnel-token rotation housekeeping and reboot-
-survival test from the remote-access implementation (explicitly noted
-as not blocking cockpit work). Unchanged: the 6 deferred orchestrator
-stages, manual-entry field typing, and any future live/hosted backend
-remain blocked on credentials/specification/authorization this repo
-doesn't have. `PRELIVE GOVERNANCE AUDIT RELEASED: NO` — still
-deferred, not self-triggered.
-
-REVIEW_REQUEST: ChatGPT review of the cockpit/GTC/auto-update audit —
-in particular, resolution of the two flagged judgment calls (section
-13 of the review package) before any implementation batch is
-authorized.
-
-NEXT_ACTION: Awaiting ChatGPT's review of
-`PWA-OWNER-DECISION-COCKPIT-01-AUDIT` and resolution of its two open
-questions. No cockpit/GTC/auto-update implementation, no further
-Cloudflare/DNS/Access/Tunnel configuration change, until that review
-completes. Governance-compliance audit remains deferred, not
+BLOCKERS: One new, owner-actionable, non-code blocker: hosted GitHub
+Actions CI for niklar-stocks appears repo/account-wide blocked (see
+above) — needs the owner to check GitHub billing/Actions settings; not
+blocking further sub-batch work, since local verification is
+exhaustive and green. Unchanged: tunnel-token rotation housekeeping
+and reboot-survival evidence from the remote-access implementation
+(still not blocking cockpit work); the 6 deferred orchestrator stages,
+manual-entry field typing, and any future live/hosted backend remain
+blocked on credentials/specification/authorization this repo doesn't
+have. `PRELIVE GOVERNANCE AUDIT RELEASED: NO` — still deferred, not
 self-triggered.
+
+REVIEW_REQUEST: ChatGPT review of sub-batch A's checkpoint (in
+particular, independent confirmation that the Invalidation Unknown
+highlight is genuinely non-destructive and that no scoring/ranking
+logic crept into the grouping), and awareness of the hosted-CI
+infrastructure gap for the owner to act on.
+
+NEXT_ACTION: Per RESPONSE_SEQ 39's own "continue from one increment to
+the next without owner interruption if tests pass and no STOP
+condition is hit" instruction — local tests passed exhaustively and
+none of the six named STOP conditions were hit (the hosted-CI outage
+is an external infrastructure condition, not one of the six) —
+proceeding directly to sub-batch B (`PWA-OWNER-DECISION-COCKPIT-01B-GTC`,
+the Daily GTC Plan snapshot contract and view) in this same session.
+Sub-batch C (`PWA-OWNER-SAFE-AUTOUPDATE-01`) follows after that, then
+this session stops for ChatGPT review per RESPONSE_SEQ 39's explicit
+"stop after the third" instruction. Governance-compliance audit
+remains deferred, not self-triggered.

@@ -1,8 +1,61 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-10 (Remote access CONFIRMED WORKING end to end
-by the owner; PWA-OWNER-DECISION-COCKPIT-01-AUDIT (cockpit UX + Daily
-GTC Plan + Windows auto-update) completed, audit only -- HANDOFF_SEQ
-40. Zero implementation. Two flagged judgment calls awaiting ChatGPT.)
+Last updated: 2026-08-11 (RESPONSE_SEQ 39: audit PASSED, both judgment
+calls resolved, three-sub-batch implementation authorized. Sub-batch A
+(PWA-OWNER-DECISION-COCKPIT-01A) shipped -- HANDOFF_SEQ 41. Hosted CI
+blocked repo-wide for infrastructure reasons, flagged for the owner.
+Proceeding to sub-batch B per the response's own continuation rule.)
+
+DONE — Sub-batch A: mobile-first owner decision cockpit shipped (this update)
+---------------------------------------------------------------------------
+  - RESPONSE_SEQ 39: audit PASSED. Both flagged judgment calls resolved
+    exactly as recommended -- exact heading "Invalidation Unknown";
+    STRICT NO-RESET (no automated git reset/merge/rebase/force/stash/
+    discard ever). All three sub-batches authorized in order, continue
+    without owner interruption if tests pass and no STOP condition is
+    hit, stop after the third for ChatGPT review.
+  - Implemented and shipped sub-batch A, PWA-OWNER-DECISION-COCKPIT-01A
+    (commit 8b8596f): global ticker search across every section;
+    stable-partition grouping of Opportunity Landscape (by stage) and
+    Watchlist (by portfolio_status), first-ticker-seen group order,
+    unchanged row order within a group; the "Invalidation Unknown"
+    highlight section (non-destructive -- flagged rows stay in their
+    normal stage group too); Quick Review cards now tap-to-expand
+    (compact summary row, full detail on demand); cross-navigation now
+    auto-expands the target card before scrolling. All presentation-
+    only -- no new fetch/field/scoring/ranking/invalidation logic, only
+    the three existing private-snapshot contracts.
+  - Verified locally and exhaustively: unittest 311/311 (unchanged, no
+    Python touched), mypy 0/20, pwa/smoke_test.py PASS, node --check
+    clean on both JS files, and two full real headless-browser
+    (Playwright) passes -- DEMO fixtures and a synthetic PRIVATE
+    snapshot (git-ignored, deleted after) -- confirming group order,
+    the highlight's non-destructiveness (checked live in the DOM, not
+    just read from code), search filtering, expand/collapse,
+    cross-navigation auto-expand, and the private banner remaining
+    visible (smaller, never hidden) in both modes with zero console
+    errors.
+  - Corrected a pre-existing pwa/README.md inaccuracy while editing the
+    same paragraph: the app has three sections, not two, as it claimed
+    since before this batch.
+  - Hosted CI (ai-qa workflow) failed all three attempts after pushing
+    -- job-never-started signature (zero billable minutes, no runner
+    assigned, no logs, 2-5 second duration). Confirmed not specific to
+    this commit: an unrelated branch this session never touched
+    (repair/pse-eod-freshness-interlock-20260812) failed identically in
+    the same window on both push and pull_request. Flagged as a real,
+    owner-actionable external infrastructure gap (most plausibly the
+    private repo's GitHub Actions minutes/spending limit) -- not
+    claimed as green, not silently worked around. Asked the owner to
+    check GitHub billing/Actions settings for niklar-stocks.
+  - Recorded as decision #73. Full checkpoint: review-packages/
+    8b8596f-owner-decision-cockpit-01a.md.
+  - Per RESPONSE_SEQ 39's own continuation instruction: local tests
+    passed exhaustively, none of the six named STOP conditions were
+    hit (the hosted-CI gap is an infrastructure condition, not one of
+    the six) -- proceeding to sub-batch B
+    (PWA-OWNER-DECISION-COCKPIT-01B-GTC) next in this session. Archived
+    HANDOFF_SEQ 40 first.
+
 
 DONE — Remote access confirmed working; cockpit/GTC/auto-update audit published (this update)
 ---------------------------------------------------------------------------

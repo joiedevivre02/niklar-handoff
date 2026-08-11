@@ -2261,3 +2261,79 @@ NIKLAR-HANDOFF — CHANGELOG
     instruction: stopped here. No implementation proceeds until
     ChatGPT reviews this package and resolves the two flagged
     judgment calls. Archived HANDOFF_SEQ 39 first.
+
+2026-08-11
+  - RESPONSE_SEQ 39: audit PASSED. Both flagged judgment calls resolved
+    exactly as recommended -- exact heading "Invalidation Unknown";
+    STRICT NO-RESET (no automated git reset/merge/rebase/force/stash/
+    discard ever, even for rollback). Implementation of all three
+    sub-batches authorized in order, continuing without owner
+    interruption if tests pass and no STOP condition is hit, stopping
+    after the third for ChatGPT review.
+  - niklar-stocks: implemented and shipped sub-batch A,
+    PWA-OWNER-DECISION-COCKPIT-01A (commit 8b8596f). Global ticker
+    search across every section (pure DOM show/hide, no re-fetch/
+    re-order). Opportunity Landscape and Watchlist now render as
+    stable-partition groups keyed on the existing stage and
+    portfolio_status fields respectively -- groups in first-ticker-seen
+    order, row order within a group exactly unchanged. New
+    "Invalidation Unknown" section highlights rows with
+    invalidation_known === false without removing them from their
+    normal stage group (a highlight, not a partition). Quick Review
+    cards now render as a compact tap-to-expand summary row with the
+    existing full detail block revealed on demand; cross-navigation now
+    auto-expands the target card before scrolling to it. Private banner
+    made visually smaller/subordinate -- still always rendered, never
+    hidden, mode-resolution logic byte-for-byte unchanged. All
+    presentation-only: no new fetch, field, scoring, ranking, or
+    invalidation logic; only the three existing private-snapshot
+    contracts (mobile-opportunity-card-v1, mobile-tactical-card-v1,
+    mobile-watchlist-row-v1).
+  - Verified: unittest 311/311 (unchanged -- no Python file in this
+    diff), mypy 0/20, pwa/smoke_test.py PASS, node --check clean on
+    both JS files, and two full real headless-browser (Playwright)
+    passes -- shipped DEMO fixtures and a synthetic PRIVATE snapshot
+    (git-ignored, deleted after use) -- confirming group order, the
+    invalidation-unknown highlight's non-destructiveness (checked in a
+    live DOM, not just read from code), search filtering and
+    group-hiding, expand/collapse, cross-navigation auto-expand, and
+    the private banner remaining visible in both modes with zero
+    console errors.
+  - Corrected a pre-existing (not newly introduced) inaccuracy in
+    pwa/README.md's Architecture section while editing the same
+    paragraph: the app has had three sections (opportunities, tactical,
+    watchlist) since the Watchlist roster shipped, not two as the text
+    claimed. Also added a new "Owner decision cockpit" section to
+    docs/app/NIKLAR_MOBILE_ARCHITECTURE.md describing the three
+    additions and the Invalidation Unknown section's callback-based
+    (not fetch-based) population.
+  - Discovered, after pushing, that the hosted ai-qa GitHub Actions
+    workflow failed on all three attempts (the original run plus two
+    reruns) with a job-never-started signature: 2-5 second duration,
+    no runner ever assigned (runner_id 0), zero billable minutes
+    (get_workflow_run_usage: total_ms 0), no log content at all (log
+    download 404s, check-run output/summary both empty). Confirmed this
+    is not specific to this commit or this diff: an entirely unrelated
+    branch (repair/pse-eod-freshness-interlock-20260812, never touched
+    by this session) failed identically on both its push and
+    pull_request runs in the same time window. Treated this as a real,
+    disclosed, owner-actionable external infrastructure gap -- most
+    plausibly the private repo's GitHub Actions included-minutes/
+    spending limit, since private repos consume billed minutes unlike
+    public ones -- rather than claiming green hosted CI that doesn't
+    exist or silently working around it. Flagged explicitly for the
+    owner to check the niklar-stocks repo's GitHub billing/Actions
+    settings.
+  - No niklar-stocks credential/PII/secret entered git -- diff scanned
+    for the owner's real ticker symbols and secret-shaped strings
+    before publishing this checkpoint and before the commit itself,
+    clean on both.
+  - Recorded as decision #73. Full checkpoint: review-packages/
+    8b8596f-owner-decision-cockpit-01a.md.
+  - Per RESPONSE_SEQ 39's own "continue... if tests pass and no STOP
+    condition is hit" instruction: local tests passed exhaustively and
+    none of the six named STOP conditions were hit (the hosted-CI
+    outage is an external infrastructure condition, not one of the
+    six) -- proceeding directly to sub-batch B
+    (PWA-OWNER-DECISION-COCKPIT-01B-GTC) in this same session. Archived
+    HANDOFF_SEQ 40 first.
