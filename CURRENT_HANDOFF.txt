@@ -1,145 +1,74 @@
 NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
 
-Direct-fetch this exact file first on `sync`/`status` — not via
-repository discovery/search. Full history: `archive/handoffs/` and
-`CHANGELOG.txt`. `TODO_CURRENT.txt`/`DECISIONS_CURRENT.txt` unchanged
-in form, fetched only when this checkpoint's summary isn't enough.
-
-STATUS: ALL THREE SUB-BATCHES SHIPPED (A, B, C) — SESSION STOPPED FOR CHATGPT REVIEW, PER RESPONSE_SEQ 39 — HOSTED CI STILL BLOCKED (INFRA, UNCHANGED)
+STATUS: PSE EDGE DIRECT-INTERACTIVE REPAIR PARTIAL — FIRST-PARTY HISTORICAL CORE VERIFIED; VOLUME/AVERAGE UNAVAILABLE AFTER ROLLOVER
 PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
-HANDOFF_SEQ: 43
-CHECKPOINT_ID: niklar-handoff-2026-08-12-seq43-owner-cockpit-01c-autoupdate-shipped-final
-IMPLEMENTATION_COMMIT: niklar-stocks main @ f71fbd6756e40984f16d5da70915e61f9786d99a
+HANDOFF_SEQ: 44
+CHECKPOINT_ID: niklar-handoff-2026-08-12-seq44-pse-edge-desktop-partial
+IMPLEMENTATION_COMMIT: NONE — repair remains local and uncommitted on repair/pse-eod-freshness-interlock-20260812
 HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
 
-GOAL: Ship sub-batch C — the final of the three ChatGPT-authorized
-(RESPONSE_SEQ 39) owner-cockpit sub-batches: `PWA-OWNER-SAFE-
-AUTOUPDATE-01`, a safe Windows auto-update mechanism, applying the
-STRICT NO-RESET resolution RESPONSE_SEQ 39 confirmed. Per that
-response's own "stop after the third for ChatGPT review" instruction,
-this session stops here.
+GOAL: Continue RESPONSE_SEQ 40's bounded PSE EDGE-only diagnosis/repair on the founder's Windows desktop. Do not own fallback acquisition, downstream persistence, or the pre-open briefing.
 
-MATERIAL_DELTA: New `ops/safe_auto_update.py` (portable Python,
-committed, fully tested) and `tests/test_safe_auto_update.py` (34
-tests, against REAL local git repositories). `ops/README.md`,
-`pwa/README.md` updated. The Windows Scheduled Task registration
-script is NOT committed (handoff-only artifact, matching the
-established precedent) — full content published in the review
-package and delivered directly to the owner. Zero changes to
-`ops/niklar_stocks_ops_v4.py`, `ops/mobile_contract.py`, or any
-`pwa/*.html|js|css` file — this sub-batch is deployment tooling only.
+MATERIAL_DELTA:
+- Confirmed the original flattened-text parser defect: the page-level word "Open" in the Status row caused nearby Market Capitalization 3,554,495,943.70 to be misparsed as the stock's Open.
+- Replaced proximity parsing locally with deterministic exact normalized TH-label to adjacent-TD extraction.
+- Observed normal first-party PSE EDGE page traffic. The public Stock Data page itself initiates POST /common/DisclosureCht.ax and receives JSON chartData.
+- Implemented local deterministic chartData extraction for the requested completed session: OPEN, HIGH, LOW, CLOSE, VALUE, plus previous-session CLOSE/date.
+- Preserved DOM As Of and 52-week values, hard requested-session equality, cache/service-worker protections, DIRECT_INTERACTIVE lineage, and fail-closed behavior.
+- No fallback source, canon, database, Decision Object, GTC, Shadow, serializer, PWA, or briefing work was touched.
 
-**STRICT NO-RESET implemented, both behaviorally and structurally.**
-`run_once()`'s five fail-closed steps exactly match the accepted audit
-design (dirty-worktree abort, fetch-failure abort, no-op if
-up-to-date, diverged-history abort, `git merge --ff-only` as the ONLY
-mutation). Restart decision uses a real `git diff --name-only` check
-for `pwa/serve.py`, matching the audit's own "zero imports elsewhere"
-finding. On a failed restart or failed post-restart health check: NO
-automated rollback of any kind — fails loudly, stops, waits for a
-human. Verified behaviorally (both failure modes leave the
-fast-forwarded commit in place, not reverted) AND structurally (a new
-AST-based test parses the module's own source and proves it never
-invokes a forbidden git subcommand/flag, and its one merge call site
-always uses `--ff-only`).
+EXACT FCG DATA NOW AVAILABLE, ALL FROM ORDINARY FIRST-PARTY PSE EDGE PAGE/TRAFFIC:
+- As Of: 2026-08-11 14:50
+- Open: 0.62
+- High: 0.69
+- Low: 0.60
+- Close: 0.65
+- Previous Close: 0.60
+- Previous Close Date: 2026-08-10
+- Value Turnover: 25,797,790.00
+- 52-Week High: 0.69
+- 52-Week Low: 0.50
+- Average Price: unavailable from the currently observed authorized surfaces
+- Volume: unavailable from the currently observed authorized surfaces
 
-**Windows-specific isolation, disclosed clearly**: the one call
-requiring `powershell.exe` (`Stop-ScheduledTask`/`Start-ScheduledTask`)
-is isolated behind an injectable parameter so the git-orchestration
-logic — the part with real correctness risk — is fully testable on
-this session's own Linux environment. That isolated call's actual
-behavior against a real Windows Scheduled Task has NOT been verified
-by this session — same capability boundary already disclosed for the
-Cloudflare/PWA deployment work. The registration script is delivered
-as a handoff-only artifact per the same precedent already established
-for `Register-NiklarPwaStartupTask.ps1` (confirmed against that prior
-review package's own "nothing to land yet" statement before writing
-this one, not assumed).
+LIVE RUNTIME DIAGNOSIS:
+- No iframe.
+- No nested span/div/input/value attribute containing the missing table values.
+- DOM snapshots at DOMContentLoaded, +1s, +3s, and +8s were identical: no asynchronous injection.
+- After next-session rollover, the visible table leaves Last/Open/High/Low/Value/Volume/Average empty and rolls Previous Close to 0.65 (Aug. 11).
+- The ordinary chart JSON preserves exact Aug. 11 O/H/L/C/Value and prior-session close, but its schema contains no Volume or Average Price.
+- Live FCG therefore now fails precisely and correctly: required rendered/structured fields missing: average_price, volume.
 
-VALIDATION: `unittest` 390/390 (356 → 390, 34 new tests), `mypy` 0/23
-(22 → 23), `pwa/smoke_test.py` PASS (unaffected), `node --check` clean
-(unaffected — no JS touched), and a manual CLI run against a real
-local git checkout/origin pair. A real `addCleanup` LIFO-ordering
-deadlock bug in the test suite's own setup was caught (the full suite
-visibly hung rather than completing) and fixed before this checkpoint
-— a defect in the test's own setup, not in the module under test.
+VALIDATION:
+- 20 relevant tests passed plus 5 subtests.
+- Exact O/H/L/C/Value oracle regression passed for FCG, IMI, FGEN, CHP, and AP.
+- Misleading Market Capitalization-before-Open regression passed.
+- Missing/ambiguous DOM relationships, missing chart session, and stale-session fail-closed regressions passed.
+- mypy passed for the acquisition module.
+- git diff --check passed.
+- Live FCG remained fail-closed only for Average Price and Volume.
+- No repair commit created because the full live FCG acceptance contract is not satisfied.
 
-**Hosted CI: still BLOCKED, same infrastructure signature across all
-three sub-batches — unchanged, not re-investigated at length again.**
-The `ai-qa` workflow run for this commit failed identically to
-sub-batches A and B (job never starts, zero billable minutes, no log
-content). This is the one concrete, owner-actionable item this whole
-authorized implementation run is leaving open across all three
-checkpoints. **Ask for the owner:** please check the niklar-stocks
-repo's GitHub billing/Actions settings.
+SELF_AUDIT: Scope stayed PSE EDGE-only. Only ordinary public page rendering and page-initiated first-party PSE traffic were observed. No hidden/private endpoint probing, access-control bypass, fallback acquisition, semantic change, persistence, or publication.
 
-SELF_AUDIT: Fails closed at every named point, each with a distinct
-outcome. No new abstraction/dependency (stdlib only; the one OS-
-specific call isolated behind a plain parameter). No new credential
-storage (git auth reuses the machine's existing credential helper); no
-Cloudflare/Tunnel/Access/DNS state touched; `pwa/private-data/`
-untouchable by a fast-forward merge by construction.
-`ops/niklar_stocks_ops_v4.py`/`ops/mobile_contract.py`/every PWA UI
-file — zero changes, confirmed via diff.
+CANON/GATE STATUS: RESPONSE_SEQ 40 obeyed. Direct-interactive PSE EDGE remains ticker-local and fail-closed. Full acceptance is incomplete solely because historical Volume and Average Price are absent from the observed ordinary post-rollover page surfaces.
 
-CANON/GATE STATUS: Unchanged elsewhere — Batch 1 PASS/CLOSED, Batch 2
-PASS/CLOSED/FROZEN, BATCH3-STAGE-MAPPING-01 RESOLVED (OPTION B),
-Batch 3 at 7 of 13 real stages, PIPELINE-CONTINUITY-SCOPE-01 RESOLVED
-(OPTION C), PWA-PRIVATE-SNAPSHOT-BRIDGE-01 PASS/OWNER_USE_RELEASED,
-PWA-BFCACHE-NO-STORE-HARDENING-01 PASS/CLOSED,
-`NIKLAR-REMOTE-ACCESS-CLOUDFLARE-IMPLEMENTATION-01` CONFIRMED WORKING
-by the owner, `PWA-OWNER-DECISION-COCKPIT-01-AUDIT` PASS/RESOLVED,
-`PWA-OWNER-DECISION-COCKPIT-01A` PASS/SHIPPED,
-`PWA-OWNER-DECISION-COCKPIT-01B-GTC` PASS/SHIPPED. NEW:
-`PWA-OWNER-SAFE-AUTOUPDATE-01` PASS/SHIPPED (this checkpoint) — ALL
-THREE RESPONSE_SEQ 39 SUB-BATCHES NOW COMPLETE.
+PROTECTED_BOUNDARY_STATUS: PASS — no engine/Decision Object/Master schema/serializer/GTC/Shadow/PWA/public-private boundary change.
 
-PROTECTED_BOUNDARY_STATUS: No canonical trading/scoring/tactical/
-invalidation/Decision Object logic touched across any of the three
-sub-batches. No Master Database schema change. No public hosting
-beyond the already-accepted owner-only Access-gated hostname. No
-Property Transfer/Journey Passport touched. No new credential storage
-introduced anywhere across the three sub-batches.
+BLOCKERS:
+- The currently observed ordinary PSE EDGE HTML and page-initiated chart response do not expose historical Volume or Average Price after session rollover.
+- Completing the required record would require either another explicitly approved ordinary PSE EDGE surface, an approved combination with another source, or an authority decision to change the required acquisition contract. None was guessed.
 
-PENDING_REVIEW_QUEUE (Section 21):
-  1. PWA-OWNER-DECISION-COCKPIT-01A —
-     review-packages/8b8596f-owner-decision-cockpit-01a.md
-  2. PWA-OWNER-DECISION-COCKPIT-01B-GTC —
-     review-packages/7b68d74-owner-decision-cockpit-01b-gtc.md
-  3. PWA-OWNER-SAFE-AUTOUPDATE-01 —
-     review-packages/f71fbd6-owner-safe-autoupdate-01.md (published;
-     commit f71fbd6; full verification evidence; complete Windows
-     registration script text included since it is not separately
-     committed; hosted-CI gap still unresolved across all three,
-     flagged again but not re-investigated at length)
+REVIEW_REQUEST: ChatGPT, please provide next steps specifically accounting for Codex operating on the founder's Windows desktop with working local Edge/Playwright and authorized read-only PSE EDGE access. Should Codex:
+1. wait for a same-session after-close window and validate the deterministic DOM path before rollover;
+2. evaluate another explicitly named ordinary PSE EDGE UI action/page surface for Volume/Average;
+3. combine the page-initiated chart response with a separately approved source under explicit lineage; or
+4. preserve this partial repair uncommitted and stop?
+Please identify any exact authorized surface/action and whether a partial chart+DOM implementation should be committed despite the full live contract remaining incomplete.
 
-BLOCKERS: One unchanged, owner-actionable, non-code blocker: hosted
-GitHub Actions CI for niklar-stocks still appears repo/account-wide
-blocked across all three sub-batches (see above) — needs the owner to
-check GitHub billing/Actions settings. A second, expected, disclosed
-item: the Windows Scheduled Task registration script for sub-batch C
-(like the one for the original PWA deployment) has not been executed
-against the owner's real machine — needs the owner's own supervised
-run before this sub-batch can be considered fully proven end to end.
-Unchanged: tunnel-token rotation housekeeping and reboot-survival
-evidence from the remote-access implementation; the 6 deferred
-orchestrator stages, manual-entry field typing, and any future live/
-hosted backend remain blocked on credentials/specification/
-authorization this repo doesn't have. `PRELIVE GOVERNANCE AUDIT
-RELEASED: NO` — still deferred, not self-triggered.
+NEXT_ACTION: Await the next authoritative ChatGPT response in Google Drive NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT. Preserve local PSE repair changes; do not commit, discard, broaden to fallback, or touch downstream state meanwhile.
 
-REVIEW_REQUEST: ChatGPT's combined review of all three sub-batches (A,
-B, C) together — in particular, independent confirmation that STRICT
-NO-RESET was genuinely implemented (not just described) in sub-batch
-C, that the Daily GTC Plan's separateness from the Master Database
-stayed intact in sub-batch B, and that the cockpit UX in sub-batch A
-introduced no scoring/ranking logic anywhere. Plus continued awareness
-of the still-unresolved hosted-CI infrastructure gap for the owner to
-act on, and that sub-batch C's Windows registration script awaits the
-owner's own supervised first run.
-
-NEXT_ACTION: Per RESPONSE_SEQ 39's own "stop after the third for
-ChatGPT review" instruction: this session stops here. No further
-niklar-stocks implementation proceeds until ChatGPT reviews this
-three-sub-batch sequence. Governance-compliance audit remains
-deferred, not self-triggered.
+ENGINEERING AUTHORITY CHECK: PASS
+ENGINEERING SCOPE FIREWALL: PASS
+PROPERTY-TRANSFER MATERIAL IN NIKLAR-STOCKS: NO
+Compliance: PARTIAL — historical Volume and Average Price remain unavailable from observed authorized PSE EDGE surfaces.
