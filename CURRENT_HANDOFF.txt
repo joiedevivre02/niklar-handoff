@@ -1,46 +1,61 @@
 NIKLAR - CURRENT HANDOFF (compact latest-pointer form)
 
-STATUS: RESPONSE_SEQ 54 AUG. 12 PIPELINE ACCEPTANCE COMPLETE; SHADOW EVIDENCE GATE PRESERVED
-PROJECT: niklar-stocks (private implementation repo) + niklar-handoff
-HANDOFF_SEQ: 54
-CHECKPOINT_ID: niklar-handoff-2026-08-12-seq54-aug12-pipeline-acceptance
-IMPLEMENTATION_COMMIT: niklar-stocks repair/pse-eod-freshness-interlock-20260812 @ 03a740c (PUSHED PRIVATE)
+STATUS: RESPONSE_SEQ 55 AUG. 12 SHADOW RECONCILIATION PERSISTED AND VERIFIED
+PROJECT: niklar-stocks canonical workbook + private Drive + niklar-handoff
+HANDOFF_SEQ: 55
+CHECKPOINT_ID: niklar-handoff-2026-08-12-seq55-shadow-current-maturation
+IMPLEMENTATION_COMMIT: 03a740c (unchanged; no new product-code change required)
 HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
 
-MATERIAL DELTA:
-- Repaired PSE EDGE source-shape drift: exact-session complete rendered DOM is authoritative when the ordinary first-party chart lags; chart remains conflict-check/corroboration when current.
-- Added verified batch-receipt to completed_session_market_state SQLite materialization and wired it into the Windows all-ticker launcher.
-- Full Aug. 12 acquisition completed 25/25 from rendered PSE EDGE with official OHLCV/Average Price; zero failed and zero unresolved market fields.
-- Regenerated the 25-card private Active Trading board and corrected its header/withholding state to reflect the actual completed session.
+CANON / METHOD:
+- Read frozen Rules 10-12 and RESPONSE_SEQ 55.
+- Used authoritative Aug. 12 PSE EDGE OHLCV/Average package and pre-session Slack/action-board conditions.
+- HOLD/WATCH/location alone was not treated as execution. No historical entry/fill was overwritten.
 
-PIPELINE ACCEPTANCE:
-- Acquisition receipt: C:\Users\bamis\AppData\Local\Niklar\PseEdge\logs\pse-edge-all-20260812-212949.json; 25/25 COMPLETE.
-- Final run_id: PSE-2026-08-12-20260812T214346-015bb6be; trading_date 2026-08-12; promoted true.
-- Canonical Market History append/readback: 25 rows; same-date reruns completed without duplicate-effect failure.
-- Local CURRENT and private Drive CURRENT promoted; Drive sync/readback PASS.
-- Publication remains PARTIAL only because Research Delta is null/UNKNOWN for all 25, not because market data is unresolved.
-- Full validation: 362 tests + 40 subtests PASS; git diff check PASS.
+WINDOWS SHADOW WRITE:
+- Canonical workbook: D:\Niklar\niklar-stocks\production\canonical\Niklar_Master_Trade_Database_CURRENT.xlsx
+- Local pre-write backup: outputs\Niklar_Master_Trade_Database_PRE_AUG12_SHADOW_RECONCILIATION.xlsx
+- Refreshed Latest Price for all 17 existing Shadow Journal rows to official Aug. 12 close.
+- Recomputed returns from immutable entry prices; P/L formulas applied only where units are known. Unknown-unit P/L remains blank/UNKNOWN.
+- Matured numeric MFE/MAE with the subsequent Aug. 12 high/low where applicable; existing SEQUENCE_UNKNOWN states remain preserved.
+- Appended nine Aug. 12 candidate-event audit rows to Shadow Setup Ledger; appended zero Shadow execution rows.
 
-AUG. 12 SHADOW RECONCILIATION:
-- Read frozen Rules 10-12 and the actual Aug. 12 pre-session/action-board Slack evidence.
-- No Aug. 12 Daily GTC initiations were promoted; therefore Rule 10 automatic range-hit treatment does not apply to this session.
-- DMC: prior MODEL_SHADOW open; Aug. 12 low 7.62 did not reach 7.25-7.45; NO ADD.
-- LPZ: price accepted above 6.10-6.15 (O/H/L/C 5.95/6.60/5.95/6.48), but its non-GTC rule also requires constructive participation or successful retest; sequence-capable/relative participation proof was not registered. UNKNOWN_PENDING; no invented fill.
-- IMI: existing exposure; no-add instruction; Aug. 12 low 7.15 did not reach support/reclaim add conditions. NO ADD.
-- NRCP: explicit NO ACTION / liquidity caution and no-add instruction. NOT FILLED.
-- FERRO: close 2.16 above 2.10-2.15, but non-GTC acceptance/retest execution also requires constructive participation or successful retest; that confirmation is not deterministically proven from OHLCV alone. UNKNOWN_PENDING; no invented fill.
-- APX: support/reclaim 14.20-14.40 was not reached (low 14.96); breakout acceptance later failed at close 14.96. NOT FILLED.
-- OGP: required defend/reclaim 34.50-35.00 or accepted >36 with revalidation; session low 35.70 and no sequence-capable retest proof. NOT FILLED.
-- PGOLD: prior MODEL_SHADOW open; support-add 39.50-40.50 not reached (low 40.60). NO ADD.
-- PCOR: prior MODEL_SHADOW open; support zone reached, but pre-session instruction explicitly prohibited add/new starter pending revalidation and no independent add trigger was registered. NO ADD.
-- No additional cohort ticker gained a new execution leg solely from WATCH/HOLD/price touch language. Existing immutable execution entries were not overwritten; Aug. 12 current-price maturation remains the required downstream workbook delta.
+PRIORITY RECONCILIATION:
+- DMC: prior MODEL_SHADOW open; ADD candidate; O/H/L/C 7.62/8.07/7.62/8.00; low above 7.25-7.45. NOT_FILLED; no ADD. Current model return +7.3826% from 7.45.
+- LPZ: no prior MODEL_SHADOW; INITIAL candidate; 5.95/6.60/5.95/6.48. UNKNOWN_PENDING: price accepted above 6.10-6.15, but constructive participation or successful retest/sequence is not deterministically registered.
+- IMI: reconstructed/provisional exposure; ADD candidate; 7.40/7.40/7.15/7.15. NOT_FILLED: explicit no-add pending revalidation and add zones not reached. Existing reconstructed return +13.4921% from 6.30.
+- NRCP: existing-position-management context; ADD candidate; 0.96/0.96/0.95/0.95. NOT_FILLED: explicit NO ACTION/liquidity caution and no-add.
+- FERRO: no prior MODEL_SHADOW; INITIAL candidate; 2.07/2.16/2.04/2.16. UNKNOWN_PENDING: price accepted above 2.10-2.15, but constructive participation or successful retest/sequence is not deterministically registered.
+- APX: no prior MODEL_SHADOW; INITIAL candidate; 15.28/15.58/14.96/14.96. NOT_FILLED: 14.20-14.40 reclaim not reached and close failed completed-session acceptance above 15.20.
+- OGP: no prior MODEL_SHADOW; INITIAL candidate; 35.90/37.45/35.70/37.45. NOT_FILLED: 34.50-35.00 reclaim entry not reached and defended retest/sequence not proven.
+- PGOLD: prior MODEL_SHADOW open; ADD candidate; 40.95/41.40/40.60/41.05. NOT_FILLED: low stayed above 39.50-40.50. Existing model return +1.3580% from 40.50.
+- PCOR: prior MODEL_SHADOW open plus separate user lineage; ADD candidate; 2.31/2.33/2.30/2.30. NOT_FILLED: location reached but add explicitly prohibited pending revalidation; defended sequence unproven. Existing model return -2.5424% from 2.36.
+- Additional qualifying Aug. 12 execution legs: NONE.
 
-BLOCKER / NEXT ACTION:
-- Canon lacks sequence/participation evidence sufficient to convert LPZ and FERRO non-GTC acceptance into deterministic fills; keep them evidence-backed UNKNOWN_PENDING unless a registered sequence-capable receipt or Founder semantic decision resolves that exact condition.
-- Runtime publication is usable now; Research Delta completion and Shadow current-price workbook maturation remain independent downstream acceptance work.
+IMMUTABILITY / LINEAGE:
+- Seven Aug. 11 MODEL_SHADOW entry prices remain unchanged. Current returns: PGOLD +1.3580%, DMC +7.3826%, ROCK +2.7397%, PCOR -2.5424%, BPI +7.2854%, SMPH +6.9945%, ACEN +1.3514%.
+- ION USER_CONFIRMED SJ-USER-ION-20260806-01 remains separate at immutable entry 1.55; Aug. 12 current mark 1.49; return -3.8710%; units and P/L UNKNOWN.
+- Reconstructed ION audit row remains superseded/excluded and was not deleted.
 
-CANON/GATE STATUS: PASS; EXCEPTIONS: LPZ/FERRO NON-GTC EXECUTION CONFIRMATION UNKNOWN_PENDING; RESEARCH DELTA 25/25 UNKNOWN
+IDEMPOTENCY / READBACK:
+- First reconciliation: Shadow marks refreshed 17; Setup Ledger appended 9.
+- Second identical reconciliation against staged result: refreshed 17; appended 0.
+- Formula-error scan: zero matches.
+- Compact row readback confirmed all nine event identities/statuses and all 17 current marks/returns.
+- Full tests: 362 PASS plus 40 subtests PASS.
+
+DRIVE PUBLICATION:
+- Private canonical file ID unchanged: 1JLu5gM5c1kKH4GTXwa-362RwjiySZBlw.
+- Drive backup ID: 1nHlgpLIIf6oSlKGD8642-5pgXO_pZjJS.
+- Drive replacement/readback: PASS; title/MIME unchanged; size 281,618 bytes; modified 2026-08-12T14:18:22.482Z.
+- Local canonical SHA256: 4C580062B6A0955C7FA4F280AFDA7F9C119EB9CF1CB4585BB156F3C617FDE7E6.
+
+UNRESOLVED CONTROLS:
+- LPZ and FERRO remain evidence-backed UNKNOWN_PENDING for non-GTC confirmation.
+- Global Research Delta remains UNKNOWN for 25/25 and is independent of completed Shadow maturation.
+
+CANON/GATE STATUS: PASS; EXCEPTIONS: LPZ/FERRO NON-GTC CONFIRMATION UNKNOWN_PENDING; RESEARCH DELTA 25/25 UNKNOWN
 ENGINEERING AUTHORITY CHECK: PASS
 ENGINEERING SCOPE FIREWALL: PASS
 PROPERTY-TRANSFER MATERIAL IN NIKLAR-STOCKS: NO
-Compliance: PARTIAL - Research Delta remains UNKNOWN for 25; LPZ/FERRO non-GTC execution confirmation lacks deterministic sequence/participation evidence.
+Compliance: PARTIAL - LPZ/FERRO confirmation unresolved and Research Delta remains UNKNOWN; all other RESPONSE_SEQ 55 controls passed.

@@ -1,0 +1,46 @@
+NIKLAR - CURRENT HANDOFF (compact latest-pointer form)
+
+STATUS: RESPONSE_SEQ 54 AUG. 12 PIPELINE ACCEPTANCE COMPLETE; SHADOW EVIDENCE GATE PRESERVED
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff
+HANDOFF_SEQ: 54
+CHECKPOINT_ID: niklar-handoff-2026-08-12-seq54-aug12-pipeline-acceptance
+IMPLEMENTATION_COMMIT: niklar-stocks repair/pse-eod-freshness-interlock-20260812 @ 03a740c (PUSHED PRIVATE)
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+MATERIAL DELTA:
+- Repaired PSE EDGE source-shape drift: exact-session complete rendered DOM is authoritative when the ordinary first-party chart lags; chart remains conflict-check/corroboration when current.
+- Added verified batch-receipt to completed_session_market_state SQLite materialization and wired it into the Windows all-ticker launcher.
+- Full Aug. 12 acquisition completed 25/25 from rendered PSE EDGE with official OHLCV/Average Price; zero failed and zero unresolved market fields.
+- Regenerated the 25-card private Active Trading board and corrected its header/withholding state to reflect the actual completed session.
+
+PIPELINE ACCEPTANCE:
+- Acquisition receipt: C:\Users\bamis\AppData\Local\Niklar\PseEdge\logs\pse-edge-all-20260812-212949.json; 25/25 COMPLETE.
+- Final run_id: PSE-2026-08-12-20260812T214346-015bb6be; trading_date 2026-08-12; promoted true.
+- Canonical Market History append/readback: 25 rows; same-date reruns completed without duplicate-effect failure.
+- Local CURRENT and private Drive CURRENT promoted; Drive sync/readback PASS.
+- Publication remains PARTIAL only because Research Delta is null/UNKNOWN for all 25, not because market data is unresolved.
+- Full validation: 362 tests + 40 subtests PASS; git diff check PASS.
+
+AUG. 12 SHADOW RECONCILIATION:
+- Read frozen Rules 10-12 and the actual Aug. 12 pre-session/action-board Slack evidence.
+- No Aug. 12 Daily GTC initiations were promoted; therefore Rule 10 automatic range-hit treatment does not apply to this session.
+- DMC: prior MODEL_SHADOW open; Aug. 12 low 7.62 did not reach 7.25-7.45; NO ADD.
+- LPZ: price accepted above 6.10-6.15 (O/H/L/C 5.95/6.60/5.95/6.48), but its non-GTC rule also requires constructive participation or successful retest; sequence-capable/relative participation proof was not registered. UNKNOWN_PENDING; no invented fill.
+- IMI: existing exposure; no-add instruction; Aug. 12 low 7.15 did not reach support/reclaim add conditions. NO ADD.
+- NRCP: explicit NO ACTION / liquidity caution and no-add instruction. NOT FILLED.
+- FERRO: close 2.16 above 2.10-2.15, but non-GTC acceptance/retest execution also requires constructive participation or successful retest; that confirmation is not deterministically proven from OHLCV alone. UNKNOWN_PENDING; no invented fill.
+- APX: support/reclaim 14.20-14.40 was not reached (low 14.96); breakout acceptance later failed at close 14.96. NOT FILLED.
+- OGP: required defend/reclaim 34.50-35.00 or accepted >36 with revalidation; session low 35.70 and no sequence-capable retest proof. NOT FILLED.
+- PGOLD: prior MODEL_SHADOW open; support-add 39.50-40.50 not reached (low 40.60). NO ADD.
+- PCOR: prior MODEL_SHADOW open; support zone reached, but pre-session instruction explicitly prohibited add/new starter pending revalidation and no independent add trigger was registered. NO ADD.
+- No additional cohort ticker gained a new execution leg solely from WATCH/HOLD/price touch language. Existing immutable execution entries were not overwritten; Aug. 12 current-price maturation remains the required downstream workbook delta.
+
+BLOCKER / NEXT ACTION:
+- Canon lacks sequence/participation evidence sufficient to convert LPZ and FERRO non-GTC acceptance into deterministic fills; keep them evidence-backed UNKNOWN_PENDING unless a registered sequence-capable receipt or Founder semantic decision resolves that exact condition.
+- Runtime publication is usable now; Research Delta completion and Shadow current-price workbook maturation remain independent downstream acceptance work.
+
+CANON/GATE STATUS: PASS; EXCEPTIONS: LPZ/FERRO NON-GTC EXECUTION CONFIRMATION UNKNOWN_PENDING; RESEARCH DELTA 25/25 UNKNOWN
+ENGINEERING AUTHORITY CHECK: PASS
+ENGINEERING SCOPE FIREWALL: PASS
+PROPERTY-TRANSFER MATERIAL IN NIKLAR-STOCKS: NO
+Compliance: PARTIAL - Research Delta remains UNKNOWN for 25; LPZ/FERRO non-GTC execution confirmation lacks deterministic sequence/participation evidence.
