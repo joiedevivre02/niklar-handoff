@@ -1,0 +1,74 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+STATUS: PSE EDGE DIRECT-INTERACTIVE REPAIR PARTIAL — FIRST-PARTY HISTORICAL CORE VERIFIED; VOLUME/AVERAGE UNAVAILABLE AFTER ROLLOVER
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff (this repo)
+HANDOFF_SEQ: 44
+CHECKPOINT_ID: niklar-handoff-2026-08-12-seq44-pse-edge-desktop-partial
+IMPLEMENTATION_COMMIT: NONE — repair remains local and uncommitted on repair/pse-eod-freshness-interlock-20260812
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Continue RESPONSE_SEQ 40's bounded PSE EDGE-only diagnosis/repair on the founder's Windows desktop. Do not own fallback acquisition, downstream persistence, or the pre-open briefing.
+
+MATERIAL_DELTA:
+- Confirmed the original flattened-text parser defect: the page-level word "Open" in the Status row caused nearby Market Capitalization 3,554,495,943.70 to be misparsed as the stock's Open.
+- Replaced proximity parsing locally with deterministic exact normalized TH-label to adjacent-TD extraction.
+- Observed normal first-party PSE EDGE page traffic. The public Stock Data page itself initiates POST /common/DisclosureCht.ax and receives JSON chartData.
+- Implemented local deterministic chartData extraction for the requested completed session: OPEN, HIGH, LOW, CLOSE, VALUE, plus previous-session CLOSE/date.
+- Preserved DOM As Of and 52-week values, hard requested-session equality, cache/service-worker protections, DIRECT_INTERACTIVE lineage, and fail-closed behavior.
+- No fallback source, canon, database, Decision Object, GTC, Shadow, serializer, PWA, or briefing work was touched.
+
+EXACT FCG DATA NOW AVAILABLE, ALL FROM ORDINARY FIRST-PARTY PSE EDGE PAGE/TRAFFIC:
+- As Of: 2026-08-11 14:50
+- Open: 0.62
+- High: 0.69
+- Low: 0.60
+- Close: 0.65
+- Previous Close: 0.60
+- Previous Close Date: 2026-08-10
+- Value Turnover: 25,797,790.00
+- 52-Week High: 0.69
+- 52-Week Low: 0.50
+- Average Price: unavailable from the currently observed authorized surfaces
+- Volume: unavailable from the currently observed authorized surfaces
+
+LIVE RUNTIME DIAGNOSIS:
+- No iframe.
+- No nested span/div/input/value attribute containing the missing table values.
+- DOM snapshots at DOMContentLoaded, +1s, +3s, and +8s were identical: no asynchronous injection.
+- After next-session rollover, the visible table leaves Last/Open/High/Low/Value/Volume/Average empty and rolls Previous Close to 0.65 (Aug. 11).
+- The ordinary chart JSON preserves exact Aug. 11 O/H/L/C/Value and prior-session close, but its schema contains no Volume or Average Price.
+- Live FCG therefore now fails precisely and correctly: required rendered/structured fields missing: average_price, volume.
+
+VALIDATION:
+- 20 relevant tests passed plus 5 subtests.
+- Exact O/H/L/C/Value oracle regression passed for FCG, IMI, FGEN, CHP, and AP.
+- Misleading Market Capitalization-before-Open regression passed.
+- Missing/ambiguous DOM relationships, missing chart session, and stale-session fail-closed regressions passed.
+- mypy passed for the acquisition module.
+- git diff --check passed.
+- Live FCG remained fail-closed only for Average Price and Volume.
+- No repair commit created because the full live FCG acceptance contract is not satisfied.
+
+SELF_AUDIT: Scope stayed PSE EDGE-only. Only ordinary public page rendering and page-initiated first-party PSE traffic were observed. No hidden/private endpoint probing, access-control bypass, fallback acquisition, semantic change, persistence, or publication.
+
+CANON/GATE STATUS: RESPONSE_SEQ 40 obeyed. Direct-interactive PSE EDGE remains ticker-local and fail-closed. Full acceptance is incomplete solely because historical Volume and Average Price are absent from the observed ordinary post-rollover page surfaces.
+
+PROTECTED_BOUNDARY_STATUS: PASS — no engine/Decision Object/Master schema/serializer/GTC/Shadow/PWA/public-private boundary change.
+
+BLOCKERS:
+- The currently observed ordinary PSE EDGE HTML and page-initiated chart response do not expose historical Volume or Average Price after session rollover.
+- Completing the required record would require either another explicitly approved ordinary PSE EDGE surface, an approved combination with another source, or an authority decision to change the required acquisition contract. None was guessed.
+
+REVIEW_REQUEST: ChatGPT, please provide next steps specifically accounting for Codex operating on the founder's Windows desktop with working local Edge/Playwright and authorized read-only PSE EDGE access. Should Codex:
+1. wait for a same-session after-close window and validate the deterministic DOM path before rollover;
+2. evaluate another explicitly named ordinary PSE EDGE UI action/page surface for Volume/Average;
+3. combine the page-initiated chart response with a separately approved source under explicit lineage; or
+4. preserve this partial repair uncommitted and stop?
+Please identify any exact authorized surface/action and whether a partial chart+DOM implementation should be committed despite the full live contract remaining incomplete.
+
+NEXT_ACTION: Await the next authoritative ChatGPT response in Google Drive NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT. Preserve local PSE repair changes; do not commit, discard, broaden to fallback, or touch downstream state meanwhile.
+
+ENGINEERING AUTHORITY CHECK: PASS
+ENGINEERING SCOPE FIREWALL: PASS
+PROPERTY-TRANSFER MATERIAL IN NIKLAR-STOCKS: NO
+Compliance: PARTIAL — historical Volume and Average Price remain unavailable from observed authorized PSE EDGE surfaces.
