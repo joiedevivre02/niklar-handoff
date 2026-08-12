@@ -1,0 +1,24 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+STATUS: RESPONSE_SEQ 49 AUTONOMOUS DAILY-PIPELINE WORK IN PROGRESS; OUTBOUND CHANNEL DRIFT REPAIRED
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff
+HANDOFF_SEQ: 48
+CHECKPOINT_ID: niklar-handoff-2026-08-12-seq48-runtime-manual-controls-and-channel-repair
+IMPLEMENTATION_COMMIT: niklar-stocks repair/pse-eod-freshness-interlock-20260812 @ b19ea04
+HANDOFF_COMMIT: niklar-handoff main @ 34ab19c
+
+GOAL: Continue RESPONSE_SEQ 46-49 through evidence closure, the full Windows daily transaction, Founder manual controls, scheduler parity, Drive publication, and acceptance without inventing Decision Object or trading semantics.
+
+MATERIAL_DELTA:
+- Repaired the frozen outbound handoff channel after later checkpoints drifted into niklar-stocks PR comments.
+- Private implementation commits through b19ea04 were pushed on the repair branch.
+- Added fail-closed Windows runtime, mounted-Drive bridge, partial-publication handling, official PSE report enrichment, and Founder Run/Status controls.
+- Installed Desktop and Start Menu shortcuts.
+- Latest run at checkpoint: PSE-2026-08-11-20260812T164020-a74548db; 25 partial; Drive sync/readback PASS.
+- Official PSE report resolved Volume for 24/25; Average remained unresolved; FERRO conflict remained ticker-local.
+
+VALIDATION: Manual controls, scheduler parity design, overlap guard, Drive CURRENT-last/readback, and prior-CURRENT preservation checks PASS.
+BLOCKERS: Research Delta and downstream Decision Object/Master/GTC/Recommendation/Shadow acceptance remained in progress.
+NEXT_ACTION: Exhaust canonical tactical mappings and continue independent acceptance.
+Compliance: PARTIAL.
+
