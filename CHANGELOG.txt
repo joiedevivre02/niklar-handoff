@@ -2437,3 +2437,106 @@ NIKLAR-HANDOFF — CHANGELOG
     sub-batch) in this same session, after which this session stops
     for ChatGPT review per RESPONSE_SEQ 39's explicit instruction.
     Archived HANDOFF_SEQ 41 first.
+
+2026-08-12 (sub-batch C -- FINAL of 3)
+  - niklar-stocks: implemented and shipped sub-batch C,
+    PWA-OWNER-SAFE-AUTOUPDATE-01 (commit f71fbd6) -- a safe,
+    fail-closed local git auto-update mechanism so an owner's Windows
+    PWA deployment can pick up approved pushes to main without a
+    manual git pull, applying STRICT NO-RESET (RESPONSE_SEQ 39's
+    resolved judgment call) throughout.
+  - New ops/safe_auto_update.py: run_once() orchestrates the five
+    fail-closed steps from the accepted audit design exactly -- dirty
+    working tree (git status --porcelain non-empty) aborts immediately
+    and never stashes/discards; git fetch origin <branch> failure
+    aborts, leaving the deployment untouched; local HEAD already
+    equal to origin/<branch> is a no-op; a fast-forward check (git
+    merge-base --is-ancestor, treating ANY non-zero exit -- not just a
+    definite "no" -- as unsafe to proceed) aborts on diverged history
+    without ever merging/rebasing/resetting/forcing; git merge
+    --ff-only is the ONLY mutation this module ever performs. Restart
+    decision: git diff --name-only between old and new HEAD checked
+    for literal pwa/serve.py -- restarts the NiklarPwaServe Scheduled
+    Task only then, matching the audit's own finding that serve.py has
+    zero imports elsewhere in the repo. On a failed restart command or
+    a failed post-restart health check (HTTP 200 + Cache-Control:
+    no-store, the same assertion already used in pwa/smoke_test.py),
+    the module fails loudly and stops -- no automated rollback of any
+    kind. The one Windows-specific call
+    (Stop-ScheduledTask/Start-ScheduledTask via powershell.exe) is
+    isolated behind an injectable runner parameter so the
+    git-orchestration logic -- the part with real correctness risk --
+    is fully testable against real local git repositories on any
+    platform, including this repo's own Linux CI.
+  - New tests/test_safe_auto_update.py (34 tests) against REAL local
+    git repositories (a synthetic origin plus a cloned local
+    checkout), not mocked git calls: dirty-worktree abort leaving the
+    uncommitted edit's content byte-for-byte unchanged, fetch-failure
+    abort, diverged-history abort with zero merge attempt (local HEAD
+    provably unchanged), fast-forward with and without a serve.py
+    change (confirming the restart runner is invoked only in the
+    latter case), a real local HTTP server proving the health-check
+    assertion including negative cases, and -- the concrete behavioral
+    proof of STRICT NO-RESET -- both a failed restart command and a
+    failed post-restart health check leaving the fast-forwarded commit
+    in place rather than rolling back. A separate AST-based structural
+    audit (StrictNoResetSourceAuditTests) parses the module's own
+    source and proves it never invokes a forbidden git subcommand/flag
+    (reset/rebase/stash/clean/push/--force) and that its one git merge
+    call site always includes --ff-only -- independent of whether any
+    given behavioral test happens to exercise every path.
+  - Caught and fixed a real bug in the test suite's own setup during
+    this batch's own verification, not left in the delivered code: the
+    local HTTP server helper initially registered
+    addCleanup(server.shutdown) before addCleanup(thread.join) --
+    unittest's addCleanup runs LIFO, so join() (registered second) ran
+    first and deadlocked waiting for a shutdown() that hadn't happened
+    yet. Caught because the full suite visibly hung rather than
+    completing; fixed by consolidating both calls (plus
+    server_close(), to avoid a ResourceWarning) into one ordered
+    cleanup function, matching tests/test_mobile_snapshot_export.py's
+    own established _shutdown_server() pattern.
+  - Verified: unittest 390/390 (356 -> 390), mypy 0/23 (22 -> 23),
+    pwa/smoke_test.py PASS (unaffected -- no PWA file touched), node
+    --check clean (unaffected -- deployment tooling only, no JS
+    touched this sub-batch), and a manual CLI run against a real local
+    git checkout/origin pair confirming the documented output format.
+  - ops/niklar_stocks_ops_v4.py, ops/mobile_contract.py, and every
+    pwa/*.html|js|css file: zero changes, confirmed via diff -- this
+    sub-batch is deployment tooling only.
+  - Updated ops/README.md to honestly disclose this is the first
+    ops/ module doing real network I/O (git fetch to GitHub, an HTTP
+    health check to localhost) -- while still no credentials of its
+    own and no market/broker/research-data connectivity, a genuine,
+    narrow, stated-not-silent expansion of the directory's originally-
+    stated scope. Updated pwa/README.md with a new "Keeping a
+    long-running deployment up to date" subsection, explicitly noting
+    this is optional (manual git pull remains fully supported).
+  - The Windows Scheduled Task registration script for this sub-batch
+    is NOT committed to niklar-stocks, confirmed against the identical
+    "script-landing decision" already established for
+    Register-NiklarPwaStartupTask.ps1 (that prior review package's own
+    explicit "nothing to land yet" statement, checked before writing
+    this one) -- published in full in the niklar-handoff review
+    package and delivered directly to the owner. This session has no
+    access to the owner's Windows machine to execute or verify it.
+  - No niklar-stocks credential/PII/secret entered git -- diff scanned
+    for the owner's real ticker symbols and secret-shaped strings
+    before publishing this checkpoint and before the commit itself,
+    clean on both.
+  - Hosted GitHub Actions CI (ai-qa workflow) still failed on this
+    commit with the identical infrastructure signature already
+    reported for sub-batches A and B -- confirmed as the same
+    persistent external condition across all three sub-batches of this
+    checkpoint sequence, not re-investigated at length again this
+    cycle. Still flagged for the owner to check GitHub billing/Actions
+    settings -- the one concrete, owner-actionable item this whole
+    authorized implementation run is leaving open.
+  - Recorded as decision #75. Full checkpoint: review-packages/
+    f71fbd6-owner-safe-autoupdate-01.md.
+  - Per RESPONSE_SEQ 39's own "stop after the third for ChatGPT
+    review" instruction: this session stops here. All three
+    sub-batches (A: PWA-OWNER-DECISION-COCKPIT-01A commit 8b8596f, B:
+    PWA-OWNER-DECISION-COCKPIT-01B-GTC commit 7b68d74, C:
+    PWA-OWNER-SAFE-AUTOUPDATE-01 commit f71fbd6) are now shipped,
+    awaiting ChatGPT's combined review. Archived HANDOFF_SEQ 42 first.

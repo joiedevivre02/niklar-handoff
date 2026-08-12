@@ -1,9 +1,52 @@
 NIKLAR — TODO (current execution queue)
-Last updated: 2026-08-11 (Sub-batch B (PWA-OWNER-DECISION-COCKPIT-01B-
-GTC, Daily GTC Plan) shipped -- HANDOFF_SEQ 42. Hosted CI still blocked
-repo-wide, same infrastructure signature, flagged for the owner.
-Proceeding to sub-batch C (final) per the response's own continuation
-rule.)
+Last updated: 2026-08-12 (Sub-batch C (PWA-OWNER-SAFE-AUTOUPDATE-01,
+safe Windows auto-update) shipped -- HANDOFF_SEQ 43, FINAL of the
+three RESPONSE_SEQ 39 sub-batches. Hosted CI still blocked repo-wide,
+same infrastructure signature, flagged for the owner. Session stops
+here for ChatGPT review, per RESPONSE_SEQ 39's own instruction.)
+
+DONE — Sub-batch C (FINAL): safe Windows auto-update mechanism shipped (this update)
+---------------------------------------------------------------------------
+  - Implemented and shipped sub-batch C, PWA-OWNER-SAFE-AUTOUPDATE-01
+    (commit f71fbd6) -- a safe, fail-closed local git auto-update
+    mechanism, applying STRICT NO-RESET (RESPONSE_SEQ 39's resolved
+    judgment call) throughout. New ops/safe_auto_update.py: run_once()
+    orchestrates the five fail-closed steps from the accepted audit
+    design exactly (dirty-worktree abort never stashing/discarding;
+    fetch-failure abort; no-op if up to date; diverged-history abort
+    never merging/rebasing/resetting/forcing; git merge --ff-only as
+    the ONLY mutation ever performed); restarts NiklarPwaServe only if
+    pwa/serve.py itself changed (via a real git diff --name-only
+    check); a failed restart or failed post-restart health check
+    fails loudly with NO automated rollback of any kind. The one
+    Windows-specific call is isolated behind an injectable parameter
+    so the git-orchestration logic is fully testable on any platform.
+  - Verified: unittest 390/390 (356 -> 390, 34 new tests against REAL
+    local git repositories, not mocked calls), mypy 0/23 (22 -> 23),
+    pwa/smoke_test.py PASS (unaffected), node --check clean
+    (unaffected -- deployment tooling only, no JS touched), and a
+    manual CLI run against a real local git checkout/origin pair. Added
+    an AST-based structural test proving the module's source never
+    invokes a forbidden git subcommand/flag and its one merge call
+    site always uses --ff-only. Caught and fixed a real addCleanup
+    LIFO-ordering deadlock bug in the test suite's own setup during
+    this batch's own verification, before this checkpoint.
+  - The Windows Scheduled Task registration script for this sub-batch
+    is NOT committed to niklar-stocks, per the same "script-landing
+    decision" already established for Register-NiklarPwaStartupTask.ps1
+    -- published in full in the niklar-handoff review package and
+    delivered directly to the owner.
+  - Hosted CI (ai-qa workflow) still failed with the identical
+    infrastructure signature already reported for sub-batches A and B
+    -- confirmed the same persistent external condition across all
+    three sub-batches, not re-investigated at length again. Still
+    flagged for the owner as the one concrete, owner-actionable item
+    this whole implementation run is leaving open.
+  - Recorded as decision #75. Full checkpoint: review-packages/
+    f71fbd6-owner-safe-autoupdate-01.md.
+  - Per RESPONSE_SEQ 39's own "stop after the third for ChatGPT
+    review" instruction: this session stops here. Archived
+    HANDOFF_SEQ 42 first.
 
 DONE — Sub-batch B: Daily GTC Plan first-class view shipped (this update)
 ---------------------------------------------------------------------------

@@ -2881,3 +2881,70 @@ NIKLAR — DECISIONS (current)
     (`PWA-OWNER-SAFE-AUTOUPDATE-01`) follows next in this same
     session, per that instruction -- the third and final sub-batch,
     after which this session stops for ChatGPT review.
+
+75) Decision: Implement and ship sub-batch C,
+    `PWA-OWNER-SAFE-AUTOUPDATE-01` (commit `f71fbd6`) -- the safe
+    Windows auto-update mechanism, applying STRICT NO-RESET. This is
+    the third and final sub-batch RESPONSE_SEQ 39 authorized; this
+    session stops for ChatGPT review after this checkpoint, per that
+    response's own explicit instruction.
+    Date: 2026-08-12
+    Rationale: Implemented exactly the design accepted in the audit
+    (section 7), with the STRICT NO-RESET reading (a) applied
+    throughout: new `ops/safe_auto_update.py` (`run_once()`
+    orchestrating the five fail-closed steps -- dirty-worktree abort
+    never stashing/discarding, fetch-failure abort, no-op if up to
+    date, diverged-history abort never merging/rebasing/resetting/
+    forcing, `git merge --ff-only` as the ONLY mutation ever
+    performed; restart decision via a real `git diff --name-only`
+    check for `pwa/serve.py`; a failed restart or failed post-restart
+    health check fails loudly with NO automated rollback of any kind).
+    The one Windows-specific call (`Stop-ScheduledTask`/
+    `Start-ScheduledTask`) is isolated behind an injectable parameter
+    so the git-orchestration logic -- the part with real correctness
+    risk -- is fully testable on any platform.
+    Verified locally and exhaustively: unittest 390/390 (356 -> 390,
+    34 new tests against REAL local git repositories, not mocked git
+    calls), mypy 0/23 (22 -> 23), `pwa/smoke_test.py` PASS (unaffected
+    -- no PWA file touched), `node --check` clean (unaffected -- no JS
+    touched, this sub-batch is deployment tooling only), and a manual
+    CLI run against a real local git checkout/origin pair. Added a new
+    AST-based structural test (`StrictNoResetSourceAuditTests`) that
+    parses the module's own source and proves it never invokes a
+    forbidden git subcommand/flag and its one merge call site always
+    uses `--ff-only` -- independent of whether any given behavioral
+    test happens to exercise every path. Caught and fixed a real
+    `addCleanup` LIFO-ordering bug in the test suite's own local-HTTP-
+    server helper during this batch's own verification (a deadlock,
+    not a defect in the module under test) before this checkpoint, not
+    after.
+    The Windows Scheduled Task registration script for this sub-batch
+    is NOT committed to niklar-stocks, per the same "script-landing
+    decision" already established for
+    `Register-NiklarPwaStartupTask.ps1` (confirmed against that prior
+    review package's own explicit "nothing to land yet" statement
+    before writing this one) -- published in full in the niklar-handoff
+    review package instead, delivered directly to the owner. This
+    session has no access to the owner's Windows machine to execute or
+    verify it against a real Scheduled Task; the committed Python
+    logic is what's actually tested here.
+    Hosted GitHub Actions CI remains blocked with the identical
+    infrastructure signature already reported for sub-batches A and B
+    -- confirmed as the same persistent external condition across all
+    three sub-batches of this checkpoint sequence, not re-investigated
+    at length again. Still flagged for the owner as the one concrete,
+    owner-actionable item this whole authorized implementation run is
+    leaving open.
+    Affected component: niklar-stocks ops/safe_auto_update.py (new),
+    ops/README.md, pwa/README.md, tests/test_safe_auto_update.py (new)
+    (commit f71fbd6756e40984f16d5da70915e61f9786d99a); niklar-handoff
+    CURRENT_HANDOFF.txt (HANDOFF_SEQ 43), archive/handoffs/
+    HANDOFF_SEQ_42.txt (archived)
+    Status: Frozen (sub-batch C shipped -- FINAL of 3) --
+    HANDOFF_SEQ 43. Full checkpoint: review-packages/
+    f71fbd6-owner-safe-autoupdate-01.md, including the complete,
+    not-separately-committed Windows Scheduled Task registration
+    script in full.
+    Per RESPONSE_SEQ 39's own "stop after the third for ChatGPT
+    review" instruction: this session stops here. Awaiting ChatGPT's
+    combined review of all three sub-batches (A, B, C).
