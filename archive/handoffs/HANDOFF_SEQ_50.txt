@@ -1,0 +1,52 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+STATUS: LOCAL RESPONSE_SEQ 50 ACCEPTANCE COMPLETE; TWO SENSITIVE DRIVE WRITES AND PRIVATE BRANCH PUSH ARE PLATFORM-GATED
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff
+HANDOFF_SEQ: 50
+CHECKPOINT_ID: niklar-handoff-2026-08-12-seq50-gtc-shadow-history-acceptance
+IMPLEMENTATION_COMMIT: niklar-stocks repair/pse-eod-freshness-interlock-20260812 @ 94d1a9a (LOCAL, UNPUSHED)
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Report canon-grounded completion of the Aug. 11 first ex-ante GTC cohort, Shadow Journal reconciliation, canonical local market-history append, scheduler parity, and the exact remaining platform authorization gates.
+
+MATERIAL_DELTA:
+- Located and inspected the canonical shared Niklar Multi-Market Research Database in Drive. The earlier evidence-adapter blocker was discovery/routing, not a missing semantic rule.
+- Replayed all 12 eligible pre-session Aug. 11 Daily GTC rows symmetrically under frozen canon: 7 GTC HIT and 5 BUY SIGNAL / NOT FILLED.
+- Created 7 MODEL SHADOW ENTRY rows. Exact fill price, return, MFE and MAE remain UNKNOWN/PENDING because completed-session OHLC does not determine intraday path; no hindsight fill was selected.
+- Updated the Shadow Setup Ledger with official session low/high/close and the hit/not-filled result for every eligible row.
+- Updated existing open shadow records to the verified Aug. 11 close and matured deterministic P/L, return, MFE and MAE fields without changing frozen entry, target, invalidation or lineage.
+- Appended all 25 official rendered PSE EDGE session rows idempotently to the canonical local PSE Market History database, preserving FERRO volume and all average-price source nulls.
+- Added the tested local ops.pse_market_history_append module and wired the registered daily master launcher to run it before runtime packaging, with a recoverable per-run backup.
+- Moved generated private PWA data out of the repository into the Windows local app-data runtime. Localhost port 8765 remains live with 25 rows; the repository private-data invariant now passes.
+- Current Scheduled Task remains Ready and points at the updated launcher. The existing 18:30 CURRENT runtime has Drive sync/readback PASS and preserves prior lineage; publication remains PARTIAL because the remote Research Delta write has not been authorized.
+
+VALIDATION:
+- Full unit suite: 332 PASS.
+- PWA smoke: PASS.
+- mypy: PASS across 26 source files.
+- Local canonical workbook re-import/readback: 12/12 ledger rows reconciled, 7/7 shadow entries present, formula-error scan clean.
+- Local canonical market-history append: 25 rows, second run idempotent at 25.
+- Post-commit diff/check: PASS; working tree clean; branch ahead of private origin by one commit.
+
+EXACT REMAINING GATES:
+1. Drive safety gate rejected replacing the existing remote canonical Master workbook with the updated full sensitive trading workbook.
+2. Drive safety gate rejected writing the prepared 25 PSE Research Delta records, 25 evidence rows, one test case and 25 outcome-queue rows to the canonical shared Research Sheet.
+3. Git safety gate rejected pushing local private commit 94d1a9a because destination trust for the exact remote payload was not established.
+No workaround or indirect egress path was attempted.
+
+FOUNDER DECISION POINT:
+Explicitly authorize these exact sensitive destinations/payloads if desired:
+- Replace the existing private Drive file named Niklar_Master_Trade_Database_CURRENT.xlsx with the locally verified canonical workbook.
+- Write the 25 normalized PSE Research Delta records plus linked Evidence Index/Test Case/Outcome Queue rows to the existing private canonical Niklar_Multi_Market_Research_Database_CURRENT Sheet.
+- Push commit 94d1a9a to the existing private joiedevivre02/niklar-stocks repair branch.
+This is an information-security/egress authorization only; no missing trading-semantic decision remains.
+
+CHATGPT REQUEST:
+- Confirm the canon-derived GTC/Shadow/Research mapping is correct.
+- If Founder authorization is supplied, instruct Codex to execute the three exact gated writes and rerun the scheduled master through Drive readback acceptance.
+- Do not request a new trading rule: Research Delta correctly stays UNKNOWN / INSUFFICIENT HISTORY until comparable persisted observations exist.
+
+ENGINEERING AUTHORITY CHECK: PASS
+ENGINEERING SCOPE FIREWALL: PASS
+PROPERTY-TRANSFER MATERIAL IN NIKLAR-STOCKS: NO
+Compliance: PARTIAL — all local implementation and tests pass; remote canonical persistence and private-branch publication are gated by explicit sensitive-destination authorization.
