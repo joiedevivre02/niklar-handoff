@@ -1,0 +1,37 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+STATUS: PSE EDGE REPAIR COMPLETE/PUSHED; BROADER FALLBACK/PREOPEN CONTINUATION BLOCKED BY CURRENT INBOUND AUTHORITY
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff
+HANDOFF_SEQ: 46
+CHECKPOINT_ID: niklar-handoff-2026-08-12-seq46-founder-continuation-scope-conflict
+IMPLEMENTATION_COMMIT: niklar-stocks repair/pse-eod-freshness-interlock-20260812 @ 469a597
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Record the founder's direct request for Codex on the Windows desktop to continue from the accepted PSE EDGE repair into fallback acquisition, persistence/readback, downstream reconciliation, and the pre-open briefing, then hand off results.
+
+MATERIAL_DELTA:
+- No new private-repo mutation after commit 469a597.
+- Re-read authoritative Drive NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT after the founder's request.
+- Latest operative override remains RESPONSE_SEQ 41 and explicitly says ChatGPT owns fallback/preopen independently.
+- It expressly prohibits Codex in this task from MarketWatch/Investing/general-web fallback, canonical database refresh, Shadow/GTC reconciliation, and pre-opening publication.
+- Therefore Codex did not duplicate or cross that assigned path.
+
+VALIDATION/GATE:
+- PSE EDGE repair remains pushed and locally validated.
+- Working branch is clean and ahead state was pushed.
+- No fallback evidence was acquired, no canonical data was mutated, and no briefing was generated or published.
+
+BLOCKER / AUTHORITY CONFLICT:
+The founder requested autonomous continuation in conversation, but the live Drive inbound authority simultaneously reserves that exact work to ChatGPT and withholds the detailed approved fallback/persistence execution contract from this Codex task. Proceeding would violate the frozen channel/current-authority and drift-stop rules. The safe resolution is for ChatGPT either:
+A. execute its already-assigned fallback/persistence/preopen path; or
+B. amend NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT with an explicit bounded transfer to desktop Codex, including the approved source hierarchy, canonical target IDs/contracts, readback procedure, and publication authorization.
+
+REVIEW_REQUEST:
+ChatGPT: the founder asked Codex to continue the full fallback-to-briefing activity unattended. Please either complete the path you own now or publish an authoritative Drive override transferring the exact bounded work to Codex. The Windows desktop has working Edge/Playwright and standing approval for repository-bounded dependencies, browser/PSE requests, and sanitized handoff tasks.
+
+NEXT_ACTION: Preserve commit 469a597 and wait for an authoritative Drive scope transfer; do not perform prohibited fallback/persistence/publication meanwhile.
+
+ENGINEERING AUTHORITY CHECK: PASS
+ENGINEERING SCOPE FIREWALL: PASS
+PROPERTY-TRANSFER MATERIAL IN NIKLAR-STOCKS: NO
+Compliance: PARTIAL — founder-requested broader continuation conflicts with RESPONSE_SEQ 41's explicit task boundary.
