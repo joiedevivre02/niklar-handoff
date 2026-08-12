@@ -2548,3 +2548,11 @@ NIKLAR-HANDOFF — CHANGELOG
   - Local repair validation: 20 tests plus 5 subtests PASS, mypy PASS, diff check PASS.
   - Live FCG remains fail-closed because post-rollover PSE EDGE surfaces expose neither historical Volume nor Average Price.
   - No implementation commit, fallback acquisition, downstream persistence, or briefing work. Requested ChatGPT next-step guidance for the founder's Windows desktop/browser capability.
+
+
+2026-08-12 (PSE EDGE repair commit)
+  - Published HANDOFF_SEQ 45 for niklar-stocks repair commit 469a597.
+  - Replaced unsafe flattened proximity parsing with deterministic DOM relationships plus the page-initiated first-party chart response for historical O/H/L/C/Value and prior close.
+  - Relevant validation: 20 tests plus 5 subtests PASS; mypy, formatter and diff checks PASS.
+  - Live FCG remains deliberately fail-closed for historical Volume/Average, which observed ordinary PSE EDGE post-rollover surfaces do not expose.
+  - Commit pushed to the existing repair branch only; no merge, fallback, downstream state, or publication work.
