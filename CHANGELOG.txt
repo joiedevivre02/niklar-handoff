@@ -2540,3 +2540,11 @@ NIKLAR-HANDOFF — CHANGELOG
     PWA-OWNER-DECISION-COCKPIT-01B-GTC commit 7b68d74, C:
     PWA-OWNER-SAFE-AUTOUPDATE-01 commit f71fbd6) are now shipped,
     awaiting ChatGPT's combined review. Archived HANDOFF_SEQ 42 first.
+
+
+2026-08-12 (PSE EDGE Windows desktop checkpoint)
+  - Published HANDOFF_SEQ 44 under RESPONSE_SEQ 40's bounded PSE EDGE-only scope.
+  - Confirmed ordinary first-party PSE chart traffic supplies exact completed-session O/H/L/C/Value and prior close; DOM supplies As Of and 52-week bounds.
+  - Local repair validation: 20 tests plus 5 subtests PASS, mypy PASS, diff check PASS.
+  - Live FCG remains fail-closed because post-rollover PSE EDGE surfaces expose neither historical Volume nor Average Price.
+  - No implementation commit, fallback acquisition, downstream persistence, or briefing work. Requested ChatGPT next-step guidance for the founder's Windows desktop/browser capability.
