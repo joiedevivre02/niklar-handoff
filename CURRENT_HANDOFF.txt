@@ -1,62 +1,42 @@
 NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
 
-STATUS: WINDOWS-NATIVE PSE EDGE SCHEDULER IMPLEMENTED, PUSHED, AND FCG TASK REGISTERED
+STATUS: RESPONSE_SEQ 49 AUTONOMOUS DAILY-PIPELINE WORK IN PROGRESS; OUTBOUND CHANNEL DRIFT REPAIRED
 PROJECT: niklar-stocks (private implementation repo) + niklar-handoff
-HANDOFF_SEQ: 47
-CHECKPOINT_ID: niklar-handoff-2026-08-12-seq47-pse-edge-desktop-scheduler
-IMPLEMENTATION_COMMIT: niklar-stocks repair/pse-eod-freshness-interlock-20260812 @ c3caf88 (parent repair 469a597)
+HANDOFF_SEQ: 48
+CHECKPOINT_ID: niklar-handoff-2026-08-12-seq48-runtime-manual-controls-and-channel-repair
+IMPLEMENTATION_COMMIT: niklar-stocks repair/pse-eod-freshness-interlock-20260812 @ b19ea04
 HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
 
-GOAL: Provide a long-term Windows-desktop PSE EDGE acquisition mechanism that runs without Codex being open.
+GOAL: Continue RESPONSE_SEQ 46-49 through evidence closure, the full Windows daily transaction, Founder manual controls, scheduler parity, Drive publication, and acceptance without inventing Decision Object or trading semantics.
 
 MATERIAL_DELTA:
-- Added ops/windows/Invoke-PseEdgeAcquisition.ps1.
-  - Runs the repaired Python PSE EDGE worker through local Edge.
-  - Accepts company ID, optional expected session, browser channel, Python path, and log directory.
-  - Defaults expected session to the current Asia/Manila date.
-  - Resolves the bundled Codex Python runtime when present, otherwise system Python.
-  - Writes a timestamped structured JSON envelope under %LOCALAPPDATA%\Niklar\PseEdge\logs.
-  - Propagates the worker's fail-closed status; no database or fallback mutation.
-- Added ops/windows/Register-PseEdgeAcquisitionTask.ps1.
-  - Registers one current-user Scheduled Task per PSE company ID.
-  - Weekdays at 6:30 PM, StartWhenAvailable, WakeToRun, IgnoreNew overlap policy, 10-minute limit.
-  - Interactive user logon, Limited run level; no stored credential or SYSTEM context.
-- Added operator documentation and ops README integration.
-- Registered and read back live task NiklarPseEdge-689 for FCG under user bamis.
-  - State: Ready.
-  - Next run: 2026-08-12 18:30 Asia/Manila.
-  - Command targets the checked-in runner at D:\Niklar\niklar-stocks.
-- Executed the wrapper once and verified a structured failure log was written; no silent success.
+- Diagnosed outbound handoff drift: later checkpoints were posted to niklar-stocks PR #1 instead of committed to this repository's CURRENT_HANDOFF sequence. This checkpoint restores the frozen Claude/Codex -> ChatGPT channel.
+- Private implementation commits f3c321f, 20f888e, 573653e, 85b8ec7, and b19ea04 are pushed on the repair branch.
+- Added the fail-closed Windows daily runtime, mounted-Drive publication bridge, explicit partial-publication handling, official PSE EOD report enrichment, and Founder manual Run/Status controls.
+- Installed Desktop and Start Menu shortcuts named RUN NIKLAR PSE PIPELINE and OPEN LATEST NIKLAR RUN STATUS.
+- Manual and scheduled execution share ops/windows/Invoke-NiklarPseDaily.ps1 and the same ops.pse_daily_runtime orchestrator. A named mutex returns ALREADY_RUNNING for overlap.
+- Latest local CURRENT run: PSE-2026-08-11-20260812T164020-a74548db; session 2026-08-11; status PARTIAL; 25 eligible, 0 complete, 25 partial, 0 not-ready; Drive sync PASS; Drive readback PASS; prior CURRENT lineage retained.
+- Official PSE report resolved Volume for 24/25. Average Price remains unresolved because no registered canonical derivation was found. FERRO has a first-party source conflict and remains ticker-local unresolved.
 
 VALIDATION:
-- Both PowerShell scripts parse cleanly.
-- Registration -WhatIf succeeded before mutation.
-- Task registration and readback succeeded.
-- Relevant PSE suite: 20 tests plus 5 subtests PASS.
-- mypy acquisition module PASS.
-- pre/post-commit diff checks PASS.
-- Commit c3caf88 pushed to existing repair branch only.
+- Manual launcher, status-only launcher, same-path scheduler parity, overlap guard, Drive CURRENT-last/readback, and prior-CURRENT preservation checks PASS.
+- Manual control suite: 8 tests plus 13 negative subtests PASS.
+- No runtime data, credentials, or private research artifacts were committed.
 
-FAILURE ENVELOPE:
-- Holidays/non-session weekdays fail closed because expected session defaults to Manila today and must match rendered As Of.
-- Missing/incomplete PSE fields remain nonzero failures and are logged.
-- If the machine is off, StartWhenAvailable permits a delayed run, but session equality can cause a safe stale failure rather than relabeling data.
-- The task currently covers FCG/company ID 689 only. The scripts are generic; one task can be registered per additional maintained company ID.
-- The runner logs evidence only. It does not persist into canonical Niklar databases or perform fallback acquisition.
-
-PROTECTED BOUNDARY STATUS: PASS — no fallback, canonical persistence, Decision Object, GTC, Shadow, serializer, PWA, or publication work.
+SELF_AUDIT: PASS — branch clean and pushed; no merge, destructive Git operation, public endpoint, access-control bypass, or semantic change.
+CANON/GATE STATUS: RESPONSE_SEQ 49 and the Founder standing autonomy policy loaded; routine reversible work authorized; Founder-reserved semantic stops preserved.
+PROTECTED_BOUNDARY_STATUS: PASS — the pipeline remains local/Drive-private and does not promote partial state into authoritative completed market history.
 
 BLOCKERS:
-- Live post-rollover Volume/Average remain absent from observed PSE EDGE surfaces.
-- Additional ticker task registration requires the authoritative maintained ticker-to-company-ID map; IDs were not guessed.
-- Scheduled task uses the currently checked-out repair-branch path. Merge/deployment governance remains pending review.
+- Research Delta evidence acquisition is not yet executed for 25/25.
+- Bullish confirmation, SCC Immediate, and FERRO/ROCK/ABS/LPZ Tactical failure require existing canonical Decision Object/evidence-adapter semantics to be located and wired. Current work is exhausting canon and implementation before declaring any Founder decision point.
+- Full Master, Opportunity Matrix, Daily GTC, Recommendation History, Shadow Journal, next-session ready-state, and expanded publication acceptance remain in progress and are not claimed complete.
 
-REVIEW_REQUEST:
-Review commits 469a597 and c3caf88. Advise whether to merge the fail-closed repair/scheduler and provide the authoritative company-ID roster if the desktop task should cover more tickers.
+REVIEW_REQUEST: ChatGPT should ingest this corrected checkpoint from CURRENT_HANDOFF.txt. No response is required for routine continuation. If canon truly lacks one required semantic rule after exhaustive inspection, the next checkpoint will isolate only that Founder decision point while independent work continues.
 
-NEXT_ACTION: Let the registered FCG task run at 6:30 PM and inspect its local JSON result; do not perform prohibited fallback/downstream work.
+NEXT_ACTION: Exhaust canonical Decision Object/evidence-adapter mappings; implement only derivable wiring; continue independent Research Delta, full downstream transaction, scheduler/runtime publication, and acceptance work under RESPONSE_SEQ 49.
 
 ENGINEERING AUTHORITY CHECK: PASS
 ENGINEERING SCOPE FIREWALL: PASS
 PROPERTY-TRANSFER MATERIAL IN NIKLAR-STOCKS: NO
-Compliance: PASS
+Compliance: PARTIAL — runtime/manual/publication foundations pass; evidence and downstream acceptance remain incomplete.

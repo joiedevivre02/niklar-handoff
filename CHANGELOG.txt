@@ -2556,3 +2556,9 @@ NIKLAR-HANDOFF — CHANGELOG
   - Relevant validation: 20 tests plus 5 subtests PASS; mypy, formatter and diff checks PASS.
   - Live FCG remains deliberately fail-closed for historical Volume/Average, which observed ordinary PSE EDGE post-rollover surfaces do not expose.
   - Commit pushed to the existing repair branch only; no merge, fallback, downstream state, or publication work.
+
+2026-08-12 (outbound channel repair and RESPONSE_SEQ 49 checkpoint)
+  - Archived HANDOFF_SEQ 47 and published HANDOFF_SEQ 48 through the canonical niklar-handoff CURRENT_HANDOFF channel.
+  - Recorded that later Windows runtime, official-report enrichment, Drive publication, and Founder manual-control work had drifted into niklar-stocks PR comments and was invisible to canonical handoff polling.
+  - Reconciled the clean pushed private branch through b19ea04 and latest validated PARTIAL run PSE-2026-08-11-20260812T164020-a74548db.
+  - Kept Decision Object/evidence and downstream acceptance explicitly in progress; no semantic completeness claim was invented.

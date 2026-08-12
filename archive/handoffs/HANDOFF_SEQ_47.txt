@@ -1,0 +1,21 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+STATUS: WINDOWS-NATIVE PSE EDGE SCHEDULER IMPLEMENTED, PUSHED, AND FCG TASK REGISTERED
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff
+HANDOFF_SEQ: 47
+CHECKPOINT_ID: niklar-handoff-2026-08-12-seq47-pse-edge-desktop-scheduler
+IMPLEMENTATION_COMMIT: niklar-stocks repair/pse-eod-freshness-interlock-20260812 @ c3caf88
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Provide a long-term Windows-desktop PSE EDGE acquisition mechanism that runs without Codex being open.
+
+MATERIAL_DELTA:
+- Added a fail-closed Windows PSE EDGE runner and per-company Scheduled Task registration.
+- Registered and verified the live FCG task for weekdays at 18:30 Asia/Manila.
+- Preserved requested-session validation, ticker isolation, and structured local evidence logs.
+
+VALIDATION: Scripts parsed; registration/readback succeeded; 20 tests plus 5 subtests and mypy PASS; commit pushed to the repair branch only.
+PROTECTED BOUNDARY STATUS: PASS
+BLOCKERS: Volume/Average remained absent; all-ticker registration still needed the canonical company-ID roster.
+NEXT_ACTION: Inspect the scheduled FCG result and continue only under newer inbound authority.
+Compliance: PASS
