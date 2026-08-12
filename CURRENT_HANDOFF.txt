@@ -1,37 +1,62 @@
 NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
 
-STATUS: PSE EDGE REPAIR COMPLETE/PUSHED; BROADER FALLBACK/PREOPEN CONTINUATION BLOCKED BY CURRENT INBOUND AUTHORITY
+STATUS: WINDOWS-NATIVE PSE EDGE SCHEDULER IMPLEMENTED, PUSHED, AND FCG TASK REGISTERED
 PROJECT: niklar-stocks (private implementation repo) + niklar-handoff
-HANDOFF_SEQ: 46
-CHECKPOINT_ID: niklar-handoff-2026-08-12-seq46-founder-continuation-scope-conflict
-IMPLEMENTATION_COMMIT: niklar-stocks repair/pse-eod-freshness-interlock-20260812 @ 469a597
+HANDOFF_SEQ: 47
+CHECKPOINT_ID: niklar-handoff-2026-08-12-seq47-pse-edge-desktop-scheduler
+IMPLEMENTATION_COMMIT: niklar-stocks repair/pse-eod-freshness-interlock-20260812 @ c3caf88 (parent repair 469a597)
 HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
 
-GOAL: Record the founder's direct request for Codex on the Windows desktop to continue from the accepted PSE EDGE repair into fallback acquisition, persistence/readback, downstream reconciliation, and the pre-open briefing, then hand off results.
+GOAL: Provide a long-term Windows-desktop PSE EDGE acquisition mechanism that runs without Codex being open.
 
 MATERIAL_DELTA:
-- No new private-repo mutation after commit 469a597.
-- Re-read authoritative Drive NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT after the founder's request.
-- Latest operative override remains RESPONSE_SEQ 41 and explicitly says ChatGPT owns fallback/preopen independently.
-- It expressly prohibits Codex in this task from MarketWatch/Investing/general-web fallback, canonical database refresh, Shadow/GTC reconciliation, and pre-opening publication.
-- Therefore Codex did not duplicate or cross that assigned path.
+- Added ops/windows/Invoke-PseEdgeAcquisition.ps1.
+  - Runs the repaired Python PSE EDGE worker through local Edge.
+  - Accepts company ID, optional expected session, browser channel, Python path, and log directory.
+  - Defaults expected session to the current Asia/Manila date.
+  - Resolves the bundled Codex Python runtime when present, otherwise system Python.
+  - Writes a timestamped structured JSON envelope under %LOCALAPPDATA%\Niklar\PseEdge\logs.
+  - Propagates the worker's fail-closed status; no database or fallback mutation.
+- Added ops/windows/Register-PseEdgeAcquisitionTask.ps1.
+  - Registers one current-user Scheduled Task per PSE company ID.
+  - Weekdays at 6:30 PM, StartWhenAvailable, WakeToRun, IgnoreNew overlap policy, 10-minute limit.
+  - Interactive user logon, Limited run level; no stored credential or SYSTEM context.
+- Added operator documentation and ops README integration.
+- Registered and read back live task NiklarPseEdge-689 for FCG under user bamis.
+  - State: Ready.
+  - Next run: 2026-08-12 18:30 Asia/Manila.
+  - Command targets the checked-in runner at D:\Niklar\niklar-stocks.
+- Executed the wrapper once and verified a structured failure log was written; no silent success.
 
-VALIDATION/GATE:
-- PSE EDGE repair remains pushed and locally validated.
-- Working branch is clean and ahead state was pushed.
-- No fallback evidence was acquired, no canonical data was mutated, and no briefing was generated or published.
+VALIDATION:
+- Both PowerShell scripts parse cleanly.
+- Registration -WhatIf succeeded before mutation.
+- Task registration and readback succeeded.
+- Relevant PSE suite: 20 tests plus 5 subtests PASS.
+- mypy acquisition module PASS.
+- pre/post-commit diff checks PASS.
+- Commit c3caf88 pushed to existing repair branch only.
 
-BLOCKER / AUTHORITY CONFLICT:
-The founder requested autonomous continuation in conversation, but the live Drive inbound authority simultaneously reserves that exact work to ChatGPT and withholds the detailed approved fallback/persistence execution contract from this Codex task. Proceeding would violate the frozen channel/current-authority and drift-stop rules. The safe resolution is for ChatGPT either:
-A. execute its already-assigned fallback/persistence/preopen path; or
-B. amend NIKLAR_CHATGPT_TO_CLAUDE_SYNC_CURRENT with an explicit bounded transfer to desktop Codex, including the approved source hierarchy, canonical target IDs/contracts, readback procedure, and publication authorization.
+FAILURE ENVELOPE:
+- Holidays/non-session weekdays fail closed because expected session defaults to Manila today and must match rendered As Of.
+- Missing/incomplete PSE fields remain nonzero failures and are logged.
+- If the machine is off, StartWhenAvailable permits a delayed run, but session equality can cause a safe stale failure rather than relabeling data.
+- The task currently covers FCG/company ID 689 only. The scripts are generic; one task can be registered per additional maintained company ID.
+- The runner logs evidence only. It does not persist into canonical Niklar databases or perform fallback acquisition.
+
+PROTECTED BOUNDARY STATUS: PASS — no fallback, canonical persistence, Decision Object, GTC, Shadow, serializer, PWA, or publication work.
+
+BLOCKERS:
+- Live post-rollover Volume/Average remain absent from observed PSE EDGE surfaces.
+- Additional ticker task registration requires the authoritative maintained ticker-to-company-ID map; IDs were not guessed.
+- Scheduled task uses the currently checked-out repair-branch path. Merge/deployment governance remains pending review.
 
 REVIEW_REQUEST:
-ChatGPT: the founder asked Codex to continue the full fallback-to-briefing activity unattended. Please either complete the path you own now or publish an authoritative Drive override transferring the exact bounded work to Codex. The Windows desktop has working Edge/Playwright and standing approval for repository-bounded dependencies, browser/PSE requests, and sanitized handoff tasks.
+Review commits 469a597 and c3caf88. Advise whether to merge the fail-closed repair/scheduler and provide the authoritative company-ID roster if the desktop task should cover more tickers.
 
-NEXT_ACTION: Preserve commit 469a597 and wait for an authoritative Drive scope transfer; do not perform prohibited fallback/persistence/publication meanwhile.
+NEXT_ACTION: Let the registered FCG task run at 6:30 PM and inspect its local JSON result; do not perform prohibited fallback/downstream work.
 
 ENGINEERING AUTHORITY CHECK: PASS
 ENGINEERING SCOPE FIREWALL: PASS
 PROPERTY-TRANSFER MATERIAL IN NIKLAR-STOCKS: NO
-Compliance: PARTIAL — founder-requested broader continuation conflicts with RESPONSE_SEQ 41's explicit task boundary.
+Compliance: PASS
