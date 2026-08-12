@@ -1,0 +1,50 @@
+NIKLAR — CURRENT HANDOFF (compact latest-pointer form)
+
+STATUS: RESPONSE_SEQ 46–50 SENSITIVE PERSISTENCE AND DOWNSTREAM ACCEPTANCE COMPLETE; ONE FOUNDER-RESERVED SHADOW FILL SEMANTIC REMAINS
+PROJECT: niklar-stocks (private implementation repo) + niklar-handoff
+HANDOFF_SEQ: 51
+CHECKPOINT_ID: niklar-handoff-2026-08-12-seq51-persistence-runtime-and-shadow-fill-decision
+IMPLEMENTATION_COMMIT: niklar-stocks repair/pse-eod-freshness-interlock-20260812 @ 8976aef (PUSHED PRIVATE)
+HANDOFF_COMMIT: niklar-handoff main HEAD (this commit)
+
+GOAL: Report verified completion of the approved canonical Drive writes, Research Delta persistence, private pushes, desktop scheduler/runtime recovery, and the exact remaining Shadow Journal simulation-rule decision.
+
+COMPLETED SENSITIVE ACTIONS:
+- Created a recoverable Drive checkpoint of the prior canonical Master workbook as Niklar_Master_Trade_Database_PRE_GTC_RECONCILIATION_20260812_BACKUP, file ID 1c8i9qg_5Ug59gOSpmCBMwWM5T-IsO97p.
+- Replaced the exact existing private Drive canonical Master workbook in place, preserving file ID 1JLu5gM5c1kKH4GTXwa-362RwjiySZBlw. Post-write raw readback returned the same 279,324-byte XLSX and verified title/MIME/destination metadata.
+- Wrote and read back 25 unique PSE Research Records, 25 ticker-specific PSE EDGE Evidence Index rows, one 25/25/0 Test Case, and 25 PENDING Outcome Queue rows in the canonical private Research Sheet.
+- Research verification: all 25 are SHADOW/UNPROMOTED; 25/25 lineage fields populated; zero NO_MATERIAL_CHANGE representations; zero USER_DEFINED or screenshot evidence; all 25 source URLs are PSE EDGE.
+- Pushed approved commits 94d1a9a and c44be00 to their existing private remotes.
+- Fixed the Windows daily launcher after acceptance exposed its stale removed pwa/private-data default. Commit 8976aef now points to %LOCALAPPDATA%\Niklar\Pwa\current\private-data\active-trading.json and is pushed to the existing private repair branch.
+- Desktop master rerun PSE-2026-08-11-20260812T191005-e7eb6a1c completed and promoted CURRENT last. Canonical history readback 25; Drive sync PASS; Drive readback PASS; prior-current lineage retained.
+- Scheduled Task NiklarPseDailyMaster remains Ready and routes through the repaired launcher with the existing 18:30 trigger and private Drive destination.
+
+SHADOW JOURNAL CANON AUDIT:
+- The frozen Daily GTC sheet states that a deterministic range hit creates the model-entry cohort and that confirmation/retest/participation remain execution-quality metadata.
+- Higher CURRENT canon simultaneously states no inferred fills and requires an independently validated model/actual fill.
+- CURRENT canon does not define an assumed simulated fill price for a touched/traded-through GTC range and does not define gap-through, partial-touch, multiple-price, or same-day mark mechanics.
+- Therefore PGOLD, DMC, ROCK, PCOR, BPI, SMPH, and ACEN correctly remain MODEL SHADOW ENTRY — FILL PRICE UNKNOWN/PENDING with official OHLC evidence and unique same-date journal IDs. Return, MFE, and MAE remain PENDING because they depend on the absent fill price.
+- CHP, OGP, PNB, MBT, and CNVRG remain BUY SIGNAL / NOT FILLED; no trigger was retroactively inferred.
+- No fill rule was invented to force acceptance.
+
+EXACT FOUNDER DECISION POINT:
+Define the canonical simulated fill-price rule for a published Buy GTC range hit when the available authoritative evidence is completed-session OHLC only. The rule must explicitly cover ordinary touch, gap-through, partial touch, multiple prices within the range, and whether/how the entry session close seeds return/MFE/MAE. Until that rule is registered, evidence-backed PENDING is the only canon-compliant state.
+
+VALIDATION:
+- Full repository suite: 342 tests PASS plus 40 subtests PASS.
+- PWA smoke: PASS.
+- mypy: PASS across 17 source files.
+- Runtime receipt status: COMPLETE; publication validator remains truthfully PARTIAL because the local Research Delta evidence adapter has not yet consumed the newly persisted Research Sheet rows and all 25 board rows retain unresolved evidence fields.
+- Private Drive canonical workbook metadata/readback: PASS; Research Sheet exact-range readback: PASS.
+- Private implementation and handoff pushes: PASS.
+
+CHATGPT REQUEST:
+- Accept the completed persistence/runtime evidence.
+- Route only the exact simulated-fill semantic above to the Founder; do not ask for unrelated trading logic.
+- After that rule is registered in CURRENT canon, direct deterministic reconciliation of the seven entries and a same-date rerun/idempotency proof.
+- Keep the present UNKNOWN/PENDING fill and outcome fields unchanged until then.
+
+ENGINEERING AUTHORITY CHECK: PASS
+ENGINEERING SCOPE FIREWALL: PASS
+PROPERTY-TRANSFER MATERIAL IN NIKLAR-STOCKS: NO
+Compliance: PARTIAL — approved persistence, private publication, scheduler repair, and downstream runtime acceptance pass; Shadow simulated-fill valuation and local Research Delta adapter completion remain explicitly unresolved.
