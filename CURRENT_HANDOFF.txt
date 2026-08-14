@@ -1,8 +1,8 @@
 NIKLAR - CURRENT HANDOFF (compact latest-pointer form)
 
-STATUS: 2026-08-14 ENGINEERING CONTINUATION / ANTI-REDO CONTROL REFRESHED
+STATUS: 2026-08-14 ENGINEERING CONTINUATION / ANTI-REDO / CI-FALLBACK CONTROL CURRENT
 PROJECT: niklar-stocks
-CHECKPOINT_ID: niklar-handoff-2026-08-14-engineering-continuation-hygiene
+CHECKPOINT_ID: niklar-handoff-2026-08-14-engineering-continuation-hygiene-v2
 
 AUTHORITY / STARTUP CONTROL:
 - Google Drive Niklar CURRENT canon remains the sole governance/product/workflow authority.
@@ -15,34 +15,39 @@ AUTHORITY / STARTUP CONTROL:
 - STARTUP DRIFT CHECK: PASS for the continuation-control work completed at this checkpoint.
 
 ANTI-REDO / BRANCH HANDOFF:
-- Drive HARD-RULE COMMIT GATE now includes a Branch Completion / Anti-Redo rule.
+- Drive HARD-RULE COMMIT GATE contains the Branch Completion / Anti-Redo rule.
 - Before new implementation, agents must inspect current canon, current implementation authority, open work, and merged implementation history for the same responsibility.
 - Work already merged into the current implementation authority is finished implementation evidence and must be reused or extended rather than recreated unless canon changed, a reproducible defect/regression exists, a dependency/platform change requires adaptation, or the Founder explicitly reopens the responsibility.
 - A finished implementation branch must leave a compact completion/continuation handoff in its pull request.
 - The merged pull request plus the private CURRENT implementation-state pointer are the durable engineering handoff. Permanent per-branch handoff files are not required merely for recordkeeping.
 
-REPOSITORY HYGIENE:
+REPOSITORY HYGIENE / APPROVED CLEANUP:
 - A read-only private-repository branch audit and cleanup manifest have been completed.
-- A pre-cleanup rollback anchor was created before any destructive cleanup.
-- Merged/disposable, superseded, rollback, active, and unresolved branch classes are now explicitly separated.
-- No unresolved branch may be deleted merely because its name looks old or temporary.
-- Remote branch deletion remains Founder-gated and has NOT been performed at this checkpoint.
-- No force-push or history rewrite is authorized for cleanup.
+- A pre-cleanup rollback anchor exists before destructive cleanup.
+- Founder explicitly approved the first destructive cleanup batch on 2026-08-14: exactly 78 refs = 76 merged PR heads + the explicitly superseded PR #51 branch + noop.
+- Preserve main, the rollback anchor, active PR #1, active PR #79, historical PR #49, historical PR #65, and all unresolved refs.
+- No wildcard deletion, force-push, or history rewrite is authorized.
+- Current ChatGPT/GitHub connector lacks remote-ref deletion and the current execution container has no authenticated gh CLI. Therefore the approved deletion is to be executed through the Founder Mac environment using an exact allowlisted script, then independently re-audited through the connected GitHub surface.
+- The need to use the Mac execution surface does NOT reopen the cleanup decision or require a new approval if the exact audited 78-ref allowlist remains unchanged.
 
 BACKUP / RECOVERY:
 - A same-repository rollback anchor exists for the pre-cleanup implementation state.
 - It is not treated as a full disaster-recovery backup because it remains inside the same primary hosting failure domain.
-- A separate verified private backup/mirror remains the stronger long-term recovery target before aggressive historical-ref cleanup.
+- A separate verified private backup/mirror remains the stronger long-term recovery target before aggressive unresolved-ref cleanup.
 
-VALIDATION / INFRASTRUCTURE:
-- Current repository-content audit found the active tree small and free of obvious committed generated/cache/temp artifacts checked by the audit.
-- Current clutter is primarily remote branch refs rather than active-tree generated files.
-- GitHub-hosted Actions remain infrastructure-blocked by the account billing/spending-limit condition when no runner is allocated. Such checks are BLOCKED/UNEXECUTED, never PASS and never treated as a code failure merely from the red status.
+VALIDATION / CI FALLBACK:
+- Drive HARD-RULE COMMIT GATE now canonizes the validation execution fallback order when GitHub-hosted CI cannot run.
+- Preferred order: GitHub CI when it actually executes -> current ChatGPT/local execution environment -> Founder Mac with exact reproducible commands/artifact references -> Codex when available as an additional verifier/execution surface.
+- These are complementary verification surfaces; they do not lower the standard or bypass legal/security/privacy/deployment/LIVE gates.
+- GitHub-hosted checks that receive no runner or execute zero steps remain BLOCKED/UNEXECUTED, never PASS.
+- Exact SHA, changed files, commands, results, and unexecuted checks must be preserved in the PR/self-handoff.
+- If a material required check cannot run in any available environment, preserve the work and mark the check BLOCKED rather than guessing.
 
 CONTINUATION:
 - Do not reconstruct already-finished implementation primitives.
-- Continue only from current private active work after the repository cleanup gate is resolved and the remaining refs are re-audited.
-- Product/legal/security/LIVE activation gates remain unchanged and are not modified by this handoff.
+- Execute the already-approved 78-ref cleanup through the exact Mac allowlist script, then re-audit remaining refs.
+- After cleanup verification, continue from current private active work rather than rebuilding predecessors; client billing remains PR #79 and PSE repair remains isolated in PR #1 unless newer canon/current implementation evidence changes that state.
+- Product/legal/security/LIVE activation gates remain unchanged.
 
-SAFE TO CONTINUE: YES for non-destructive, reversible, canon-grounded PRELIVE work.
-SAFE TO DELETE REMOTE BRANCHES: NO until explicit Founder approval for the audited cleanup batch.
+SAFE TO CONTINUE: YES for non-destructive, reversible, canon-grounded PRELIVE work and for the exact Founder-approved 78-ref cleanup through the approved Mac execution path.
+SAFE TO DELETE REMOTE BRANCHES: YES — ONLY the exact audited 78-ref allowlist already Founder-approved on 2026-08-14.
